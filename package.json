@@ -2,7 +2,7 @@
   "name": "spinal-service-ticket",
   "version": "0.0.1",
   "description": "SpinalCOM service ticket. This service allow the handleling of ticket inside a spinalcom environment.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,6 +18,6 @@
   "dependencies": {
     "@types/node": "^10.12.12",
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
-    "spinal-models-ticket": "file:../spinal-models-ticket"
+    "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket.git"
   }
 }
