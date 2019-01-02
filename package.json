@@ -1,0 +1,23 @@
+{
+  "name": "spinal-service-ticket",
+  "version": "0.0.1",
+  "description": "SpinalCOM service ticket. This service allow the handleling of ticket inside a spinalcom environment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SPINALCOM",
+  "license": "SpinalCOM",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "jsdoc-to-markdown": "^4.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "@types/node": "^10.12.12",
+    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
+    "spinal-models-ticket": "file:../spinal-models-ticket"
+  }
+}
