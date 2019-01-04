@@ -4,7 +4,7 @@
   "description": "SpinalCOM service ticket. This service allow the handleling of ticket inside a spinalcom environment.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "nyc mocha --recursive tests"
+    "test": " nyc  mocha $NODE_DEBUG_OPTION --recursive tests"
   },
   "author": "SPINALCOM",
   "license": "SpinalCOM",
