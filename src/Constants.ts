@@ -32,3 +32,9 @@ export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_NAME : string =  "Spinal Serv
 export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_NAME: string = "SpinalSystemServiceArchiveHasProcess";
 export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_TYPE : string = SPINAL_RELATION_TYPE;
 
+export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME : string = "Spinal Service Ticket Process has default sentence section"
+export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE : string = SPINAL_RELATION_TYPE;
+
+
+export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME : string = "Spinal Service Ticket Process has default sentence"
+export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE : string = SPINAL_RELATION_TYPE;

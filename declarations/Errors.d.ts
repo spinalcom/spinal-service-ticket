@@ -5,3 +5,4 @@ export declare const CANNOT_ADD_STEP_TO_PROCESS: string;
 export declare const PROCESS_ID_DOES_NOT_EXIST: string;
 export declare const STEP_ID_DOES_NOT_EXIST: string;
 export declare const TICKET_ID_DOES_NOT_EXIST: string;
+export declare const DEFAULT_SENTECE_SECTION_ALREADY_EXIST: string;

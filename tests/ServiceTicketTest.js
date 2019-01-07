@@ -217,6 +217,7 @@ describe( "Spinal Service Ticket", function () {
     
     } );
   } );
+
   describe( 'DeleteTicket', function () {
     it( 'should delete a ticket', function () {
       assert.isTrue( false );

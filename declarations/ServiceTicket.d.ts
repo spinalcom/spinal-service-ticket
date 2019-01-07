@@ -1,16 +1,18 @@
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
 export declare class ServiceTicket {
-    context: any;
     contextId: string;
-    processNames: Set<string>;
-    processes: Set<string>;
-    initialized: boolean;
-    steps: Set<string>;
-    tickets: Set<string>;
-    stepByProcess: Map<string, string[]>;
-    ticketByStep: Map<string, string[]>;
+    private context;
+    private processNames;
+    private processes;
+    private initialized;
+    private steps;
+    private tickets;
+    private processByStep;
+    private stepByProcess;
+    private ticketByStep;
     constructor();
     init(): void;
+    addDefaultSentence(processId: string, sentence: string): Promise<boolean | string>;
     addStep(stepId: string, processId: string): Promise<boolean | Error>;
     addTicket(ticketId: string, stepId: string): Promise<boolean | Error>;
     createProcess(name: string): Promise<string | Error>;
@@ -26,4 +28,5 @@ export declare class ServiceTicket {
     private addStepToProcess;
     private addTicketToStep;
     private createContext;
+    private addSentenceSection;
 }

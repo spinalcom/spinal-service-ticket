@@ -1,6 +1,6 @@
 "use strict";
 /*
- * Copyright 2019 SpinalCom - www.spinalcom.com
+ *  Copyright 2019 SpinalCom - www.spinalcom.com
  *
  *  This file is part of SpinalCore.
  *
@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
+const Constants_2 = require("../declarations/Constants");
 class ServiceTicket {
     constructor() {
     }
@@ -43,6 +44,17 @@ class ServiceTicket {
                 throw new Error(e);
             });
         }
+    }
+    addDefaultSentence(processId, sentence) {
+        if (!this.processes.has(processId)) {
+            return Promise.reject(Errors_1.PROCESS_ID_DOES_NOT_EXIST);
+        }
+        const sentenceId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({ name: sentence });
+        return spinal_env_viewer_graph_service_1.SpinalGraphService
+            .addChildInContext(processId, sentenceId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME, Constants_2.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE)
+            .then(() => {
+            return Promise.resolve(true);
+        });
     }
     addStep(stepId, processId) {
         if (!this.processes.has(processId)) {
@@ -168,6 +180,7 @@ class ServiceTicket {
         if (!this.steps.has(stepId) || !this.processes.has(processId)) {
             return false;
         }
+        this.processByStep.set(stepId, processId);
         if (this.stepByProcess.has(processId)) {
             steps = this.stepByProcess.get(processId);
             if (steps.indexOf(stepId) !== -1) {
@@ -208,6 +221,29 @@ class ServiceTicket {
             .catch((e) => {
             console.error(e);
             return Promise.reject(Error(Errors_1.CANNOT_CREATE_CONTEXT_INTERNAL_ERROR));
+        });
+    }
+    addSentenceSection(processId) {
+        if (!this.processes.has(processId)) {
+            throw new Error(Errors_1.PROCESS_ID_DOES_NOT_EXIST);
+        }
+        return spinal_env_viewer_graph_service_1.SpinalGraphService
+            .getChildren(processId, [Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME])
+            .then((children) => {
+            if (children.length > 0) {
+                return Promise.reject(Errors_1.DEFAULT_SENTECE_SECTION_ALREADY_EXIST);
+            }
+            const sentenceId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({
+                name: 'Default Sentence.',
+            });
+            return spinal_env_viewer_graph_service_1.SpinalGraphService
+                .addChildInContext(processId, sentenceId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE)
+                .then(() => {
+                return Promise.resolve(true);
+            })
+                .catch((e) => {
+                return Promise.reject(e);
+            });
         });
     }
 }

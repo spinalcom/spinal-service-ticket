@@ -6,3 +6,4 @@ export const CANNOT_ADD_STEP_TO_PROCESS : string = ERROR_PREFIX + 'Internal erro
 export const PROCESS_ID_DOES_NOT_EXIST : string = ERROR_PREFIX + "Process id doesn't exist";
 export const STEP_ID_DOES_NOT_EXIST : string = ERROR_PREFIX + "Step id doesn't exist";
 export const TICKET_ID_DOES_NOT_EXIST : string = ERROR_PREFIX + "Ticket id doesn't exist";
+export const DEFAULT_SENTECE_SECTION_ALREADY_EXIST : string = ERROR_PREFIX + "Default sentence section already exits";

@@ -8,4 +8,5 @@ exports.CANNOT_ADD_STEP_TO_PROCESS = ERROR_PREFIX + 'Internal error: cannot crea
 exports.PROCESS_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Process id doesn't exist";
 exports.STEP_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Step id doesn't exist";
 exports.TICKET_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Ticket id doesn't exist";
+exports.DEFAULT_SENTECE_SECTION_ALREADY_EXIST = ERROR_PREFIX + "Default sentence section already exits";
 //# sourceMappingURL=Errors.js.map

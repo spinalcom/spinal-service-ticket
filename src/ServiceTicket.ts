@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 SpinalCom - www.spinalcom.com
+ *  Copyright 2019 SpinalCom - www.spinalcom.com
  *
  *  This file is part of SpinalCore.
  *
@@ -31,6 +31,9 @@ import {
   SPINAL_TICKET_SERVICE_ARCHIVE_NAME,
   SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
   SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
+  SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME,
+  SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME,
+  SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE,
   SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
   SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE,
   SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
@@ -41,25 +44,27 @@ import {
 import {
   CANNOT_ADD_STEP_TO_PROCESS,
   CANNOT_CREATE_CONTEXT_INTERNAL_ERROR,
-  CANNOT_CREATE_PROCESS_INTERNAL_ERROR,
+  CANNOT_CREATE_PROCESS_INTERNAL_ERROR, DEFAULT_SENTECE_SECTION_ALREADY_EXIST,
   PROCESS_ID_DOES_NOT_EXIST,
   PROCESS_NAME_ALREADY_USED,
   STEP_ID_DOES_NOT_EXIST,
   TICKET_ID_DOES_NOT_EXIST,
 } from './Errors';
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
+import { SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE } from '../declarations/Constants';
 
 export class ServiceTicket {
 
-  context: any;
-  contextId: string;
-  processNames: Set<string>;
-  processes: Set<string>;
-  initialized: boolean;
-  steps: Set<string>;
-  tickets: Set<string>;
-  stepByProcess: Map<string, string[]>;
-  ticketByStep: Map<string, string[]>;
+  public contextId: string;
+  private context: any;
+  private processNames: Set<string>;
+  private processes: Set<string>;
+  private initialized: boolean;
+  private steps: Set<string>;
+  private tickets: Set<string>;
+  private processByStep: Map<string, string>;
+  private stepByProcess: Map<string, string[]>;
+  private ticketByStep: Map<string, string[]>;
 
   constructor() {
 
@@ -81,6 +86,21 @@ export class ServiceTicket {
     }
   }
 
+  public addDefaultSentence(processId: string, sentence: string): Promise<boolean | string> {
+    if (!this.processes.has(processId)) {
+      return Promise.reject(PROCESS_ID_DOES_NOT_EXIST);
+    }
+    const sentenceId: string = SpinalGraphService.createNode({ name: sentence });
+    return  SpinalGraphService
+      .addChildInContext(
+        processId, sentenceId, this.contextId,
+        SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE)
+      .then(() => {
+        return Promise.resolve(true);
+      });
+  }
+
   public addStep(stepId: string, processId: string): Promise<boolean | Error> {
     if (!this.processes.has(processId)) {
       return Promise.reject(Error(PROCESS_ID_DOES_NOT_EXIST));
@@ -91,10 +111,11 @@ export class ServiceTicket {
 
     return SpinalGraphService
       .addChildInContext(processId, stepId, this.contextId,
-        SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
+                         SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+                         SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
       .then(() => {
         this.addStepToProcess(stepId, processId);
+
         return Promise.resolve(true);
       })
       .catch((e) => {
@@ -113,8 +134,8 @@ export class ServiceTicket {
 
     return SpinalGraphService
       .addChildInContext(stepId, ticketId,
-        this.contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+                         this.contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+                         SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
       .then(() => {
         this.addTicketToStep(ticketId, stepId);
         return Promise.resolve(true);
@@ -129,7 +150,7 @@ export class ServiceTicket {
       return Promise.reject(Error(PROCESS_NAME_ALREADY_USED));
     }
 
-    const processId = SpinalGraphService.createNode({name, PROCESS_TYPE});
+    const processId = SpinalGraphService.createNode({ name, PROCESS_TYPE });
     return SpinalGraphService.addChildInContext(
       this.contextId,
       processId,
@@ -148,13 +169,13 @@ export class ServiceTicket {
   }
 
   public createStep(name: string, color: string): string {
-    const stepId = SpinalGraphService.createNode({name, color});
+    const stepId = SpinalGraphService.createNode({ name, color });
     this.steps.add(stepId);
     return stepId;
   }
 
   public createTicket(info: TicketInterface) {
-    const ticketId = SpinalGraphService.createNode({name: info.name}, info);
+    const ticketId = SpinalGraphService.createNode({ name: info.name }, info);
     this.tickets.add(ticketId);
     return ticketId;
   }
@@ -173,9 +194,9 @@ export class ServiceTicket {
 
     return SpinalGraphService
       .addChild(this.contextId,
-        archiveId,
-        SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
+                archiveId,
+                SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
+                SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
       )
       .then((res) => {
         return Promise.resolve(true);
@@ -242,6 +263,8 @@ export class ServiceTicket {
       return false;
     }
 
+    this.processByStep.set(stepId, processId);
+
     if (this.stepByProcess.has(processId)) {
       steps = this.stepByProcess.get(processId);
 
@@ -291,4 +314,38 @@ export class ServiceTicket {
         return Promise.reject(Error(CANNOT_CREATE_CONTEXT_INTERNAL_ERROR));
       });
   }
+
+  private addSentenceSection(processId: string): Promise<boolean | string> {
+    if (!this.processes.has(processId)) {
+      throw new Error(PROCESS_ID_DOES_NOT_EXIST);
+    }
+    return SpinalGraphService
+      .getChildren(processId,
+                   [SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME])
+      .then((children) => {
+        if (children.length > 0) {
+          return Promise.reject(DEFAULT_SENTECE_SECTION_ALREADY_EXIST);
+        }
+
+        const sentenceId = SpinalGraphService.createNode({
+          name: 'Default Sentence.',
+        });
+
+        return SpinalGraphService
+          .addChildInContext(
+            processId, sentenceId,
+            this.contextId,
+            SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME,
+            SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE)
+          .then(() => {
+            return Promise.resolve(true);
+          })
+          .catch((e) => {
+            return Promise.reject(e);
+          });
+      });
+  }
+
+
+
 }
