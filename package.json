@@ -19,7 +19,7 @@
     "@types/node": "^10.12.12"
   },
   "dependencies": {
-    "spinal-env-viewer-graph-service": "file:../spinal-env-viewer-graph-service",
+    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
     "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket.git"
   }
 }
