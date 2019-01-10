@@ -1,33 +1,80 @@
+/*
+ * Copyright 2019 SpinalCom - www.spinalcom.com
+ *
+ *  This file is part of SpinalCore.
+ *
+ *  Please read all of the following terms and conditions
+ *  of the Free Software license Agreement ("Agreement")
+ *  carefully.
+ *
+ *  This Agreement is a legally binding contract between
+ *  the Licensee (as defined below) and SpinalCom that
+ *  sets forth the terms and conditions that govern your
+ *  use of the Program. By installing and/or using the
+ *  Program, you agree to abide by all the terms and
+ *  conditions stated or referenced herein.
+ *
+ *  If you do not agree to abide by these terms and
+ *  conditions, do not demonstrate your acceptance and do
+ *  not install or use the Program.
+ *  You should have received a copy of the license along
+ *  with this file. If not, see
+ *  <http://resources.spinalcom.com/licenses.pdf>.
+ */
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
-exports.SERVICE_NAME = "TicketService";
-exports.SERVICE_TYPE = "SpinalSystemService";
-exports.SERVICE_ARCHIVE_TYPE = "SpinalSystemServiceTicketArchive";
-exports.PROCESS_TYPE = "SpinalServiceTicketProcess";
-exports.SPINAL_TICKET_SERVICE_PROCESS_TYPE = "SpinalSystemServiceTicketTypeProcess";
-exports.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME = "SpinalSystemServiceTicketHasProcess";
-exports.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_STEP_TYPE = "SpinalSystemServiceTicketTypeStep";
-exports.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME = "SpinalSystemServiceTicketHasStep";
-exports.SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_TICKET_TYPE = "SpinalSystemServiceTicketTypeTicket";
-exports.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME = "SpinalSystemServiceTicketHasTicket";
+exports.SERVICE_NAME = 'TicketService';
+exports.SERVICE_TYPE = 'SpinalSystemServiceTicket';
+/////////////////////////////////////////
+/////////////// TICKET ///////////////////
+exports.SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
 exports.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_ARCHIVE_NAME = "Spinal Service Ticket Archive";
-exports.SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME = "SpinalSystemServiceTicketHasArchive";
-exports.SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME = "Spinal Service Ticket Archive - Archive Ticket";
-exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_NAME = "SpinalSystemServiceArchiveHasTicket";
 exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME = "Spinal Service Ticket Archive - Archive Step";
-exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME = "SpinalSystemServiceArchiveHasStep";
-exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_NAME = "Spinal Service Ticket Archive - Archive Process";
-exports.SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_NAME = "SpinalSystemServiceArchiveHasProcess";
+exports.SPINAL_TICKET_SERVICE_TICKET_SECTION = 'SpinalSystemServiceHasTicket';
+exports.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME = 'SpinalSystemServiceTicketHasTicket';
+exports.SPINAL_TICKET_SERVICE_TICKET_SECTION_NAME = 'Tickets';
+exports.SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_NAME = 'SpinalSystemServiceHasTicket';
+exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceArchiveHasTicket';
+exports.SPINAL_TICKET_SERVICE_TICKET_TYPE = 'SpinalSystemServiceTicketTypeTicket';
+/////////////////////////////////////////
+/////////////// PROCESS /////////////////
+exports.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
 exports.SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME = "Spinal Service Ticket Process has default sentence section";
+exports.SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive_Archive_Process';
+exports.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME = 'SpinalSystemServiceTicketHasProcess';
+exports.SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceArchiveHasProcess';
+exports.PROCESS_TYPE = 'SpinalServiceTicketProcess';
+exports.SPINAL_TICKET_SERVICE_PROCESS_TYPE = 'SpinalSystemServiceTicketTypeProcess';
+exports.PROCESS_HAS_TICKET_RELATION_NAME = 'SpinalSystemService_ProcessHasTicket';
+exports.PROCESS_HAS_TICKET_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+/////////////////////////////////////////
+/////////////// STEP /////////////////
+exports.SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_STEP_TYPE = 'SpinalSystemServiceTicketTypeStep';
+exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceArchiveHasStep';
+exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive_Archive_Step';
+exports.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME = 'SpinalSystemServiceTicketHasStep';
+exports.DEFAULT_STEPS = [
+  { name: 'Declared', color: '#ff0019' },
+  { name: 'Opened', color: '#ff4700' },
+  { name: 'Solved', color: '#09ff10' },
+];
+/////////////////////////////////////////
+/////////////// SENTENCE /////////////////
 exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME = "Spinal Service Ticket Process has default sentence";
 exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_TYPE = 'DEFAULT_SENTENCE_SECTION_TYPE';
+exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_default_sentence';
+exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_default_sentence_section';
+exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_TYPE = 'DEFAULT_SENTENCE_TYPE';
+/////////////////////////////////////////
+/////////////// ARCHIVE /////////////////
+exports.SPINAL_TICKET_SERVICE_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive';
+exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive_Archive_Ticket';
+exports.SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceTicketHasArchive';
+exports.SERVICE_ARCHIVE_TYPE = 'SpinalSystemServiceTicketArchive';
 //# sourceMappingURL=Constants.js.map
