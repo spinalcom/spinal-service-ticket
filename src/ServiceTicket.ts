@@ -67,6 +67,7 @@ import {
 } from './Errors';
 
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
+import { SpinalProcess } from '../../spinal-models-ticket/declarations/SpinalProcess';
 
 export class ServiceTicket {
 
@@ -103,7 +104,7 @@ export class ServiceTicket {
 
   public addDefaultSentence(processId: string, sentence: string): Promise<boolean | string> {
     if (!this.processes.has(processId)) {
-      return Promise.reject(PROCESS_ID_DOES_NOT_EXIST + ': ' + processId);
+      return Promise.reject('${PROCESS_ID_DOES_NOT_EXIST}: ${processId}');
     }
     return SpinalGraphService
       .getChildren(processId,
@@ -126,7 +127,7 @@ export class ServiceTicket {
             });
         }
 
-        return this.addSentenceSection(processId).then(bool => {
+        return this.addSentenceSection(processId).then((bool) => {
           if (bool) {
             return this.addDefaultSentence(processId, sentence);
           }
@@ -158,6 +159,10 @@ export class ServiceTicket {
       });
   }
 
+  public addTicketToProcess(ticketId: string, processId: string): Promise<boolean | Error> {
+    const process = SpinalGraphService.getNode(processId);
+    return this.addTicket(ticketId, process.defaultStepId.get());
+  }
   public addTicket(ticketId: string, stepId: string): Promise<boolean | Error> {
 
     if (!this.steps.has(stepId)) {
@@ -182,12 +187,15 @@ export class ServiceTicket {
       });
   }
 
-  public createProcess(name: string): Promise<string | Error> {
-    if (this.processNames.has(name)) {
+  public createProcess(process: SpinalProcess): Promise<string | Error> {
+    if (this.processNames.has(process.name)) {
       return Promise.reject(Error(PROCESS_NAME_ALREADY_USED));
     }
 
-    const processId = SpinalGraphService.createNode({name, type: PROCESS_TYPE});
+    process.type = PROCESS_TYPE;
+
+    const processId = SpinalGraphService.createNode(process);
+
     return SpinalGraphService.addChildInContext(
       this.contextId,
       processId,
@@ -274,13 +282,26 @@ export class ServiceTicket {
   }
 
   public getStepsFromProcess(processId: string): string[] {
-    console.log('processId', processId);
-    console.log('step by process', this.stepByProcess);
     return this.stepByProcess.get(processId);
   }
 
   public getTicketsFromStep(stepId: string): string[] {
     return this.ticketByStep.get(stepId);
+  }
+
+  public getDefaultSentenceFromProcess(processId: string): Promise<string[]> {
+
+    return SpinalGraphService
+      .getChildren(processId,
+        [SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME])
+      .then((children) => {
+        if (children.length > 0) {
+          return SpinalGraphService
+            .getChildren(children[0].id.get(),
+              [SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME]);
+        }
+        return Promise.resolve([]);
+      });
   }
 
   public moveTicket(ticketId: string, stepFromId: string, stepToId: string): void {
@@ -354,8 +375,6 @@ export class ServiceTicket {
       if (steps.indexOf(stepId) !== -1) {
         return false;
       }
-      console.log('sdqsstepId', stepId);
-      console.log('qsdqsprocessId', processId);
 
       steps.push(stepId);
       this.stepByProcess.set(processId, steps);
@@ -483,10 +502,15 @@ export class ServiceTicket {
   private initProcess(processId: string): Promise<(boolean | Error)[]> {
     const steps: string[] = this.createDefaultSteps();
     const promises: Promise<boolean | Error>[] = [];
+
+
+    SpinalGraphService.modifyNode(processId, {defaultStepId: steps[0]});
+    promises.push(this.addTicketSection(processId));
+
     for (const stepId of steps) {
       promises.push(this.addStep(stepId, processId));
     }
-    promises.push(this.addTicketSection(processId));
+
     return Promise.all(promises);
   }
 

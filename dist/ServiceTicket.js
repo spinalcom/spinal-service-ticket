@@ -24,7 +24,7 @@
 
 "use strict";
 /*
- *  Copyright 2019 SpinalCom - www.spinalcom.com
+ * Copyright 2019 SpinalCom - www.spinalcom.com
  *
  *  This file is part of SpinalCore.
  *
@@ -70,7 +70,7 @@ class ServiceTicket {
     }
     addDefaultSentence(processId, sentence) {
         if (!this.processes.has(processId)) {
-          return Promise.reject( Errors_1.PROCESS_ID_DOES_NOT_EXIST + ': ' + processId );
+          return Promise.reject( '${PROCESS_ID_DOES_NOT_EXIST}: ${processId}' );
         }
       return spinal_env_viewer_graph_service_1.SpinalGraphService
         .getChildren( processId, [Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME] )
@@ -87,7 +87,7 @@ class ServiceTicket {
                 return Promise.resolve( true );
               } );
           }
-          return this.addSentenceSection( processId ).then( bool => {
+          return this.addSentenceSection( processId ).then( ( bool ) => {
             if (bool) {
               return this.addDefaultSentence( processId, sentence );
             }
@@ -111,6 +111,11 @@ class ServiceTicket {
             return Promise.reject(Error(Errors_1.CANNOT_ADD_STEP_TO_PROCESS + e));
         });
     }
+  
+  addTicketToProcess( ticketId, processId ) {
+    const process = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode( processId );
+    return this.addTicket( ticketId, process.defaultStepId.get() );
+  }
     addTicket(ticketId, stepId) {
         if (!this.steps.has(stepId)) {
             return Promise.reject(Error(Errors_1.STEP_ID_DOES_NOT_EXIST));
@@ -130,14 +135,13 @@ class ServiceTicket {
             return Promise.reject(Error(Errors_1.CANNOT_ADD_STEP_TO_PROCESS + e));
         });
     }
-    createProcess(name) {
-        if (this.processNames.has(name)) {
+  
+  createProcess( process ) {
+    if (this.processNames.has( process.name )) {
             return Promise.reject(Error(Errors_1.PROCESS_NAME_ALREADY_USED));
         }
-      const processId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode( {
-        name,
-        type: Constants_1.PROCESS_TYPE
-      } );
+    process.type = Constants_1.PROCESS_TYPE;
+    const processId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode( process );
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(this.contextId, processId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE).then(() => {
             this.processNames.add(name);
             this.processes.add(processId);
@@ -202,13 +206,29 @@ class ServiceTicket {
         return this.tickets;
     }
     getStepsFromProcess(processId) {
-      console.log( 'processId', processId );
-      console.log( 'step by process', this.stepByProcess );
         return this.stepByProcess.get(processId);
     }
     getTicketsFromStep(stepId) {
         return this.ticketByStep.get(stepId);
     }
+  
+  getDefaultSentenceFromProcess( processId ) {
+    return spinal_env_viewer_graph_service_1.SpinalGraphService
+      .getChildren( processId, [Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME] )
+      .then( ( children ) => {
+        if (children.length > 0) {
+          return spinal_env_viewer_graph_service_1.SpinalGraphService
+            .getChildren( children[0].id.get(), [Constants_1.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME] );
+        }
+        return Promise.resolve( [] );
+      } );
+  }
+  
+  moveTicket( ticketId, stepFromId, stepToId ) {
+    spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode( ticketId, { stepId: stepToId } );
+    spinal_env_viewer_graph_service_1.SpinalGraphService
+      .moveChild( stepFromId, stepToId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE );
+  }
     initVar(contextId) {
       this.contextId = contextId;
         this.processes = new Set();
@@ -261,8 +281,6 @@ class ServiceTicket {
             if (steps.indexOf(stepId) !== -1) {
                 return false;
             }
-          console.log( 'sdqsstepId', stepId );
-          console.log( 'qsdqsprocessId', processId );
             steps.push(stepId);
             this.stepByProcess.set(processId, steps);
             return true;
@@ -370,10 +388,11 @@ class ServiceTicket {
   initProcess( processId ) {
     const steps = this.createDefaultSteps();
     const promises = [];
+    spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode( processId, { defaultStepId: steps[0] } );
+    promises.push( this.addTicketSection( processId ) );
     for (const stepId of steps) {
       promises.push( this.addStep( stepId, processId ) );
     }
-    promises.push( this.addTicketSection( processId ) );
     return Promise.all( promises );
   }
   
@@ -384,12 +403,6 @@ class ServiceTicket {
       steps.push( this.createStep( step.name, step.color ) );
     }
     return steps;
-  }
-  
-  moveTicket( ticketId, stepFromId, stepToId ) {
-    spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode( ticketId, { stepId: stepToId } );
-    spinal_env_viewer_graph_service_1.SpinalGraphService
-      .moveChild( stepFromId, stepToId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE );
   }
 }
 exports.ServiceTicket = ServiceTicket;

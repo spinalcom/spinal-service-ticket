@@ -23,6 +23,7 @@
  */
 
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
+import { SpinalProcess } from '../../spinal-models-ticket/declarations/SpinalProcess';
 
 export declare class ServiceTicket {
     contextId: string;
@@ -39,8 +40,11 @@ export declare class ServiceTicket {
     init(): void;
     addDefaultSentence(processId: string, sentence: string): Promise<boolean | string>;
     addStep(stepId: string, processId: string): Promise<boolean | Error>;
+
+  private retrieveStep;
     addTicket(ticketId: string, stepId: string): Promise<boolean | Error>;
-    createProcess(name: string): Promise<string | Error>;
+
+  private addTicketToProcessTicketSection;
     createStep(name: string, color: string): string;
     createTicket(info: TicketInterface): any;
     createArchives(): Promise<boolean | Error>;
@@ -49,16 +53,21 @@ export declare class ServiceTicket {
     getAllTickets(): Set<string>;
     getStepsFromProcess(processId: string): string[];
     getTicketsFromStep(stepId: string): string[];
-    private initVar;
-  private retrieveStep;
-    private addStepToProcess;
-    private addTicketToStep;
-  private addTicketToProcessTicketSection;
-    private createContext;
-    private addSentenceSection;
+
   private addTicketSection;
   private initProcess;
+    private initVar;
   private createDefaultSteps;
+    private addStepToProcess;
+    private addTicketToStep;
+
+  addTicketToProcess(ticketId: string, processId: string): Promise<boolean | Error>;
+    private createContext;
+    private addSentenceSection;
+
+  createProcess(process: SpinalProcess): Promise<string | Error>;
+
+  getDefaultSentenceFromProcess(processId: string): Promise<string[]>;
 
   moveTicket(ticketId: string, stepFromId: string, stepToId: string): void;
 }
