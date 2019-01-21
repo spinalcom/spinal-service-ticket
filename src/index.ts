@@ -23,12 +23,13 @@
  */
 
 import { ServiceTicket } from './ServiceTicket';
+import { ServiceUser } from 'spinal-service-user';
 
-const G_root = typeof window === 'undefined' ? global : window;
+const gRoot = typeof window === 'undefined' ? global : window;
 
-if (typeof G_root.spinal === 'undefined') G_root.spinal = {};
-if (typeof G_root.spinal.SpinalServiceTicket === 'undefined') {
-  G_root.spinal.spinalServiceUser = new ServiceTicket();
+if (typeof gRoot.spinal === 'undefined') gRoot.spinal = {};
+if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
+  gRoot.spinal.spinalServiceUser = new ServiceTicket();
 }
 
-export const SpinalServiceTicket = G_root.spinal.spinalServiceUser;
+export const SpinalServiceTicket = gRoot.spinal.spinalServiceUser;

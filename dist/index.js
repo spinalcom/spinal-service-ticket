@@ -48,11 +48,11 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const ServiceTicket_1 = require("./ServiceTicket");
-const G_root = typeof window === 'undefined' ? global : window;
-if (typeof G_root.spinal === 'undefined')
-    G_root.spinal = {};
-if (typeof G_root.spinal.SpinalServiceTicket === 'undefined') {
-  G_root.spinal.spinalServiceUser = new ServiceTicket_1.ServiceTicket();
+const gRoot = typeof window === 'undefined' ? global : window;
+if (typeof gRoot.spinal === 'undefined')
+  gRoot.spinal = {};
+if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
+  gRoot.spinal.spinalServiceUser = new ServiceTicket_1.ServiceTicket();
 }
-exports.SpinalServiceTicket = G_root.spinal.spinalServiceUser;
+exports.SpinalServiceTicket = gRoot.spinal.spinalServiceUser;
 //# sourceMappingURL=index.js.map

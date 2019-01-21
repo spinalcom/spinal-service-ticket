@@ -48,7 +48,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
-exports.SERVICE_NAME = 'TicketService';
+exports.SERVICE_NAME = 'Ticket Service';
 exports.SERVICE_TYPE = 'SpinalSystemServiceTicket';
 /////////////////////////////////////////
 /////////////// TICKET ///////////////////
@@ -72,7 +72,7 @@ exports.PROCESS_TYPE = 'SpinalServiceTicketProcess';
 exports.SPINAL_TICKET_SERVICE_PROCESS_TYPE = 'SpinalSystemServiceTicketTypeProcess';
 exports.PROCESS_HAS_TICKET_RELATION_NAME = 'SpinalSystemService_ProcessHasTicket';
 exports.PROCESS_HAS_TICKET_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-/////////////////////////////////////////
+//////////////////////////////////////
 /////////////// STEP /////////////////
 exports.SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
 exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
@@ -87,17 +87,33 @@ exports.DEFAULT_STEPS = [
   { name: 'Solved', color: '#09ff10' },
 ];
 /////////////////////////////////////////
-/////////////// SENTENCE /////////////////
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_TYPE = 'DEFAULT_SENTENCE_SECTION_TYPE';
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_default_sentence';
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_default_sentence_section';
-exports.SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_TYPE = 'DEFAULT_SENTENCE_TYPE';
+/////////////// CATEGORY ////////////////
+exports.SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_CATEGORY_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_sub_category';
+exports.SPINAL_TICKET_SERVICE_CATEGORY_SECTION_TYPE = 'DEFAULT_CATEGORY_TYPE';
+exports.SPINAL_TICKET_SERVICE_CATEGORY_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_category';
+exports.SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_NAME = 'Spinal_Service_Ticket_Process_has_categories_section';
+exports.SPINAL_TICKET_SERVICE_CATEGORY_TYPE = 'CATEGORY_TYPE';
+exports.DEFAULT_CATEGORY_NAME = 'Categories';
 /////////////////////////////////////////
 /////////////// ARCHIVE /////////////////
 exports.SPINAL_TICKET_SERVICE_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive';
 exports.SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive_Archive_Ticket';
 exports.SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceTicketHasArchive';
 exports.SERVICE_ARCHIVE_TYPE = 'SpinalSystemServiceTicketArchive';
+/////////////////////////////////////////
+/////////////// LOG /////////////////
+exports.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME = 'SpinalSystemServiceTicketHasLog';
+exports.SERVICE_LOG_TYPE = 'SpinalSystemServiceTicketLog';
+/////////////////////////////////////////
+/////////////// Target /////////////////
+exports.SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+exports.SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME = 'SpinalSystemServiceTicketHasLocation';
+/////////////////////////////////////////
+/////////////// USER ////////////////////
+exports.USER_RELATION_NAME = 'userHasDeclaredTicket';
+exports.USER_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
 //# sourceMappingURL=Constants.js.map

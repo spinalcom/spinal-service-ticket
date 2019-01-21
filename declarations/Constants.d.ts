@@ -22,6 +22,8 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 
+import { SpinalStep } from 'spinal-models-ticket/declarations/SpinalStep';
+
 export declare const SERVICE_NAME: string;
 export declare const SERVICE_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_TYPE: string;
@@ -49,17 +51,24 @@ export declare const SPINAL_TICKET_SERVICE_STEP_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string;
-export declare const DEFAULT_STEPS: {
-  name: string;
-  color: string;
-}[];
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE: string;
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE: string;
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_TYPE: string;
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME: string;
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME: string;
-export declare const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_TYPE: string;
+export declare const DEFAULT_STEPS: SpinalStep[];
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_NAME: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_NAME: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_NAME: string;
+export declare const SPINAL_TICKET_SERVICE_CATEGORY_TYPE: string;
+export declare const DEFAULT_CATEGORY_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_ARCHIVE_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME: string;
 export declare const SERVICE_ARCHIVE_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_LOG_RELATION_NAME: string;
+export declare const SERVICE_LOG_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string;
+export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string;
+export declare const USER_RELATION_NAME: string;
+export declare const USER_RELATION_TYPE: string;

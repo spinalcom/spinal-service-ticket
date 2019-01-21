@@ -23,8 +23,9 @@
  */
 
 import { SPINAL_RELATION_TYPE } from 'spinal-env-viewer-graph-service';
+import { SpinalStep } from 'spinal-models-ticket/declarations/SpinalStep';
 
-export const SERVICE_NAME: string = 'TicketService';
+export const SERVICE_NAME: string = 'Ticket Service';
 export const SERVICE_TYPE: string = 'SpinalSystemServiceTicket';
 
 /////////////////////////////////////////
@@ -39,7 +40,6 @@ export const SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_NAME: string = 'Spina
 export const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceArchiveHasTicket';
 export const SPINAL_TICKET_SERVICE_TICKET_TYPE: string = 'SpinalSystemServiceTicketTypeTicket';
 
-
 /////////////////////////////////////////
 /////////////// PROCESS /////////////////
 export const SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
@@ -52,8 +52,7 @@ export const SPINAL_TICKET_SERVICE_PROCESS_TYPE: string = 'SpinalSystemServiceTi
 export const PROCESS_HAS_TICKET_RELATION_NAME: string = 'SpinalSystemService_ProcessHasTicket';
 export const PROCESS_HAS_TICKET_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
 
-
-/////////////////////////////////////////
+//////////////////////////////////////
 /////////////// STEP /////////////////
 export const SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
 export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
@@ -63,20 +62,23 @@ export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME: string = 'SpinalS
 export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive_Archive_Step';
 export const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string = 'SpinalSystemServiceTicketHasStep';
 
-export const DEFAULT_STEPS: { name: string, color: string }[] = [
+export const DEFAULT_STEPS: SpinalStep[] = [
   {name: 'Declared', color: '#ff0019'},
   {name: 'Opened', color: '#ff4700'},
   {name: 'Solved', color: '#09ff10'},
 ];
 
 /////////////////////////////////////////
-/////////////// SENTENCE /////////////////
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_TYPE: string = 'DEFAULT_SENTENCE_SECTION_TYPE';
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_default_sentence';
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_default_sentence_section';
-export const SPINAL_TICKET_SERVICE_DEFAULT_SENTENCE_TYPE: string = 'DEFAULT_SENTENCE_TYPE';
+/////////////// CATEGORY ////////////////
+export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_sub_category';
+export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_TYPE: string = 'DEFAULT_CATEGORY_TYPE';
+export const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_category';
+export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_categories_section';
+export const SPINAL_TICKET_SERVICE_CATEGORY_TYPE: string = 'CATEGORY_TYPE';
+export const DEFAULT_CATEGORY_NAME: string = 'Categories';
 
 /////////////////////////////////////////
 /////////////// ARCHIVE /////////////////
@@ -84,3 +86,19 @@ export const SPINAL_TICKET_SERVICE_ARCHIVE_NAME: string = 'Spinal_Service_Ticket
 export const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive_Archive_Ticket';
 export const SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceTicketHasArchive';
 export const SERVICE_ARCHIVE_TYPE: string = 'SpinalSystemServiceTicketArchive';
+
+/////////////////////////////////////////
+/////////////// LOG /////////////////
+export const SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_LOG_RELATION_NAME: string = 'SpinalSystemServiceTicketHasLog';
+export const SERVICE_LOG_TYPE: string = 'SpinalSystemServiceTicketLog';
+
+/////////////////////////////////////////
+/////////////// Target /////////////////
+export const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string = 'SpinalSystemServiceTicketHasLocation';
+
+/////////////////////////////////////////
+/////////////// USER ////////////////////
+export const USER_RELATION_NAME: string = 'userHasDeclaredTicket';
+export const USER_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
