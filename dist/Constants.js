@@ -116,4 +116,7 @@ exports.SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME = 'SpinalSystemServiceTicketH
 /////////////// USER ////////////////////
 exports.USER_RELATION_NAME = 'userHasDeclaredTicket';
 exports.USER_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_TYPE;
+/////////////////////////////////////////
+/////////////// ticket ////////////////////
+// tickethasReferentiel
 //# sourceMappingURL=Constants.js.map

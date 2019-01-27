@@ -28,30 +28,42 @@ import { SpinalLogTicket } from 'spinal-models-ticket/declarations/SpinalLogTick
 
 export declare class ServiceTicket {
   contextId: string;
+  initialized: boolean;
   private context;
   private processNames;
   private processes;
-  initialized: boolean;
   private steps;
   private tickets;
   private processByStep;
   private stepByProcess;
   private ticketByStep;
   private getCategories;
+  private initVar;
+  private retrieveStep;
+  private addStepToProcess;
+  private addTicketToStep;
+  private addTicketToProcessTicketSection;
+  private createContext;
+  private addSentenceSection;
+  private addTicketSection;
+  private initProcess;
+  private createDefaultSteps;
 
   constructor();
 
-  init(): void;
-
   isInitialized(): boolean;
+
+  init(): void;
 
   addCategory(processId: string, sentence: string): Promise<boolean | string>;
 
-  addStep(stepId: string, processId: string): Promise<boolean | Error>;
-
   addSubCategory(categoryId: string, sentence: string): Promise<boolean | string>;
 
-  addLocationToTicket(ticketId: string, bimId: string): void;
+  addStep(stepId: string, processId: string): Promise<boolean | Error>;
+
+  addLocationToTicket(ticketId: string, bimId: string): Promise<boolean>;
+
+  addTicketToProcessWithUser(ticketId: string, processId: string, userId: string): Promise<boolean | Error>;
 
   addTicketToProcess(ticketId: string, processId: string): Promise<boolean | Error>;
 
@@ -61,11 +73,11 @@ export declare class ServiceTicket {
 
   createStep(name: string, color: string): string;
 
-  addTicketToProcessWithUser(ticketId: string, processId: string, userId: string): Promise<boolean | Error>;
-
   createTicket(info: TicketInterface): string;
 
   createLog(info: SpinalLogTicket): string;
+
+  getTicketForUser(userId: string): Promise<any>;
 
   createArchives(): Promise<boolean | Error>;
 
@@ -79,23 +91,10 @@ export declare class ServiceTicket {
 
   getTicketsFromStep(stepId: string): string[];
 
-  getTicketForUser(userId: string): Promise<any>;
-
   getCategoriesFromProcess(processId: string): Promise<{
     id: string;
     children: string[];
   }[]>;
 
   moveTicket(ticketId: string, stepFromId: string, stepToId: string): void;
-
-  private initVar;
-  private retrieveStep;
-  private addStepToProcess;
-  private addTicketToStep;
-  private addTicketToProcessTicketSection;
-  private createContext;
-  private addSentenceSection;
-  private addTicketSection;
-  private initProcess;
-  private createDefaultSteps;
 }

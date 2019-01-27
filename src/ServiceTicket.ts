@@ -189,12 +189,13 @@ export class ServiceTicket {
       });
   }
 
-  public async addLocationToTicket(ticketId: string, bimId: string): void {
-    SpinalGraphService.addChild(
+  public addLocationToTicket(ticketId: string, bimId: string) {
+    return SpinalGraphService.addChild(
       ticketId,
       bimId,
-      SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
-      SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME);
+      SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
+      SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE
+    );
   }
 
   public async addTicketToProcessWithUser(ticketId: string,
@@ -286,11 +287,9 @@ export class ServiceTicket {
   }
 
   public createTicket(info: TicketInterface): string {
+    info.type = SPINAL_TICKET_SERVICE_TICKET_TYPE;
     const ticketId = SpinalGraphService.createNode(
-      {
-        name: info.name,
-        type: SPINAL_TICKET_SERVICE_TICKET_TYPE,
-      },
+      info,
       info);
     this.tickets.add(ticketId);
     return ticketId;

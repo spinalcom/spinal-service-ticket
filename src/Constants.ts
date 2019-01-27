@@ -102,3 +102,7 @@ export const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string = 'SpinalSystemS
 /////////////// USER ////////////////////
 export const USER_RELATION_NAME: string = 'userHasDeclaredTicket';
 export const USER_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+
+/////////////////////////////////////////
+/////////////// ticket ////////////////////
+// tickethasReferentiel
