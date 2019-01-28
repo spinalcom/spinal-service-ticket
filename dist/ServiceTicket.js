@@ -305,7 +305,10 @@ class ServiceTicket {
         .then( ( children ) => {
           if (children.length > 0) {
             const sectionId = children[0].id.get();
-            return this.getCategories( sectionId, [] );
+            return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren( sectionId, [] )
+              .then( children => {
+                return this.getCategories( children[0].id.get(), [] );
+              } );
           }
           return { parent: processId };
         } );
