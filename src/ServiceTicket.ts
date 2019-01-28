@@ -374,7 +374,13 @@ export class ServiceTicket {
       .then((children) => {
         if (children.length > 0) {
           const sectionId: string = children[0].id.get();
-          return this.getCategories(sectionId, []);
+          return SpinalGraphService.getChildren(sectionId, [])
+            .then(
+              children => {
+                return this.getCategories(children[0].id.get(), []);
+
+              }
+            )
         }
 
         return {parent: processId};
