@@ -389,7 +389,8 @@ export class ServiceTicket {
   }
 
   public moveTicket(ticketId: string, stepFromId: string, stepToId: string): void {
-    SpinalGraphService.modifyNode(ticketId, {stepId: stepToId});
+    const step = SpinalGraphService.getNode(stepToId);
+    SpinalGraphService.modifyNode(ticketId, {stepId: stepToId, color: step['color']});
     SpinalGraphService
       .addChild(
         ticketId,
@@ -532,7 +533,8 @@ export class ServiceTicket {
     if (!this.tickets.has(ticketId) || !this.steps.has(stepId)) {
       return false;
     }
-    SpinalGraphService.modifyNode(ticketId, {stepId});
+    const step = SpinalGraphService.getNode(stepId);
+    SpinalGraphService.modifyNode(ticketId, {stepId, color: step['color']});
     if (this.ticketByStep.has(stepId)) {
       tickets = this.ticketByStep.get(stepId);
       if (tickets.indexOf(stepId) !== -1) {
