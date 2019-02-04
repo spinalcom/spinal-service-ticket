@@ -22,6 +22,6 @@
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
     "spinal-core-connectorjs_type": "git+https://github.com/spinalcom/spinal-core-connectorjs_type.git",
     "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket",
-    "spinal-service-user": "file:../spinal-service-user"
+    "spinal-service-user": "git+https://github.com/spinalcom/spinal-service-user.git"
   }
 }
