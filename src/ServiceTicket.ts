@@ -120,6 +120,7 @@ export class ServiceTicket {
   public getProcessByName(name: string): string {
     return this.processNames.get(name);
   }
+
   public addCategory(processId: string, sentence: string): Promise<boolean | string> {
     if (!this.processes.has(processId)) {
       return Promise.reject('${PROCESS_ID_DOES_NOT_EXIST}: ${processId}');

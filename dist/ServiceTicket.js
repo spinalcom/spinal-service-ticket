@@ -379,7 +379,7 @@ class ServiceTicket {
             }
             } ).catch( ( e ) => {
               console.log( e );
-          });
+          } );
     }
     addStepToProcess(stepId, processId) {
         let steps = [];
