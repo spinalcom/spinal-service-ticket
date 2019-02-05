@@ -85,7 +85,7 @@ export class ServiceTicket {
 
   public contextId: string;
   private context: any;
-  private processNames: Set<string>;
+  private processNames: Map<string, string>;
   private processes: Set<string>;
   public initialized: boolean;
   private steps: Set<string>;
@@ -117,6 +117,9 @@ export class ServiceTicket {
     }
   }
 
+  public getProcessByName(name: string): string {
+    return this.processNames.get(name);
+  }
   public addCategory(processId: string, sentence: string): Promise<boolean | string> {
     if (!this.processes.has(processId)) {
       return Promise.reject('${PROCESS_ID_DOES_NOT_EXIST}: ${processId}');
@@ -262,7 +265,7 @@ export class ServiceTicket {
       SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
       SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE,
     ).then(() => {
-      this.processNames.add(name);
+      this.processNames.set(name, processId);
       this.processes.add(processId);
       return this.initProcess(processId).then(() => {
         return Promise.resolve(processId);
@@ -376,8 +379,12 @@ export class ServiceTicket {
           const sectionId: string = children[0].id.get();
           return SpinalGraphService.getChildren(sectionId, [])
             .then(
-              children => {
-                return this.getCategories(children[0].id.get(), []);
+              (children) => {
+                const res = [];
+                for (let i = 0; i < children.length; i++) {
+                  res.push(this.getCategories(children[i].id.get(), []));
+                }
+                return Promise.all(res);
 
               },
             );
@@ -463,7 +470,7 @@ export class ServiceTicket {
   private initVar(contextId: string): Promise<void> {
     this.contextId = contextId;
     this.processes = new Set();
-    this.processNames = new Set();
+    this.processNames = new Map();
     this.steps = new Set();
     this.tickets = new Set();
     this.stepByProcess = new Map();
@@ -475,7 +482,7 @@ export class ServiceTicket {
 
           for (let i = 0; i < children.length; i = i + 1) {
             const child = children[i];
-            this.processNames.add(child.name.get());
+            this.processNames.set(child.name.get(), child.id.get());
             this.processes.add(child.id.get());
           }
 

@@ -1,3 +1,27 @@
+/*
+ * Copyright 2019 SpinalCom - www.spinalcom.com
+ *
+ *  This file is part of SpinalCore.
+ *
+ *  Please read all of the following terms and conditions
+ *  of the Free Software license Agreement ("Agreement")
+ *  carefully.
+ *
+ *  This Agreement is a legally binding contract between
+ *  the Licensee (as defined below) and SpinalCom that
+ *  sets forth the terms and conditions that govern your
+ *  use of the Program. By installing and/or using the
+ *  Program, you agree to abide by all the terms and
+ *  conditions stated or referenced herein.
+ *
+ *  If you do not agree to abide by these terms and
+ *  conditions, do not demonstrate your acceptance and do
+ *  not install or use the Program.
+ *  You should have received a copy of the license along
+ *  with this file. If not, see
+ *  <http://resources.spinalcom.com/licenses.pdf>.
+ */
+
 "use strict";
 /*
  * Copyright 2019 SpinalCom - www.spinalcom.com
@@ -56,6 +80,10 @@ class ServiceTicket {
                 throw new Error(e);
             });
         }
+    }
+    
+    getProcessByName( name ) {
+        return this.processNames.get( name );
     }
     addCategory(processId, sentence) {
         if (!this.processes.has(processId)) {
@@ -160,7 +188,7 @@ class ServiceTicket {
         process.type = Constants_1.PROCESS_TYPE;
         const processId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(process);
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(this.contextId, processId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE).then(() => {
-            this.processNames.add(name);
+              this.processNames.set( name, processId );
             this.processes.add(processId);
             return this.initProcess(processId).then(() => {
                 return Promise.resolve(processId);
@@ -248,8 +276,12 @@ class ServiceTicket {
                 if (children.length > 0) {
                     const sectionId = children[0].id.get();
                     return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(sectionId, [])
-                        .then(children => {
-                        return this.getCategories(children[0].id.get(), []);
+                      .then( ( children ) => {
+                          const res = [];
+                          for (let i = 0; i < children.length; i++) {
+                              res.push( this.getCategories( children[i].id.get(), [] ) );
+                          }
+                          return Promise.all( res );
                     });
                 }
                 return { parent: processId };
@@ -258,7 +290,10 @@ class ServiceTicket {
     }
     moveTicket(ticketId, stepFromId, stepToId) {
         const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(stepToId);
-        spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(ticketId, { stepId: stepToId, color: step['color'] });
+        spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode( ticketId, {
+            stepId: stepToId,
+            color: step['color']
+        } );
         spinal_env_viewer_graph_service_1.SpinalGraphService
             .addChild(ticketId, this.createLog({
             ticketId,
@@ -275,7 +310,7 @@ class ServiceTicket {
                 id,
                 name: node.name.get(),
                 children: [],
-                value: node.name.get()
+                value: node.name.get(),
             };
             if ((typeof node === 'undefined')
                 || (node.hasOwnProperty('childrenIds') && node.childrenIds.length === 0)) {
@@ -308,7 +343,7 @@ class ServiceTicket {
     initVar(contextId) {
         this.contextId = contextId;
         this.processes = new Set();
-        this.processNames = new Set();
+        this.processNames = new Map();
         this.steps = new Set();
         this.tickets = new Set();
         this.stepByProcess = new Map();
@@ -318,7 +353,7 @@ class ServiceTicket {
             .then((children) => {
             for (let i = 0; i < children.length; i = i + 1) {
                 const child = children[i];
-                this.processNames.add(child.name.get());
+                this.processNames.set( child.name.get(), child.id.get() );
                 this.processes.add(child.id.get());
             }
             this.initialized = true;
@@ -342,7 +377,9 @@ class ServiceTicket {
                     this.processByStep.set(child.id.get(), child.processId.get());
                 }
             }
-        });
+            } ).catch( ( e ) => {
+              console.log( e );
+          });
     }
     addStepToProcess(stepId, processId) {
         let steps = [];
