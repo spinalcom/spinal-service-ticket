@@ -194,7 +194,7 @@ export class ServiceTicket {
       ticketId,
       bimId,
       SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
-      SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE
+      SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
     );
   }
 
@@ -379,8 +379,8 @@ export class ServiceTicket {
               children => {
                 return this.getCategories(children[0].id.get(), []);
 
-              }
-            )
+              },
+            );
         }
 
         return {parent: processId};
@@ -390,7 +390,10 @@ export class ServiceTicket {
 
   public moveTicket(ticketId: string, stepFromId: string, stepToId: string): void {
     const step = SpinalGraphService.getNode(stepToId);
-    SpinalGraphService.modifyNode(ticketId, {stepId: stepToId, color: step['color']});
+    SpinalGraphService.modifyNode(ticketId, {
+      stepId: stepToId,
+      color: step['color']
+    });
     SpinalGraphService
       .addChild(
         ticketId,
@@ -417,7 +420,7 @@ export class ServiceTicket {
       id,
       name: node.name.get(),
       children: [],
-      value: node.name.get()
+      value: node.name.get(),
     };
 
     if (
@@ -500,6 +503,8 @@ export class ServiceTicket {
             this.processByStep.set(child.id.get(), child.processId.get());
           }
         }
+      }).catch((e) => {
+        console.log(e);
       });
   }
 
