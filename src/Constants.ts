@@ -63,9 +63,9 @@ export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string = 'Spinal_Service_T
 export const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string = 'SpinalSystemServiceTicketHasStep';
 
 export const DEFAULT_STEPS: SpinalStep[] = [
-  {name: 'Declared', color: '#ff0019'},
-  {name: 'Opened', color: '#ff4700'},
-  {name: 'Solved', color: '#09ff10'},
+  {name: 'Déclarer', color: '#ff0019'},
+  {name: 'Ouvert', color: '#fff112'},
+  {name: 'Résolu', color: '#10ff1d'},
 ];
 
 /////////////////////////////////////////
@@ -78,7 +78,7 @@ export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE: string = 'DEFAULT_INCI
 export const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_category';
 export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_categories_section';
 export const SPINAL_TICKET_SERVICE_INCIDENT_TYPE: string = 'INCIDENT_TYPE';
-export const DEFAULT_INCIDENTS_NAME: string = 'Incidents';
+export const DEFAULT_INCIDENTS_NAME: string = 'Incidents commun';
 
 /////////////////////////////////////////
 /////////////// ARCHIVE /////////////////
