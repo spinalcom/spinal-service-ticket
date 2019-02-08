@@ -70,15 +70,15 @@ export const DEFAULT_STEPS: SpinalStep[] = [
 
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
-export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
-export const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
-export const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
-export const SPINAL_TICKET_SERVICE_CATEGORY_SUB_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_sub_category';
-export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_TYPE: string = 'DEFAULT_CATEGORY_TYPE';
-export const SPINAL_TICKET_SERVICE_CATEGORY_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_category';
-export const SPINAL_TICKET_SERVICE_CATEGORY_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_categories_section';
-export const SPINAL_TICKET_SERVICE_CATEGORY_TYPE: string = 'CATEGORY_TYPE';
-export const DEFAULT_CATEGORY_NAME: string = 'Categories';
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE: string = SPINAL_RELATION_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_sub_category';
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE: string = 'DEFAULT_INCIDENT_TYPE';
+export const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_category';
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_categories_section';
+export const SPINAL_TICKET_SERVICE_INCIDENT_TYPE: string = 'INCIDENT_TYPE';
+export const DEFAULT_INCIDENTS_NAME: string = 'Incidents';
 
 /////////////////////////////////////////
 /////////////// ARCHIVE /////////////////
