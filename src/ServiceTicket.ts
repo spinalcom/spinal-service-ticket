@@ -78,8 +78,9 @@ import {
 
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
 import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
-import { SpinalServiceUser } from 'spinal-service-user';
 import { SpinalLogTicket } from 'spinal-models-ticket/declarations/SpinalLogTicket';
+import { SpinalServiceUser } from 'spinal-service-user';
+
 
 export class ServiceTicket {
 
@@ -131,7 +132,7 @@ export class ServiceTicket {
           const sentenceId: string = SpinalGraphService.createNode({
             name: sentence,
             type: SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
-          });
+          }, undefined);
 
           return SpinalGraphService
             .addChildInContext(
@@ -353,7 +354,7 @@ export class ServiceTicket {
     return this.stepByProcess.get(processId);
   }
 
-  public getStepsFromProcessAsync(processId: string) {
+  public getStepsFromProcessAsync(processId: string) : Promise<any>{
     return SpinalGraphService.findNode(processId)
       .then(node => {
         return SpinalGraphService.getChildren(node.info.id.get(),
