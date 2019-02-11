@@ -68,7 +68,7 @@ class ServiceTicket {
                 const sentenceId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({
                     name: sentence,
                     type: Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
-                });
+                }, undefined);
                 return spinal_env_viewer_graph_service_1.SpinalGraphService
                     .addChildInContext(sectionId, sentenceId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE)
                     .then(() => {
