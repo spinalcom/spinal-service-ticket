@@ -19,7 +19,7 @@ export declare class ServiceTicket {
     addCategory(processId: string, sentence: string): Promise<boolean | string>;
     addSubCategory(categoryId: string, sentence: string): Promise<boolean | string>;
     addStep(stepId: string, processId: string): Promise<boolean | Error>;
-    addLocationToTicket(ticketId: string, bimId: string): any;
+    addLocationToTicket(ticketId: string, bimId: string): Promise<boolean>;
     addTicketToProcessWithUser(ticketId: string, processId: string, userId: string): Promise<boolean | Error>;
     addTicketToProcess(ticketId: string, processId: string): Promise<boolean | Error>;
     addTicket(ticketId: string, stepId: string): Promise<boolean | Error>;
@@ -31,11 +31,11 @@ export declare class ServiceTicket {
     createArchives(): Promise<boolean | Error>;
     getContext(): Promise<string>;
     getAllProcess(): Set<string>;
-    getAllProcessAsync(): any;
+    getAllProcessAsync(): Promise<void>;
     getAllTickets(): Set<string>;
     getStepsFromProcess(processId: string): string[];
-    getStepsFromProcessAsync(processId: string): any;
-    getTicketsFromStepAsync(stepId: string): any;
+    getStepsFromProcessAsync(processId: string): Promise<any>;
+    getTicketsFromStepAsync(stepId: string): Promise<any>;
     getTicketsFromStep(stepId: string): string[];
     getCategoriesFromProcess(processId: string): Promise<{
         id: string;
