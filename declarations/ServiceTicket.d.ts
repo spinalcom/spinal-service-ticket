@@ -31,7 +31,7 @@ export declare class ServiceTicket {
     createArchives(): Promise<boolean | Error>;
     getContext(): Promise<string>;
     getAllProcess(): Set<string>;
-    getAllProcessAsync(): Promise<void>;
+    getAllProcessAsync(): Promise<void | Set<string>>;
     getAllTickets(): Set<string>;
     getStepsFromProcess(processId: string): string[];
     getStepsFromProcessAsync(processId: string): Promise<any>;
