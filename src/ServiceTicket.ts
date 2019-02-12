@@ -81,12 +81,10 @@ import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
 import { SpinalLogTicket } from 'spinal-models-ticket/declarations/SpinalLogTicket';
 import { SpinalServiceUser } from 'spinal-service-user';
 
-
 export class ServiceTicket {
 
   public contextId: string;
   public initialized: boolean;
-
   private context: any;
   private processNames: Map<string, string>;
   private processes: Set<string>;
@@ -106,7 +104,7 @@ export class ServiceTicket {
 
   public init() {
     this.context = SpinalGraphService.getContext(SERVICE_NAME);
-    if (typeof this.context === "undefined") {
+    if (typeof this.context === 'undefined') {
       this.createContext().then(context => {
         console.log(context);
         this.contextId = context.info.id.get();
@@ -125,14 +123,14 @@ export class ServiceTicket {
   public addCategory(processId: string, sentence: string): Promise<boolean | string> {
     return SpinalGraphService
       .getChildren(processId,
-        [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
+                   [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
       .then((children) => {
         if (children.length > 0) {
           const sectionId: string = children[0].id.get();
           const sentenceId: string = SpinalGraphService.createNode({
             name: sentence,
             type: SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
-          }, undefined);
+          },                                                       undefined);
 
           return SpinalGraphService
             .addChildInContext(
@@ -173,8 +171,8 @@ export class ServiceTicket {
 
     return SpinalGraphService
       .addChildInContext(processId, stepId, this.contextId,
-        SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
+                         SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+                         SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
       .then(() => {
         this.addStepToProcess(stepId, processId);
 
@@ -221,8 +219,8 @@ export class ServiceTicket {
   public addTicket(ticketId: string, stepId: string): Promise<boolean | Error> {
     return SpinalGraphService
       .addChildInContext(stepId, ticketId,
-        this.contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+                         this.contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+                         SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
       .then(() => {
         return this.addTicketToStep(ticketId, stepId);
       })
@@ -256,11 +254,11 @@ export class ServiceTicket {
   public createStep(name: string, color: string): string {
     const stepId = SpinalGraphService
       .createNode(
-        {
-          name,
-          color,
-          type: SPINAL_TICKET_SERVICE_STEP_TYPE,
-        });
+      {
+        name,
+        color,
+        type: SPINAL_TICKET_SERVICE_STEP_TYPE,
+      });
     this.steps.add(stepId);
     return stepId;
   }
@@ -284,9 +282,20 @@ export class ServiceTicket {
     return ticketId;
   }
 
-  public getTicketForUser(userId: string): Promise<any> {
+  public async getTicketForUser(userId: string): Promise<any> {
+    let children = [];
+    try {
+      children =  await SpinalGraphService
+        .getChildren(userId, [USER_RELATION_NAME]);
+    } catch (e) {
+      console.error(e);
+      SpinalGraphService.findNode(userId)
+        .then(nodeRef => {
+          return SpinalGraphService
+            .getChildren(userId, [USER_RELATION_NAME]);
+        });
 
-    return SpinalGraphService.getChildren(userId, [USER_RELATION_NAME]);
+    }
   }
 
   public createArchives(): Promise<boolean | Error> {
@@ -303,9 +312,9 @@ export class ServiceTicket {
 
     return SpinalGraphService
       .addChild(this.contextId,
-        archiveId,
-        SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
+                archiveId,
+                SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
+                SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
       )
       .then((res) => {
         return Promise.resolve(true);
@@ -355,19 +364,19 @@ export class ServiceTicket {
     return this.stepByProcess.get(processId);
   }
 
-  public getStepsFromProcessAsync(processId: string) : Promise<any>{
+  public getStepsFromProcessAsync(processId: string) : Promise<any> {
     return SpinalGraphService.findNode(processId)
       .then(node => {
         return SpinalGraphService.getChildren(node.id.get(),
-          [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
-      })
+                                              [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
+      });
   }
 
   public getTicketsFromStepAsync(stepId: string) {
     return SpinalGraphService.findNode(stepId)
       .then(node => {
         return node.getChildren(SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE,
-          [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]);
+                                [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]);
       });
   }
 
@@ -379,7 +388,7 @@ export class ServiceTicket {
   public async getCategoriesFromProcess(processId: string): Promise<{ id: string, children: string[] }[]> {
     return SpinalGraphService
       .getChildren(processId,
-        [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
+                   [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
       .then((children) => {
         if (children.length > 0) {
           const sectionId: string = children[0].id.get();
@@ -396,7 +405,7 @@ export class ServiceTicket {
             );
         }
 
-        return {parent: processId};
+        return { parent: processId };
 
       });
   }
@@ -405,7 +414,7 @@ export class ServiceTicket {
     const step = SpinalGraphService.getNode(stepToId);
     SpinalGraphService.modifyNode(ticketId, {
       stepId: stepToId,
-      color: step['color']
+      color: step['color'],
     });
     SpinalGraphService
       .addChild(
@@ -422,7 +431,7 @@ export class ServiceTicket {
       .moveChild(
         stepFromId, stepToId, ticketId,
         SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE,
       );
 
   }
@@ -448,10 +457,10 @@ export class ServiceTicket {
     const children = await SpinalGraphService
       .getChildren(
         id,
-        [
-          SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME,
-          SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME,
-        ]);
+      [
+        SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME,
+      ]);
 
     if (typeof children === 'undefined' || children.length === 0) {
       res.push(category);
@@ -505,7 +514,7 @@ export class ServiceTicket {
     for (const processId of this.processes) {
       promises.push(SpinalGraphService
         .getChildren(processId,
-          [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]));
+                     [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]));
     }
     return Promise.all(promises)
       .then((res) => {
@@ -525,7 +534,7 @@ export class ServiceTicket {
     let steps = [];
 
     this.processByStep.set(stepId, processId);
-    SpinalGraphService.modifyNode(stepId, {processId});
+    SpinalGraphService.modifyNode(stepId, { processId });
 
     if (this.stepByProcess.has(processId)) {
       steps = this.stepByProcess.get(processId);
@@ -546,7 +555,7 @@ export class ServiceTicket {
   private addTicketToStep(ticketId, stepId): boolean {
     let tickets = [];
     const step = SpinalGraphService.getNode(stepId);
-    SpinalGraphService.modifyNode(ticketId, {stepId, color: step['color']});
+    SpinalGraphService.modifyNode(ticketId, { stepId, color: step['color'] });
     if (this.ticketByStep.has(stepId)) {
       tickets = this.ticketByStep.get(stepId);
       if (tickets.indexOf(stepId) !== -1) {
@@ -560,7 +569,6 @@ export class ServiceTicket {
     this.ticketByStep.set(stepId, [ticketId]);
     return true;
   }
-
 
   private createContext(): Promise<any | Error> {
     return SpinalGraphService.addContext(SERVICE_NAME, SERVICE_TYPE, undefined)
@@ -577,7 +585,7 @@ export class ServiceTicket {
   private addSentenceSection(processId: string): Promise<boolean | string> {
     return SpinalGraphService
       .getChildren(processId,
-        [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
+                   [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
       .then((children) => {
         if (children.length > 0) {
           return Promise.reject(DEFAULT_SENTENCE_SECTION_ALREADY_EXIST);
@@ -608,7 +616,7 @@ export class ServiceTicket {
     const steps: string[] = this.createDefaultSteps();
     const promises: Promise<boolean | Error>[] = [];
 
-    SpinalGraphService.modifyNode(processId, {defaultStepId: steps[0], finalStepId: steps[2]});
+    SpinalGraphService.modifyNode(processId, { defaultStepId: steps[0], finalStepId: steps[2] });
 
     for (const stepId of steps) {
       promises.push(this.addStep(stepId, processId));

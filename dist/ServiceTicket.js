@@ -44,7 +44,7 @@ class ServiceTicket {
     }
     init() {
         this.context = spinal_env_viewer_graph_service_1.SpinalGraphService.getContext(Constants_1.SERVICE_NAME);
-        if (typeof this.context === "undefined") {
+        if (typeof this.context === 'undefined') {
             this.createContext().then(context => {
                 console.log(context);
                 this.contextId = context.info.id.get();
@@ -176,7 +176,21 @@ class ServiceTicket {
         return ticketId;
     }
     getTicketForUser(userId) {
-        return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(userId, [Constants_1.USER_RELATION_NAME]);
+        return __awaiter(this, void 0, void 0, function* () {
+            let children = [];
+            try {
+                children = yield spinal_env_viewer_graph_service_1.SpinalGraphService
+                    .getChildren(userId, [Constants_1.USER_RELATION_NAME]);
+            }
+            catch (e) {
+                console.error(e);
+                spinal_env_viewer_graph_service_1.SpinalGraphService.findNode(userId)
+                    .then(nodeRef => {
+                    return spinal_env_viewer_graph_service_1.SpinalGraphService
+                        .getChildren(userId, [Constants_1.USER_RELATION_NAME]);
+                });
+            }
+        });
     }
     createArchives() {
         const archives = spinal_env_viewer_graph_service_1.SpinalGraphService
@@ -268,7 +282,7 @@ class ServiceTicket {
         const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(stepToId);
         spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(ticketId, {
             stepId: stepToId,
-            color: step['color']
+            color: step['color'],
         });
         spinal_env_viewer_graph_service_1.SpinalGraphService
             .addChild(ticketId, this.createLog({
