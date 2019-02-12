@@ -287,6 +287,7 @@ export class ServiceTicket {
     try {
       children =  await SpinalGraphService
         .getChildren(userId, [USER_RELATION_NAME]);
+      return children;
     } catch (e) {
       console.error(e);
       SpinalGraphService.findNode(userId)
