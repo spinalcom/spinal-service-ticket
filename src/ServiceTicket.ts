@@ -358,7 +358,7 @@ export class ServiceTicket {
   public getStepsFromProcessAsync(processId: string) : Promise<any>{
     return SpinalGraphService.findNode(processId)
       .then(node => {
-        return SpinalGraphService.getChildren(node.info.id.get(),
+        return SpinalGraphService.getChildren(node.id.get(),
           [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
       })
   }
