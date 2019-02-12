@@ -339,6 +339,7 @@ export class ServiceTicket {
             this.processNames.set(child.name.get(), child.id.get());
             this.processes.add(child.id.get());
           }
+          return this.processes;
         },
       )
       .catch((e) => {
