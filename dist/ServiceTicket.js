@@ -232,7 +232,7 @@ class ServiceTicket {
     getStepsFromProcessAsync(processId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.findNode(processId)
             .then(node => {
-            return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(node.info.id.get(), [Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
+            return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(node.id.get(), [Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
         });
     }
     getTicketsFromStepAsync(stepId) {
