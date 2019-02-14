@@ -284,9 +284,21 @@ export class ServiceTicket {
     return logId;
   }
 
-  public getTicketForUser(userId: string): Promise<any> {
+  public async getTicketForUser(userId: string): Promise<any> {
+    let children = [];
+    try {
+      children =  await SpinalGraphService
+        .getChildren(userId, [USER_RELATION_NAME]);
+      return children;
+    } catch (e) {
+      console.error(e);
+      SpinalGraphService.findNode(userId)
+        .then(nodeRef => {
+          return SpinalGraphService
+            .getChildren(userId, [USER_RELATION_NAME]);
+        });
 
-    return SpinalGraphService.getChildren(userId, [USER_RELATION_NAME]);
+    }
   }
 
   public createArchives(): Promise<boolean | Error> {
@@ -339,6 +351,7 @@ export class ServiceTicket {
             this.processNames.set(child.name.get(), child.id.get());
             this.processes.add(child.id.get());
           }
+          return this.processes;
         },
       )
       .catch((e) => {
@@ -409,7 +422,7 @@ export class ServiceTicket {
     const step = SpinalGraphService.getNode(stepToId);
     SpinalGraphService.modifyNode(ticketId, {
       stepId: stepToId,
-      color: step['color']
+      color: step['color'],
     });
     SpinalGraphService
       .addChild(
@@ -550,7 +563,7 @@ export class ServiceTicket {
   private addTicketToStep(ticketId, stepId): boolean {
     let tickets = [];
     const step = SpinalGraphService.getNode(stepId);
-    SpinalGraphService.modifyNode(ticketId, {stepId, color: step['color']});
+    SpinalGraphService.modifyNode(ticketId, { stepId, color: step['color'] });
     if (this.ticketByStep.has(stepId)) {
       tickets = this.ticketByStep.get(stepId);
       if (tickets.indexOf(stepId) !== -1) {
@@ -612,7 +625,7 @@ export class ServiceTicket {
     const steps: string[] = this.createDefaultSteps();
     const promises: Promise<boolean | Error>[] = [];
 
-    SpinalGraphService.modifyNode(processId, {defaultStepId: steps[0], finalStepId: steps[2]});
+    SpinalGraphService.modifyNode(processId, { defaultStepId: steps[0], finalStepId: steps[2] });
 
     for (const stepId of steps) {
       promises.push(this.addStep(stepId, processId));
