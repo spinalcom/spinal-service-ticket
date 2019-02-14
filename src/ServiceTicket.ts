@@ -275,13 +275,13 @@ export class ServiceTicket {
   }
 
   public createLog(info: SpinalLogTicket): string {
-    const ticketId = SpinalGraphService.createNode(
+    const logId = SpinalGraphService.createNode(
       {
         name: info.ticketId,
         type: SERVICE_LOG_TYPE,
       },
-      info);
-    return ticketId;
+      new SpinalLogTicket(info));
+    return logId;
   }
 
   public getTicketForUser(userId: string): Promise<any> {
@@ -401,6 +401,11 @@ export class ServiceTicket {
   }
 
   public moveTicket(ticketId: string, stepFromId: string, stepToId: string): void {
+    if (typeof ticketId === "undefined"
+      || typeof stepFromId === "undefined"
+      || typeof stepToId === "undefined") {
+      return;
+    }
     const step = SpinalGraphService.getNode(stepToId);
     SpinalGraphService.modifyNode(ticketId, {
       stepId: stepToId,
@@ -418,8 +423,8 @@ export class ServiceTicket {
         SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE,
       );
     SpinalGraphService
-      .moveChild(
-        stepFromId, stepToId, ticketId,
+      .moveChildInContext(
+        stepFromId, stepToId, ticketId, this.contextId,
         SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
         SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
       );
