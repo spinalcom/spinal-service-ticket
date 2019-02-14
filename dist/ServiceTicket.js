@@ -44,7 +44,7 @@ class ServiceTicket {
     }
     init() {
         this.context = spinal_env_viewer_graph_service_1.SpinalGraphService.getContext(Constants_1.SERVICE_NAME);
-        if (typeof this.context === 'undefined') {
+        if (typeof this.context === "undefined") {
             this.createContext().then(context => {
                 console.log(context);
                 this.contextId = context.info.id.get();
@@ -169,11 +169,11 @@ class ServiceTicket {
         return ticketId;
     }
     createLog(info) {
-        const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({
+        const logId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({
             name: info.ticketId,
             type: Constants_1.SERVICE_LOG_TYPE,
-        }, info);
-        return ticketId;
+        }, new SpinalLogTicket(info));
+        return logId;
     }
     getTicketForUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -181,6 +181,7 @@ class ServiceTicket {
             try {
                 children = yield spinal_env_viewer_graph_service_1.SpinalGraphService
                     .getChildren(userId, [Constants_1.USER_RELATION_NAME]);
+                return children;
             }
             catch (e) {
                 console.error(e);
@@ -279,6 +280,11 @@ class ServiceTicket {
         });
     }
     moveTicket(ticketId, stepFromId, stepToId) {
+        if (typeof ticketId === "undefined"
+            || typeof stepFromId === "undefined"
+            || typeof stepToId === "undefined") {
+            return;
+        }
         const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(stepToId);
         spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(ticketId, {
             stepId: stepToId,
@@ -291,7 +297,7 @@ class ServiceTicket {
             date: Date.now(),
         }), Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE);
         spinal_env_viewer_graph_service_1.SpinalGraphService
-            .moveChild(stepFromId, stepToId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            .moveChildInContext(stepFromId, stepToId, ticketId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
     }
     getCategories(id, res) {
         return __awaiter(this, void 0, void 0, function* () {
