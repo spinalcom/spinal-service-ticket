@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
+const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
 const spinal_service_user_1 = require("spinal-service-user");
 class ServiceTicket {
     constructor() {
@@ -105,7 +106,9 @@ class ServiceTicket {
         });
     }
     addLocationToTicket(ticketId, bimId) {
-        return spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(ticketId, bimId, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE);
+        return spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(bimId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE).then(() => {
+            return spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(ticketId, bimId, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE);
+        });
     }
     addTicketToProcessWithUser(ticketId, processId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -172,7 +175,7 @@ class ServiceTicket {
         const logId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode({
             name: info.ticketId,
             type: Constants_1.SERVICE_LOG_TYPE,
-        }, new SpinalLogTicket(info));
+        }, new SpinalLogTicket_1.SpinalLogTicket(info));
         return logId;
     }
     getTicketForUser(userId) {

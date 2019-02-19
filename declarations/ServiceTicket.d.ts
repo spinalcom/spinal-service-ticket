@@ -1,6 +1,6 @@
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
 import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
-import { SpinalLogTicket } from 'spinal-models-ticket/declarations/SpinalLogTicket';
+import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
 export declare class ServiceTicket {
     contextId: string;
     initialized: boolean;
