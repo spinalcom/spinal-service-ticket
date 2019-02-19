@@ -78,7 +78,7 @@ import {
 
 import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
 import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
-import { SpinalLogTicket } from 'spinal-models-ticket/declarations/SpinalLogTicket';
+import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
 import { SpinalServiceUser } from 'spinal-service-user';
 
 
@@ -187,11 +187,19 @@ export class ServiceTicket {
 
   public addLocationToTicket(ticketId: string, bimId: string) {
     return SpinalGraphService.addChild(
-      ticketId,
       bimId,
+      ticketId,
       SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
       SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
-    );
+    ).then(()=> {
+      return SpinalGraphService.addChild(
+        ticketId,
+        bimId,
+        SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
+      );
+    });
+
   }
 
   public async addTicketToProcessWithUser(ticketId: string,
