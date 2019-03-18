@@ -63,7 +63,7 @@ export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string = 'Spinal_Service_T
 export const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string = 'SpinalSystemServiceTicketHasStep';
 
 export const DEFAULT_STEPS: SpinalStep[] = [
-  {name: 'Déclarer', color: '#ff0019'},
+  {name: 'Déclaré', color: '#ff0019'},
   {name: 'Ouvert', color: '#fff112'},
   {name: 'Résolu', color: '#10ff1d'},
 ];
