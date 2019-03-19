@@ -35,6 +35,7 @@ const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-servi
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
 const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
+const SpinalTicket_1 = require("spinal-models-ticket/dist/SpinalTicket");
 const spinal_service_user_1 = require("spinal-service-user");
 class ServiceTicket {
     constructor() {
@@ -114,6 +115,7 @@ class ServiceTicket {
         return __awaiter(this, void 0, void 0, function* () {
             const process = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(processId);
             try {
+                const user = spinal_service_user_1.SpinalServiceUser.getUser(userId);
                 const addedToUser = yield spinal_service_user_1.SpinalServiceUser
                     .addNode(userId, ticketId, Constants_1.USER_RELATION_NAME, Constants_1.USER_RELATION_TYPE);
                 if (addedToUser) {
@@ -167,7 +169,8 @@ class ServiceTicket {
     }
     createTicket(info) {
         info.type = Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE;
-        const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(info, info);
+        const ticket = new SpinalTicket_1.SpinalTicket(info);
+        const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(info, ticket);
         this.tickets.add(ticketId);
         return ticketId;
     }
@@ -451,7 +454,10 @@ class ServiceTicket {
     initProcess(processId) {
         const steps = this.createDefaultSteps();
         const promises = [];
-        spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(processId, { defaultStepId: steps[0], finalStepId: steps[2] });
+        spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(processId, {
+            defaultStepId: steps[0],
+            finalStepId: steps[2]
+        });
         for (const stepId of steps) {
             promises.push(this.addStep(stepId, processId));
         }

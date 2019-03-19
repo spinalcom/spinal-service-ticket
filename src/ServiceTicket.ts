@@ -76,9 +76,13 @@ import {
   TICKET_SECTION_ALREADY_EXIST,
 } from './Errors';
 
-import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
+import {
+
+  TicketInterface
+} from 'spinal-models-ticket/declarations/SpinalTicket';
 import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
 import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
+import {SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket'
 import { SpinalServiceUser } from 'spinal-service-user';
 
 
@@ -191,7 +195,7 @@ export class ServiceTicket {
       ticketId,
       SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
       SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
-    ).then(()=> {
+    ).then(() => {
       return SpinalGraphService.addChild(
         ticketId,
         bimId,
@@ -209,6 +213,7 @@ export class ServiceTicket {
 
     const process = SpinalGraphService.getNode(processId);
     try {
+      const user = SpinalServiceUser.getUser(userId);
       const addedToUser = await SpinalServiceUser
         .addNode(userId, ticketId, USER_RELATION_NAME, USER_RELATION_TYPE);
       if (addedToUser) {
@@ -275,9 +280,10 @@ export class ServiceTicket {
 
   public createTicket(info: TicketInterface): string {
     info.type = SPINAL_TICKET_SERVICE_TICKET_TYPE;
+    const ticket = new SpinalTicket(info);
     const ticketId = SpinalGraphService.createNode(
       info,
-      info);
+      ticket);
     this.tickets.add(ticketId);
     return ticketId;
   }
@@ -295,7 +301,7 @@ export class ServiceTicket {
   public async getTicketForUser(userId: string): Promise<any> {
     let children = [];
     try {
-      children =  await SpinalGraphService
+      children = await SpinalGraphService
         .getChildren(userId, [USER_RELATION_NAME]);
       return children;
     } catch (e) {
@@ -375,7 +381,7 @@ export class ServiceTicket {
     return this.stepByProcess.get(processId);
   }
 
-  public getStepsFromProcessAsync(processId: string) : Promise<any>{
+  public getStepsFromProcessAsync(processId: string): Promise<any> {
     return SpinalGraphService.findNode(processId)
       .then(node => {
         return SpinalGraphService.getChildren(node.id.get(),
@@ -571,7 +577,7 @@ export class ServiceTicket {
   private addTicketToStep(ticketId, stepId): boolean {
     let tickets = [];
     const step = SpinalGraphService.getNode(stepId);
-    SpinalGraphService.modifyNode(ticketId, { stepId, color: step['color'] });
+    SpinalGraphService.modifyNode(ticketId, {stepId, color: step['color']});
     if (this.ticketByStep.has(stepId)) {
       tickets = this.ticketByStep.get(stepId);
       if (tickets.indexOf(stepId) !== -1) {
@@ -633,7 +639,10 @@ export class ServiceTicket {
     const steps: string[] = this.createDefaultSteps();
     const promises: Promise<boolean | Error>[] = [];
 
-    SpinalGraphService.modifyNode(processId, { defaultStepId: steps[0], finalStepId: steps[2] });
+    SpinalGraphService.modifyNode(processId, {
+      defaultStepId: steps[0],
+      finalStepId: steps[2]
+    });
 
     for (const stepId of steps) {
       promises.push(this.addStep(stepId, processId));
