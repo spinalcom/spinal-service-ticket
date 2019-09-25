@@ -25,11 +25,13 @@
 import { ServiceTicket } from './ServiceTicket';
 import { ServiceUser } from 'spinal-service-user';
 
-const gRoot = typeof window === 'undefined' ? global : window;
+const gRoot: any = typeof window === 'undefined' ? global : window;
 
 if (typeof gRoot.spinal === 'undefined') gRoot.spinal = {};
 if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
   gRoot.spinal.spinalServiceUser = new ServiceTicket();
 }
 
-export const SpinalServiceTicket = gRoot.spinal.spinalServiceUser;
+// tslint:disable-next-line:variable-name
+const SpinalServiceTicket: ServiceTicket = gRoot.spinal.spinalServiceUser;
+export { ServiceTicket, SpinalServiceTicket };
