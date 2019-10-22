@@ -90,7 +90,7 @@ class ServiceTicket {
             type: Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
         });
         return spinal_env_viewer_graph_service_1.SpinalGraphService
-            .addChildInContext(categoryId, sentenceId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE)
+            .addChildInContext(categoryId, sentenceId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE)
             .then(() => {
             return Promise.resolve(true);
         });
@@ -350,22 +350,18 @@ class ServiceTicket {
         this.stepByProcess = new Map();
         this.ticketByStep = new Map();
         this.processByStep = new Map();
-        /* return SpinalGraphService.getChildrenInContext(this.contextId, contextId)
-           .then(
-             (children) => {
-    
-               for (let i = 0; i < children.length; i = i + 1) {
-                 const child = children[i];
-                 this.processNames.set(child.name.get(), child.id.get());
-                 this.processes.add(child.id.get());
-               }
-    
-               this.initialized = true;
-               return this.retrieveStep();
-             },
-           )
-           .catch((e) => {
-           });*/
+        spinal_env_viewer_graph_service_1.SpinalGraphService.getChildrenInContext(this.contextId, this.contextId)
+            .then((children) => {
+            for (let i = 0; i < children.length; i = i + 1) {
+                const child = children[i];
+                this.processNames.set(child.name.get(), child.id.get());
+                this.processes.add(child.id.get());
+            }
+            this.initialized = true;
+            return this.retrieveStep();
+        })
+            .catch((e) => {
+        });
     }
     retrieveStep() {
         const promises = [];
