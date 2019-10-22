@@ -46,7 +46,7 @@ class ServiceTicket {
     }
     init() {
         this.context = spinal_env_viewer_graph_service_1.SpinalGraphService.getContext(Constants_1.SERVICE_NAME);
-        if (typeof this.context === "undefined") {
+        if (typeof this.context === 'undefined') {
             this.createContext().then(context => {
                 console.log(context);
                 this.contextId = context.info.id.get();
@@ -146,7 +146,7 @@ class ServiceTicket {
         process.type = Constants_1.PROCESS_TYPE;
         const processId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(process);
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(this.contextId, processId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE).then(() => {
-            this.processNames.set(name, processId);
+            this.processNames.set(process.name, processId);
             this.processes.add(processId);
             return this.initProcess(processId).then(() => {
                 return Promise.resolve(processId);
@@ -286,9 +286,9 @@ class ServiceTicket {
         });
     }
     moveTicket(ticketId, stepFromId, stepToId) {
-        if (typeof ticketId === "undefined"
-            || typeof stepFromId === "undefined"
-            || typeof stepToId === "undefined") {
+        if (typeof ticketId === 'undefined'
+            || typeof stepFromId === 'undefined'
+            || typeof stepToId === 'undefined') {
             return;
         }
         const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(stepToId);
@@ -456,7 +456,7 @@ class ServiceTicket {
         const promises = [];
         spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(processId, {
             defaultStepId: steps[0],
-            finalStepId: steps[2]
+            finalStepId: steps[2],
         });
         for (const stepId of steps) {
             promises.push(this.addStep(stepId, processId));

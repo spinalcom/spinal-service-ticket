@@ -28,7 +28,7 @@ const gRoot = typeof window === 'undefined' ? global : window;
 if (typeof gRoot.spinal === 'undefined')
     gRoot.spinal = {};
 if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
-    gRoot.spinal.spinalServiceUser = new ServiceTicket_1.ServiceTicket();
+    gRoot.spinal.spinalServiceTicket = new ServiceTicket_1.ServiceTicket();
 }
-exports.SpinalServiceTicket = gRoot.spinal.spinalServiceUser;
+exports.SpinalServiceTicket = gRoot.spinal.spinalServiceTicket;
 //# sourceMappingURL=index.js.map
