@@ -14,7 +14,7 @@ export declare class ServiceTicket {
     private ticketByStep;
     constructor();
     isInitialized(): boolean;
-    init(): void;
+    init(): Promise<void>;
     getProcessByName(name: string): string;
     addCategory(processId: string, sentence: string): Promise<boolean | string>;
     addSubCategory(categoryId: string, sentence: string): Promise<boolean | string>;

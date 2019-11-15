@@ -47,7 +47,7 @@ class ServiceTicket {
     init() {
         this.context = spinal_env_viewer_graph_service_1.SpinalGraphService.getContext(Constants_1.SERVICE_NAME);
         if (typeof this.context === 'undefined') {
-            this.createContext().then(context => {
+            return this.createContext().then(context => {
                 console.log(context);
                 this.contextId = context.info.id.get();
                 this.initVar();
@@ -56,6 +56,7 @@ class ServiceTicket {
         else {
             this.contextId = this.context.info.id.get();
             this.initVar();
+            return Promise.resolve();
         }
     }
     getProcessByName(name) {

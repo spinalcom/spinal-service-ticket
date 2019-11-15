@@ -109,7 +109,7 @@ export class ServiceTicket {
   public init() {
     this.context = SpinalGraphService.getContext(SERVICE_NAME);
     if (typeof this.context === 'undefined') {
-      this.createContext().then(context => {
+      return this.createContext().then(context => {
         console.log(context);
         this.contextId = context.info.id.get();
         this.initVar();
@@ -117,6 +117,7 @@ export class ServiceTicket {
     } else {
       this.contextId = this.context.info.id.get();
       this.initVar();
+      return Promise.resolve();
     }
   }
 
