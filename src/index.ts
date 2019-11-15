@@ -24,7 +24,7 @@
 
 import { ServiceTicket } from './ServiceTicket';
 
-const gRoot = typeof window === 'undefined' ? global : window;
+const gRoot: any = typeof window === 'undefined' ? global : window;
 
 if (typeof gRoot.spinal === 'undefined') gRoot.spinal = {};
 if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {

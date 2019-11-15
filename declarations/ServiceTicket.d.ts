@@ -41,7 +41,7 @@ export declare class ServiceTicket {
         id: string;
         children: string[];
     }[]>;
-    moveTicket(ticketId: string, stepFromId: string, stepToId: string): void;
+    moveTicket(ticketId: string, stepFromId: string, stepToId: string): Promise<void>;
     private getCategories;
     private initVar;
     private retrieveStep;

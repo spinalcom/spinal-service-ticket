@@ -159,12 +159,11 @@ export class ServiceTicket {
     const sentenceId: string = SpinalGraphService.createNode({
       name: sentence,
       type: SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
-    });
+    }, undefined);
 
     return SpinalGraphService
       .addChildInContext(
         categoryId, sentenceId, this.contextId,
-        SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME,
         SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME,
         SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE)
       .then(() => {
@@ -206,8 +205,8 @@ export class ServiceTicket {
   }
 
   public async addTicketToProcessWithUser(ticketId: string,
-                                          processId: string,
-                                          userId: string)
+    processId: string,
+    userId: string)
     : Promise<boolean | Error> {
 
     const process = await SpinalGraphService.getNodeAsync(processId);
@@ -245,7 +244,7 @@ export class ServiceTicket {
 
   public createProcess(process: SpinalProcess): Promise<string | Error> {
     process.type = PROCESS_TYPE;
-    const processId = SpinalGraphService.createNode(process);
+    const processId = SpinalGraphService.createNode(process, undefined);
     return SpinalGraphService.addChildInContext(
       this.contextId,
       processId,
@@ -272,7 +271,7 @@ export class ServiceTicket {
           name,
           color,
           type: SPINAL_TICKET_SERVICE_STEP_TYPE,
-        });
+        }, undefined);
     this.steps.add(stepId);
     return stepId;
   }
@@ -314,17 +313,17 @@ export class ServiceTicket {
     }
   }
 
-  public createArchives(): Promise<boolean | Error> {
-    const archives = SpinalGraphService
+  public async createArchives(): Promise<boolean | Error> {
+    const archives = await SpinalGraphService
       .getChildren(this.contextId, [SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME]);
-    if (archives.leght > 0) {
+    if (archives.length > 0) {
       return;
     }
     const archiveId = SpinalGraphService.createNode(
       {
         name: SPINAL_TICKET_SERVICE_ARCHIVE_NAME,
         type: SERVICE_ARCHIVE_TYPE,
-      });
+      }, undefined);
 
     return SpinalGraphService
       .addChild(this.contextId,
@@ -333,7 +332,7 @@ export class ServiceTicket {
         SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
       )
       .then((res) => {
-        return Promise.resolve(true);
+        return (true);
       })
       .catch((e) => {
         return Promise.reject(Error(e));
@@ -359,6 +358,13 @@ export class ServiceTicket {
     return SpinalGraphService.getChildrenInContext(this.contextId, this.contextId)
       .then(
         (children) => {
+          for (const [name, childId] of this.processNames) {
+            if (!(children.some((child) => child.name.get() === name))) {
+              this.processNames.delete(name)
+              this.processes.delete(childId)
+            }
+          }
+
           for (let i = 0; i < children.length; i = i + 1) {
             const child = children[i];
             this.processNames.set(child.name.get(), child.id.get());
@@ -402,38 +408,31 @@ export class ServiceTicket {
   }
 
   public async getCategoriesFromProcess(processId: string): Promise<{ id: string, children: string[] }[]> {
-    return SpinalGraphService
-      .getChildren(processId,
-        [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
-      .then((children) => {
-        if (children.length > 0) {
-          const sectionId: string = children[0].id.get();
-          return SpinalGraphService.getChildren(sectionId, [])
-            .then(
-              (children) => {
-                const res = [];
-                for (let i = 0; i < children.length; i++) {
-                  res.push(this.getCategories(children[i].id.get(), []));
-                }
-                return Promise.all(res);
-
-              },
-            );
-        }
-
-        return {parent: processId};
-
-      });
+    const sections = await SpinalGraphService.getChildren(processId, [SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME])
+    if (sections.length > 0) {
+      const sectionId: string = sections[0].id.get();
+      return SpinalGraphService.getChildren(sectionId, [])
+        .then(
+          (children) => {
+            const res = [];
+            for (let i = 0; i < children.length; i++) {
+              res.push(this.getCategories(children[i].id.get(), []));
+            }
+            return Promise.all(res);
+          },
+        );
+    }
+    return [];
   }
 
-  public async moveTicket(ticketId: string, stepFromId: string, stepToId: string): void {
+  public async moveTicket(ticketId: string, stepFromId: string, stepToId: string): Promise<void> {
     if (typeof ticketId === 'undefined'
       || typeof stepFromId === 'undefined'
       || typeof stepToId === 'undefined') {
       return;
     }
     const step = await SpinalGraphService.getNodeAsync(stepToId);
-    SpinalGraphService.modifyNode(ticketId, {
+    SpinalGraphService.modifyNode(ticketId, <any>{
       stepId: stepToId,
       color: step['color'],
     });
@@ -555,7 +554,7 @@ export class ServiceTicket {
     let steps = [];
 
     this.processByStep.set(stepId, processId);
-    SpinalGraphService.modifyNode(stepId, {processId});
+    SpinalGraphService.modifyNode(stepId, <any>{ processId });
 
     if (this.stepByProcess.has(processId)) {
       steps = this.stepByProcess.get(processId);
@@ -573,10 +572,10 @@ export class ServiceTicket {
     return true;
   }
 
-  private async addTicketToStep(ticketId, stepId): boolean {
+  private async addTicketToStep(ticketId, stepId): Promise<boolean> {
     let tickets = [];
     const step = await SpinalGraphService.getNodeAsync(stepId);
-    SpinalGraphService.modifyNode(ticketId, {stepId, color: step['color']});
+    SpinalGraphService.modifyNode(ticketId, <any>{ stepId, color: step['color'] });
     if (this.ticketByStep.has(stepId)) {
       tickets = this.ticketByStep.get(stepId);
       if (tickets.indexOf(stepId) !== -1) {
@@ -616,7 +615,7 @@ export class ServiceTicket {
           processId,
           name: DEFAULT_INCIDENTS_NAME,
           type: SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE,
-        });
+        }, undefined);
 
         return SpinalGraphService
           .addChildInContext(
@@ -637,7 +636,7 @@ export class ServiceTicket {
     const steps: string[] = this.createDefaultSteps();
     const promises: Promise<boolean | Error>[] = [];
 
-    SpinalGraphService.modifyNode(processId, {
+    SpinalGraphService.modifyNode(processId, <any>{
       defaultStepId: steps[0],
       finalStepId: steps[2],
     });
