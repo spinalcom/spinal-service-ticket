@@ -106,18 +106,16 @@ export class ServiceTicket {
     return this.initialized;
   }
 
-  public init() {
+  public async init(): Promise<void> {
+    await SpinalGraphService.waitForInitialization();
     this.context = SpinalGraphService.getContext(SERVICE_NAME);
     if (typeof this.context === 'undefined') {
-      this.createContext().then(context => {
-        console.log(context);
-        this.contextId = context.info.id.get();
-        this.initVar();
-      });
+      const context = await this.createContext()
+      this.contextId = context.info.id.get();
     } else {
       this.contextId = this.context.info.id.get();
-      this.initVar();
     }
+    return this.initVar();
   }
 
   public getProcessByName(name: string): string {
@@ -389,16 +387,14 @@ export class ServiceTicket {
   public getStepsFromProcessAsync(processId: string): Promise<any> {
     return SpinalGraphService.findNode(processId)
       .then(node => {
-        return SpinalGraphService.getChildren(node.id.get(),
-          [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
+        return SpinalGraphService.getChildren(node.id.get(), [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
       });
   }
 
   public getTicketsFromStepAsync(stepId: string) {
     return SpinalGraphService.findNode(stepId)
       .then(node => {
-        return node.getChildren(SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE,
-          [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]);
+        return SpinalGraphService.getChildren(node.id.get(), [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]);
       });
   }
 

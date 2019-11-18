@@ -14,7 +14,7 @@ export declare class ServiceTicket {
     private ticketByStep;
     constructor();
     isInitialized(): boolean;
-    init(): void;
+    init(): Promise<void>;
     getProcessByName(name: string): string;
     addCategory(processId: string, sentence: string): Promise<boolean | string>;
     addSubCategory(categoryId: string, sentence: string): Promise<boolean | string>;
@@ -35,7 +35,7 @@ export declare class ServiceTicket {
     getAllTickets(): Set<string>;
     getStepsFromProcess(processId: string): string[];
     getStepsFromProcessAsync(processId: string): Promise<any>;
-    getTicketsFromStepAsync(stepId: string): Promise<any>;
+    getTicketsFromStepAsync(stepId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
     getTicketsFromStep(stepId: string): string[];
     getCategoriesFromProcess(processId: string): Promise<{
         id: string;
