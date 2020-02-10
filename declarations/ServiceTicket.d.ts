@@ -23,9 +23,9 @@ export declare class ServiceTicket {
     addTicketToProcessWithUser(ticketId: string, processId: string, userId: string): Promise<boolean | Error>;
     addTicketToProcess(ticketId: string, processId: string): Promise<boolean | Error>;
     addTicket(ticketId: string, stepId: string): Promise<boolean | Error>;
-    createProcess(process: SpinalProcess): Promise<string | Error>;
+    createProcess(process: SpinalProcess): Promise<string>;
     createStep(name: string, color: string): string;
-    createTicket(info: TicketInterface): string;
+    createTicket(elementInfo: TicketInterface, infoNode?: any): string;
     createLog(info: SpinalLogTicket): string;
     getTicketForUser(userId: string): Promise<any>;
     createArchives(): Promise<boolean | Error>;

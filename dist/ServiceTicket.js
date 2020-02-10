@@ -23,10 +23,11 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -150,9 +151,10 @@ class ServiceTicket {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(this.contextId, processId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE).then(() => {
             this.processNames.set(process.name, processId);
             this.processes.add(processId);
-            return this.initProcess(processId).then(() => {
-                return Promise.resolve(processId);
-            });
+            return processId;
+            // return this.initProcess(processId).then(() => {
+            //   return Promise.resolve(processId);
+            // });
         })
             .catch((e) => {
             console.error(e);
@@ -169,10 +171,14 @@ class ServiceTicket {
         this.steps.add(stepId);
         return stepId;
     }
-    createTicket(info) {
-        info.type = Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE;
-        const ticket = new SpinalTicket_1.SpinalTicket(info);
-        const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(info, ticket);
+    createTicket(elementInfo, infoNode) {
+        let infoNodeRef = infoNode;
+        if (infoNodeRef) {
+            infoNodeRef = elementInfo;
+        }
+        infoNodeRef.type = Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE;
+        const ticket = new SpinalTicket_1.SpinalTicket(elementInfo);
+        const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(infoNodeRef, ticket);
         this.tickets.add(ticketId);
         return ticketId;
     }
@@ -304,19 +310,19 @@ class ServiceTicket {
                 stepId: stepToId,
                 color: step['color'],
             });
-            spinal_env_viewer_graph_service_1.SpinalGraphService
-                .addChild(ticketId, this.createLog({
+            return spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(ticketId, this.createLog({
                 ticketId,
                 steps: [stepFromId, stepToId],
                 date: Date.now(),
-            }), Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE);
-            spinal_env_viewer_graph_service_1.SpinalGraphService
-                .moveChildInContext(stepFromId, stepToId, ticketId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            }), Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE).then(() => {
+                return spinal_env_viewer_graph_service_1.SpinalGraphService
+                    .moveChildInContext(stepFromId, stepToId, ticketId, this.contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            }).then(() => { return; });
         });
     }
     getCategories(id, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const node = yield spinal_env_viewer_graph_service_1.SpinalGraphService.getNodeAsync(id);
+            const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getNode(id);
             const category = {
                 id,
                 name: node.name.get(),

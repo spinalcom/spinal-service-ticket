@@ -3,6 +3,7 @@
   "version": "0.0.4",
   "description": "SpinalCOM service ticket. This service allow the handling of ticket inside a spinalcom environment.",
   "main": "dist/index.js",
+  "types": "declarations/index.d.ts",
   "scripts": {
     "test": " nyc  mocha $NODE_DEBUG_OPTION --recursive tests"
   },
