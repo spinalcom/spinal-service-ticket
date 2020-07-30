@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "declarations/index.d.ts",
   "scripts": {
+    "build": "rm -rf dist && tsc",
     "test": " nyc  mocha $NODE_DEBUG_OPTION --recursive tests"
   },
   "author": "SPINALCOM",

@@ -1,3 +1,5 @@
 import { ServiceTicket } from './ServiceTicket';
+import { ServiceTicketPersonalized } from './ServiceTicketPersonalized';
+declare const serviceTicketPersonalized: ServiceTicketPersonalized;
 declare const SpinalServiceTicket: ServiceTicket;
-export { ServiceTicket, SpinalServiceTicket };
+export { serviceTicketPersonalized, ServiceTicket, SpinalServiceTicket };

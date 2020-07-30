@@ -79,7 +79,6 @@ import {
 import {
   TicketInterface,
 } from 'spinal-models-ticket/declarations/SpinalTicket';
-
 import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
 import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
 import { SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket';
@@ -114,7 +113,8 @@ export class ServiceTicket {
       const context = await this.createContext()
       this.contextId = context.info.id.get();
     } else {
-      this.contextId = this.context.info.id.get()
+      this.contextId = this.context.info.id.get();
+
     }
     return this.initVar();
   }

@@ -25,11 +25,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ServiceTicket_1 = require("./ServiceTicket");
 exports.ServiceTicket = ServiceTicket_1.ServiceTicket;
+const ServiceTicketPersonalized_1 = require("./ServiceTicketPersonalized");
+const serviceTicketPersonalized = new ServiceTicketPersonalized_1.ServiceTicketPersonalized();
+exports.serviceTicketPersonalized = serviceTicketPersonalized;
 const gRoot = typeof window === 'undefined' ? global : window;
 if (typeof gRoot.spinal === 'undefined')
     gRoot.spinal = {};
 if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
     gRoot.spinal.spinalServiceTicket = new ServiceTicket_1.ServiceTicket();
+    gRoot.spinal.serviceTicketPersonalized = serviceTicketPersonalized;
 }
 // tslint:disable-next-line:variable-name
 const SpinalServiceTicket = gRoot.spinal.spinalServiceUser;

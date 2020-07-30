@@ -58,9 +58,9 @@ exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME = 'SpinalSystemServiceA
 exports.SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME = 'Spinal_Service_Ticket_Archive_Archive_Step';
 exports.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME = 'SpinalSystemServiceTicketHasStep';
 exports.DEFAULT_STEPS = [
-    { name: 'Déclaré', color: '#ff0019' },
-    { name: 'Ouvert', color: '#fff112' },
-    { name: 'Résolu', color: '#10ff1d' },
+    { name: 'Déclaré', color: '#ff0019', order: 0 },
+    { name: 'Ouvert', color: '#fff112', order: 1 },
+    { name: 'Résolu', color: '#10ff1d', order: 2 },
 ];
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
