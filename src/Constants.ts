@@ -106,3 +106,9 @@ export const USER_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
 /////////////////////////////////////////
 /////////////// ticket ////////////////////
 // tickethasReferentiel
+
+export const TICKET_PRIORITIES: { [key: string]: number } = {
+  occasionally: 0,
+  normal: 1,
+  urgent: 2,
+}

@@ -95,4 +95,9 @@ exports.USER_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_P
 /////////////////////////////////////////
 /////////////// ticket ////////////////////
 // tickethasReferentiel
+exports.TICKET_PRIORITIES = {
+    occasionally: 0,
+    normal: 1,
+    urgent: 2,
+};
 //# sourceMappingURL=Constants.js.map

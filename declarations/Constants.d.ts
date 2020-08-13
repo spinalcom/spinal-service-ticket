@@ -47,3 +47,6 @@ export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string;
 export declare const USER_RELATION_NAME: string;
 export declare const USER_RELATION_TYPE: string;
+export declare const TICKET_PRIORITIES: {
+    [key: string]: number;
+};
