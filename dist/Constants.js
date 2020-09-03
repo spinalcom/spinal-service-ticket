@@ -84,6 +84,12 @@ exports.SERVICE_ARCHIVE_TYPE = 'SpinalSystemServiceTicketArchive';
 exports.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_PTR_LST_TYPE;
 exports.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME = 'SpinalSystemServiceTicketHasLog';
 exports.SERVICE_LOG_TYPE = 'SpinalSystemServiceTicketLog';
+var LOGS_EVENTS;
+(function (LOGS_EVENTS) {
+    LOGS_EVENTS[LOGS_EVENTS["creation"] = 1] = "creation";
+    LOGS_EVENTS[LOGS_EVENTS["moveToNext"] = 2] = "moveToNext";
+    LOGS_EVENTS[LOGS_EVENTS["moveToPrevious"] = 3] = "moveToPrevious";
+})(LOGS_EVENTS = exports.LOGS_EVENTS || (exports.LOGS_EVENTS = {}));
 /////////////////////////////////////////
 /////////////// Target /////////////////
 exports.SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_PTR_LST_TYPE;

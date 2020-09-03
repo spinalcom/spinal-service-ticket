@@ -92,7 +92,11 @@ export const SERVICE_ARCHIVE_TYPE: string = 'SpinalSystemServiceTicketArchive';
 export const SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
 export const SPINAL_TICKET_SERVICE_LOG_RELATION_NAME: string = 'SpinalSystemServiceTicketHasLog';
 export const SERVICE_LOG_TYPE: string = 'SpinalSystemServiceTicketLog';
-
+export enum LOGS_EVENTS {
+  creation = 1,
+  moveToNext = 2,
+  moveToPrevious = 3
+}
 /////////////////////////////////////////
 /////////////// Target /////////////////
 export const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;

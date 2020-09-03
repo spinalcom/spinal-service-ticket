@@ -43,6 +43,11 @@ export declare const SERVICE_ARCHIVE_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_LOG_RELATION_NAME: string;
 export declare const SERVICE_LOG_TYPE: string;
+export declare enum LOGS_EVENTS {
+    creation = 1,
+    moveToNext = 2,
+    moveToPrevious = 3
+}
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string;
 export declare const USER_RELATION_NAME: string;
