@@ -35,10 +35,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
+// import {
+//     TicketInterface,
+// } from 'spinal-models-ticket/declarations/';
+// import { SpinalProcess } from 'spinal-models-ticket/SpinalProcess';
+// import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
+// import {SpinalTicket} from 'spinal-models-ticket'
+// import { SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket';
+// import { SpinalServiceUser } from 'spinal-service-user';
+//SpinalLogTicket, SpinalProcess, SpinalTicket, SpinalLogTicketInterface, TicketInterface
 const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
 const SpinalTicket_1 = require("spinal-models-ticket/dist/SpinalTicket");
 const spinal_core_connectorjs_type_1 = require("spinal-core-connectorjs_type");
 const spinal_env_viewer_plugin_documentation_service_1 = require("spinal-env-viewer-plugin-documentation-service");
+const moment = require("moment");
 class ServiceTicketPersonalized {
     constructor() { }
     //////////////////////////////////////////////////////////
@@ -229,7 +239,7 @@ class ServiceTicketPersonalized {
     //////////////////////////////////////////////////////////
     addLogToTicket(ticketId, event, userInfo = {}, fromId, toId) {
         let info = {
-            ticketId,
+            ticketId: ticketId,
             event: event,
             user: userInfo,
             steps: []
@@ -296,15 +306,15 @@ class ServiceTicketPersonalized {
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //                                              PRIVATE                                         //
     //////////////////////////////////////////////////////////////////////////////////////////////////
-    createAttirbute(ticketId) {
+    createAttribute(ticketId) {
         const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
         const categoryName = "default";
         return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = [];
             if (node) {
-                const attributes = node.info._attribute_names;
+                const attributes = ["name", "priority", "user", "creationDate"];
                 for (const element of attributes) {
-                    promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, node.info[element]));
+                    promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
                 }
                 return Promise.all(promises);
             }
@@ -312,17 +322,6 @@ class ServiceTicketPersonalized {
     }
     modifyStepProcessId(stepId, processId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(stepId, { processId });
-        // if (this.stepByProcess.has(processId)) {
-        //   steps = this.stepByProcess.get(processId);
-        //   if (steps.indexOf(stepId) !== -1) {
-        //     return false;
-        //   }
-        //   steps.push(stepId);
-        //   this.stepByProcess.set(processId, steps);
-        //   return true;
-        // }
-        // this.stepByProcess.set(processId, [stepId]);
-        // return true;
     }
     modifyTicketStepId(ticketId, stepId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -340,7 +339,7 @@ class ServiceTicketPersonalized {
         const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttirbute(ticketId).then(() => ticketId);
+        return this.createAttribute(ticketId).then(() => ticketId);
     }
     createStep(name, color, order, processId) {
         // this.stepOrderIsValid(processId, order);
@@ -386,6 +385,22 @@ class ServiceTicketPersonalized {
                 return Promise.reject(e);
             });
         });
+    }
+    getObjData(key, valueModel) {
+        switch (key) {
+            case "name":
+                return valueModel;
+            case "priority":
+                const found = Object.keys(Constants_1.TICKET_PRIORITIES).find(el => Constants_1.TICKET_PRIORITIES[el] == valueModel.get());
+                return found ? found : "-";
+            case "user":
+                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                break;
+            case "creationDate":
+                return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
+            default:
+                return "";
+        }
     }
 }
 exports.ServiceTicketPersonalized = ServiceTicketPersonalized;

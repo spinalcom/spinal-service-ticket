@@ -60,7 +60,8 @@ import {
     SPINAL_TICKET_SERVICE_TICKET_TYPE,
     USER_RELATION_NAME,
     USER_RELATION_TYPE,
-    LOGS_EVENTS
+    LOGS_EVENTS,
+    TICKET_PRIORITIES
 } from './Constants';
 
 
@@ -79,18 +80,27 @@ import {
 } from './Errors';
 
 
-import {
-    TicketInterface,
-} from 'spinal-models-ticket/declarations/SpinalTicket';
+// import {
+//     TicketInterface,
+// } from 'spinal-models-ticket/declarations/';
+// import { SpinalProcess } from 'spinal-models-ticket/SpinalProcess';
+// import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
 
-import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
-import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
-import { SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket';
-import { SpinalServiceUser } from 'spinal-service-user';
+// import {SpinalTicket} from 'spinal-models-ticket'
+// import { SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket';
+
+
+// import { SpinalServiceUser } from 'spinal-service-user';
+
+//SpinalLogTicket, SpinalProcess, SpinalTicket, SpinalLogTicketInterface, TicketInterface
+
+import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
+import { SpinalTicket, TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
+import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
+
 import { Lst, Ptr } from 'spinal-core-connectorjs_type';
-
 import { serviceDocumentation } from "spinal-env-viewer-plugin-documentation-service";
-import { info } from 'console';
+import * as moment from "moment";
 
 export class ServiceTicketPersonalized {
 
@@ -327,7 +337,7 @@ export class ServiceTicketPersonalized {
     public addLogToTicket(ticketId: string, event: number, userInfo: Object = {}, fromId?: string, toId?: string): any {
 
         let info = {
-            ticketId,
+            ticketId: ticketId,
             event: event,
             user: userInfo,
             steps: []
@@ -347,13 +357,14 @@ export class ServiceTicketPersonalized {
 
     }
 
-    public createLog(info: SpinalLogTicket): string {
+    public createLog(info: SpinalLogTicketInterface): string {
         const logId = SpinalGraphService.createNode(
             {
                 name: "log",// info.ticketId,
                 type: SERVICE_LOG_TYPE,
             },
             new SpinalLogTicket(info));
+
         return logId;
     }
 
@@ -418,16 +429,18 @@ export class ServiceTicketPersonalized {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private createAttirbute(ticketId: string): Promise<any> {
+    private createAttribute(ticketId: string): Promise<any> {
         const node = SpinalGraphService.getRealNode(ticketId);
         const categoryName: string = "default";
 
         return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = []
             if (node) {
-                const attributes = node.info._attribute_names;
+                const attributes = ["name", "priority", "user", "creationDate"];
+
+
                 for (const element of attributes) {
-                    promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, node.info[element]))
+                    promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])))
                 }
                 return Promise.all(promises)
             }
@@ -437,24 +450,7 @@ export class ServiceTicketPersonalized {
     }
 
     private modifyStepProcessId(stepId: string, processId: string): boolean {
-
-
         return SpinalGraphService.modifyNode(stepId, <any>{ processId });
-
-        // if (this.stepByProcess.has(processId)) {
-        //   steps = this.stepByProcess.get(processId);
-
-        //   if (steps.indexOf(stepId) !== -1) {
-        //     return false;
-        //   }
-
-        //   steps.push(stepId);
-        //   this.stepByProcess.set(processId, steps);
-        //   return true;
-        // }
-
-        // this.stepByProcess.set(processId, [stepId]);
-        // return true;
     }
 
     private async modifyTicketStepId(ticketId, stepId): Promise<boolean> {
@@ -468,12 +464,10 @@ export class ServiceTicketPersonalized {
 
         infoNodeRef.type = SPINAL_TICKET_SERVICE_TICKET_TYPE;
         const ticket = new SpinalTicket(elementInfo);
-        const ticketId = SpinalGraphService.createNode(
-            infoNodeRef,
-            ticket);
+        const ticketId = SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttirbute(ticketId).then(() => ticketId)
+        return this.createAttribute(ticketId).then(() => ticketId)
     }
 
     private createStep(name: string, color: string, order: number, processId?: string): string {
@@ -534,17 +528,28 @@ export class ServiceTicketPersonalized {
             });
     }
 
+    private getObjData(key, valueModel): any {
 
-    // private async stepOrderIsValid(processId: string, order: number = -1) {
-    //     const processes = await this.getStepsFromProcess(processId);
+        switch (key) {
+            case "name":
+                return valueModel;
 
-    //         if (order >= -1) {
-    //             order = processes.length;
-    //         }
+            case "priority":
+                const found = Object.keys(TICKET_PRIORITIES).find(el => TICKET_PRIORITIES[el] == valueModel.get())
+                return found ? found : "-";
 
+            case "user":
+                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                break;
 
-    // }
+            case "creationDate":
+                return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
 
+            default:
+                return "";
+        }
+
+    }
 
 
 }

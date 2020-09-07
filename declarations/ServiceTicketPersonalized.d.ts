@@ -1,6 +1,6 @@
-import { TicketInterface } from 'spinal-models-ticket/declarations/SpinalTicket';
-import { SpinalProcess } from 'spinal-models-ticket/declarations/SpinalProcess';
-import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
+import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
+import { TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
+import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
 export declare class ServiceTicketPersonalized {
     constructor();
     createContext(contextName: string, steps?: Array<any>): Promise<any | Error>;
@@ -20,15 +20,16 @@ export declare class ServiceTicketPersonalized {
     moveTicketToNextStep(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<void>;
     moveTicketToPreviousStep(contextId: string, processId: string, ticketId: string, userInfo?: object): Promise<void>;
     addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
-    createLog(info: SpinalLogTicket): string;
+    createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
     addCommonIncident(processId: string, sentence: string): Promise<boolean | string>;
     getCommonIncident(processId: string): Promise<any>;
-    private createAttirbute;
+    private createAttribute;
     private modifyStepProcessId;
     private modifyTicketStepId;
     private createTicket;
     private createStep;
     private getContextSteps;
     private addSentenceSection;
+    private getObjData;
 }
