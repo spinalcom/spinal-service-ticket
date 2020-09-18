@@ -194,7 +194,7 @@ class ServiceTicketPersonalized {
                 return;
             }
             const step = yield spinal_env_viewer_graph_service_1.SpinalGraphService.getNodeAsync(stepToId);
-            spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(ticketId, {
+            yield spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(ticketId, {
                 stepId: stepToId
             });
             // return SpinalGraphService.addChild(ticketId, ,
@@ -215,6 +215,7 @@ class ServiceTicketPersonalized {
                 if (nextStep) {
                     return this.moveTicket(ticketId, stepId, nextStep.id.get(), contextId).then(() => __awaiter(this, void 0, void 0, function* () {
                         yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.moveToNext, userInfo, stepId, nextStep.id.get());
+                        return nextStep.get();
                     }));
                 }
             }
@@ -229,6 +230,7 @@ class ServiceTicketPersonalized {
                 if (previousStep) {
                     return this.moveTicket(ticketId, stepId, previousStep.id.get(), contextId).then(() => __awaiter(this, void 0, void 0, function* () {
                         yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.moveToPrevious, userInfo, stepId, previousStep.id.get());
+                        return previousStep.get();
                     }));
                 }
             }

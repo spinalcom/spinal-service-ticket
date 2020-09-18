@@ -284,7 +284,7 @@ export class ServiceTicketPersonalized {
             return;
         }
         const step = await SpinalGraphService.getNodeAsync(stepToId);
-        SpinalGraphService.modifyNode(ticketId, <any>{
+        await SpinalGraphService.modifyNode(ticketId, <any>{
             stepId: stepToId
         });
         // return SpinalGraphService.addChild(ticketId, ,
@@ -309,6 +309,7 @@ export class ServiceTicketPersonalized {
                 return this.moveTicket(ticketId, stepId, nextStep.id.get(), contextId).then(async () => {
 
                     await this.addLogToTicket(ticketId, LOGS_EVENTS.moveToNext, userInfo, stepId, nextStep.id.get())
+                    return nextStep.get();
                 });
             }
         }
@@ -322,7 +323,8 @@ export class ServiceTicketPersonalized {
             if (previousStep) {
                 return this.moveTicket(ticketId, stepId, previousStep.id.get(), contextId).then(async () => {
 
-                    await this.addLogToTicket(ticketId, LOGS_EVENTS.moveToPrevious, userInfo, stepId, previousStep.id.get())
+                    await this.addLogToTicket(ticketId, LOGS_EVENTS.moveToPrevious, userInfo, stepId, previousStep.id.get());
+                    return previousStep.get();
                 });
             }
         }
