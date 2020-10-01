@@ -113,7 +113,6 @@ export class ServiceTicketPersonalized {
     //////////////////////////////////////////////////////////
 
     public createContext(contextName: string, steps: Array<{ name: string, color: string, order: number }> = new Array()): Promise<any | Error> {
-        if (!steps || steps && steps.length == 0) Promise.reject(Error("No step insert"));
 
         return SpinalGraphService.addContext(contextName, SERVICE_TYPE, undefined)
             .then((context) => {
@@ -138,7 +137,9 @@ export class ServiceTicketPersonalized {
     //                      PROCESS                         //
     //////////////////////////////////////////////////////////
 
-    public createProcess(process: SpinalProcess, contextId: string): Promise<string> {
+    public createProcess(process: SpinalProcess | string, contextId: string): Promise<string> {
+        if (typeof process === "string") process = { name: process };
+
         process.type = PROCESS_TYPE;
         const processId = SpinalGraphService.createNode(process, undefined);
         return SpinalGraphService.addChildInContext(

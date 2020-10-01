@@ -9,7 +9,7 @@ export declare class ServiceTicketPersonalized {
         order: number;
     }>): Promise<any | Error>;
     getContexts(): any[];
-    createProcess(process: SpinalProcess, contextId: string): Promise<string>;
+    createProcess(process: SpinalProcess | string, contextId: string): Promise<string>;
     getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
     addStep(processId: string, contextId: string, name: string, color: string, order: number): Promise<any | Error>;
     addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error>;

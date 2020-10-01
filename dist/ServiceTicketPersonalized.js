@@ -55,8 +55,6 @@ class ServiceTicketPersonalized {
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
     createContext(contextName, steps = new Array()) {
-        if (!steps || steps && steps.length == 0)
-            Promise.reject(Error("No step insert"));
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addContext(contextName, Constants_1.SERVICE_TYPE, undefined)
             .then((context) => {
             // this.context = context;
@@ -77,6 +75,8 @@ class ServiceTicketPersonalized {
     //                      PROCESS                         //
     //////////////////////////////////////////////////////////
     createProcess(process, contextId) {
+        if (typeof process === "string")
+            process = { name: process };
         process.type = Constants_1.PROCESS_TYPE;
         const processId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(process, undefined);
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(contextId, processId, contextId, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE).then(() => __awaiter(this, void 0, void 0, function* () {
