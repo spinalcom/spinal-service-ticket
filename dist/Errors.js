@@ -32,6 +32,6 @@ exports.PROCESS_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Process id doesn't exist";
 exports.STEP_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Step id doesn't exist";
 exports.TICKET_ID_DOES_NOT_EXIST = ERROR_PREFIX + "Ticket id doesn't exist";
 exports.DEFAULT_SENTENCE_SECTION_ALREADY_EXIST = ERROR_PREFIX + "Default sentence section already exits";
-exports.TICKET_SECTION_ALREADY_EXIST = ERROR_PREFIX + "Ticket" +
-    " already exits";
+exports.TICKET_SECTION_ALREADY_EXIST = ERROR_PREFIX + "Ticket" + " already exits";
+exports.STEP_ORDER_NOT_VALID = ERROR_PREFIX + " step order not valid";
 //# sourceMappingURL=Errors.js.map

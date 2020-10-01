@@ -7,3 +7,4 @@ export declare const STEP_ID_DOES_NOT_EXIST: string;
 export declare const TICKET_ID_DOES_NOT_EXIST: string;
 export declare const DEFAULT_SENTENCE_SECTION_ALREADY_EXIST: string;
 export declare const TICKET_SECTION_ALREADY_EXIST: string;
+export declare const STEP_ORDER_NOT_VALID: string;

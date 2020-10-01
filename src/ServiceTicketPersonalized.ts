@@ -61,7 +61,7 @@ import {
     USER_RELATION_NAME,
     USER_RELATION_TYPE,
     LOGS_EVENTS,
-    TICKET_PRIORITIES
+    TICKET_PRIORITIES, ARCHIVED_STEP
 } from './Constants';
 
 
@@ -75,6 +75,7 @@ import {
     PROCESS_ID_DOES_NOT_EXIST,
     PROCESS_NAME_ALREADY_USED,
     STEP_ID_DOES_NOT_EXIST,
+    STEP_ORDER_NOT_VALID,
     TICKET_ID_DOES_NOT_EXIST,
     TICKET_SECTION_ALREADY_EXIST,
 } from './Errors';
@@ -102,6 +103,7 @@ import { Lst, Ptr } from 'spinal-core-connectorjs_type';
 import { serviceDocumentation } from "spinal-env-viewer-plugin-documentation-service";
 import * as moment from "moment";
 
+
 export class ServiceTicketPersonalized {
 
     constructor() { }
@@ -110,7 +112,9 @@ export class ServiceTicketPersonalized {
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
 
-    public createContext(contextName: string, steps: Array<any> = new Array()): Promise<any | Error> {
+    public createContext(contextName: string, steps: Array<{ name: string, color: string, order: number }> = new Array()): Promise<any | Error> {
+        if (!steps || steps && steps.length == 0) Promise.reject(Error("No step insert"));
+
         return SpinalGraphService.addContext(contextName, SERVICE_TYPE, undefined)
             .then((context) => {
                 // this.context = context;
@@ -146,9 +150,9 @@ export class ServiceTicketPersonalized {
         ).then(async () => {
             const steps = await this.getContextSteps(contextId);
 
-            const promises = steps.map(step => this.addStep(step.name, step.color, step.order, processId, contextId));
+            const promises = steps.map(step => this.createStepNode(step.name, step.color, step.order, processId, contextId));
 
-            await Promise.all(promises);
+            await Promise.all([...promises, this.createArchivedStep(processId, contextId)]);
 
             return processId;
         })
@@ -166,20 +170,20 @@ export class ServiceTicketPersonalized {
     //                      STEPS                           //
     //////////////////////////////////////////////////////////
 
-    public async addStep(name: string, color: string, order: number, processId: string, contextId: string): Promise<boolean | Error> {
+    public async addStep(processId: string, contextId: string, name: string, color: string, order: number,): Promise<any | Error> {
+        if (order < 0) return Promise.reject(Error(STEP_ORDER_NOT_VALID));
 
-        const stepId = await this.createStep(name, color, order, processId);
+        return this.getStepsFromProcess(processId, contextId).then((steps) => {
+            const max = Math.max.apply(Math, steps.map(el => el.order.get()));
+            if (order != 0 && !order) order = max + 1;
+            if (order > max && max - order > 1) return Promise.reject(Error(STEP_ORDER_NOT_VALID));
 
-        return SpinalGraphService
-            .addChildInContext(processId, stepId, contextId,
-                SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-                SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
-            .then(() => {
-                return this.modifyStepProcessId(stepId, processId);
-            })
-            .catch((e) => {
-                return Promise.reject(Error(CANNOT_ADD_STEP_TO_PROCESS + e));
-            });
+            if (order >= 0 && order <= max) {
+                return this.insertStep(contextId, processId, { name, color, order });
+            } else {
+                return this.createStepNode(name, color, order, processId, contextId);
+            }
+        })
     }
 
     public addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error> {
@@ -196,16 +200,16 @@ export class ServiceTicketPersonalized {
             });
     }
 
-    public getStepsFromProcess(processId: string): Promise<any> {
-        return SpinalGraphService.findNode(processId)
-            .then(node => {
-                return SpinalGraphService.getChildren(node.id.get(),
-                    [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
-            });
+    public getStepsFromProcess(processId: string, contextId: string): Promise<any> {
+        return SpinalGraphService.findInContext(processId, contextId, (node) => node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE)
+        // .then(nodes => {
+        //     return SpinalGraphService.getChildren(node.id.get(),
+        //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
+        // });
     }
 
     public async getFirstStep(processId: string, contextId: string): Promise<string> {
-        const steps = await this.getStepsFromProcess(processId);
+        const steps = await this.getStepsFromProcess(processId, contextId);
 
         let first = steps.find(el => el.order.get() == 0);
         if (first) return first.id.get();
@@ -216,27 +220,61 @@ export class ServiceTicketPersonalized {
         return stepId;
     }
 
-    public async getNextStep(processId: string, stepId: string): Promise<any> {
-        const steps = await this.getStepsFromProcess(processId);
+    public async getNextStep(processId: string, stepId: string, contextId: string): Promise<any> {
+        const steps = await this.getStepsFromProcess(processId, contextId);
         if (steps) {
             const step = steps.find(el => el.id.get() === stepId);
-            if (step) {
+            if (step && step.order.get() !== -1) {
                 const nextOrder = parseInt(step.order.get()) + 1;
                 return steps.find(el => el.order.get() == nextOrder);
             }
         }
     }
 
-    public async getPreviousStep(processId: string, stepId: string): Promise<any> {
-        const steps = await this.getStepsFromProcess(processId);
+    public async getPreviousStep(processId: string, stepId: string, contextId: string): Promise<any> {
+        const steps = await this.getStepsFromProcess(processId, contextId);
         if (steps) {
             const step = steps.find(el => el.id.get() === stepId);
-            if (step) {
+            if (step && step.order.get() > 0) {
                 const nextOrder = parseInt(step.order.get()) - 1;
                 return steps.find(el => el.order.get() == nextOrder);
             }
         }
     }
+
+    public async getSuperiorsSteps(contextId: string, processId: string, stepOrder: number, equals: Boolean = false) {
+        return this.getStepsFromProcess(processId, contextId).then((steps) => {
+            return steps.filter(step => {
+                const order = step.order.get();
+                if (equals && order === stepOrder) return true;
+                return order > stepOrder;
+            }).map(el => el.get())
+        })
+    }
+
+    public async getInferiorsSteps(contextId: string, processId: string, stepOrder: number, equals: Boolean = false) {
+        return this.getStepsFromProcess(processId, contextId).then((steps) => {
+            return steps.filter(step => {
+                const order = step.order.get();
+                if (equals && order === stepOrder) return true;
+                return order < stepOrder;
+            }).map(el => el.get())
+        })
+    }
+
+    public async insertStep(contextId: string, processId: string, stepInfo: { name: string, color: string, order: number }) {
+        return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then(async (steps) => {
+            const stepId = await this.createStepNode(stepInfo.name, stepInfo.color, stepInfo.order, processId, contextId);
+
+            for (const step of steps) {
+                const realNode = SpinalGraphService.getRealNode(step.id);
+                realNode.info.order.set(step.order + 1);
+            }
+
+            return stepId;
+        })
+    }
+
 
     //////////////////////////////////////////////////////////
     //                      TICKETS                         //
@@ -304,7 +342,7 @@ export class ServiceTicketPersonalized {
         const ticketInfo = SpinalGraphService.getInfo(ticketId);
         if (ticketInfo) {
             const stepId = ticketInfo.stepId.get()
-            const nextStep = await this.getNextStep(processId, stepId);
+            const nextStep = await this.getNextStep(processId, stepId, contextId);
             if (nextStep) {
                 return this.moveTicket(ticketId, stepId, nextStep.id.get(), contextId).then(async () => {
 
@@ -319,7 +357,7 @@ export class ServiceTicketPersonalized {
         const ticketInfo = SpinalGraphService.getInfo(ticketId);
         if (ticketInfo) {
             const stepId = ticketInfo.stepId.get()
-            const previousStep = await this.getPreviousStep(processId, stepId);
+            const previousStep = await this.getPreviousStep(processId, stepId, contextId);
             if (previousStep) {
                 return this.moveTicket(ticketId, stepId, previousStep.id.get(), contextId).then(async () => {
 
@@ -330,6 +368,30 @@ export class ServiceTicketPersonalized {
         }
     }
 
+    public async ArchiveTickets(contextId: string, processId: string, ticketId: string, userInfo: Object = {}): Promise<any> {
+        const archiveId = await this.createArchivedStep(processId, contextId);
+        const ticketInfo = SpinalGraphService.getInfo(ticketId);
+
+        if (ticketInfo && archiveId) {
+            const fromId = ticketInfo.stepId.get()
+            await this.moveTicket(ticketId, fromId, archiveId, contextId);
+            await this.addLogToTicket(ticketId, LOGS_EVENTS.archived, userInfo, fromId, archiveId);
+            return SpinalGraphService.getInfo(archiveId).get();
+        }
+    }
+
+    public async unarchiveTicket(contextId: string, processId: string, ticketId: string, userInfo: Object = {}): Promise<any> {
+        const ticketInfo = SpinalGraphService.getInfo(ticketId);
+        const firstStep = await this.getFirstStep(processId, contextId);
+
+        if (ticketInfo && firstStep) {
+            const fromId = ticketInfo.stepId.get()
+            await this.moveTicket(ticketId, fromId, firstStep, contextId);
+            await this.addLogToTicket(ticketId, LOGS_EVENTS.unarchive, userInfo, fromId, firstStep);
+            return SpinalGraphService.getInfo(firstStep).get();
+        }
+
+    }
 
     //////////////////////////////////////////////////////////
     //                      LOGS                            //
@@ -542,16 +604,35 @@ export class ServiceTicketPersonalized {
 
             case "user":
                 return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
-                break;
 
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
-
-            default:
-                return "";
         }
 
     }
 
+    private createArchivedStep(processId: string, contextId: string): Promise<any> {
+        return this.getStepsFromProcess(processId, contextId).then((result) => {
+            const found = result.find(el => el.name.get() === ARCHIVED_STEP.name && el.order.get() === ARCHIVED_STEP.order);
+            if (found) return found.id.get();
 
+            return this.createStepNode(ARCHIVED_STEP.name, ARCHIVED_STEP.color, ARCHIVED_STEP.order, processId, contextId);
+        })
+    }
+
+    private async createStepNode(name: string, color: string, order: number, processId: string, contextId: string): Promise<any> {
+        const stepId = await this.createStep(name, color, order, processId);
+
+        return SpinalGraphService
+            .addChildInContext(processId, stepId, contextId,
+                SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+                SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
+            .then(async () => {
+                await this.modifyStepProcessId(stepId, processId);
+                return stepId;
+            })
+            .catch((e) => {
+                return Promise.reject(Error(CANNOT_ADD_STEP_TO_PROCESS + e));
+            });
+    }
 }

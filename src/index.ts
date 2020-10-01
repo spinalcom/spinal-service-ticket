@@ -22,7 +22,7 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import { ServiceTicket } from './ServiceTicket';
+// import { ServiceTicket } from './ServiceTicket';
 import { ServiceTicketPersonalized } from './ServiceTicketPersonalized';
 
 
@@ -33,11 +33,12 @@ const gRoot: any = typeof window === 'undefined' ? global : window;
 if (typeof gRoot.spinal === 'undefined') gRoot.spinal = {};
 
 if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
-  gRoot.spinal.spinalServiceTicket = new ServiceTicket();
+  gRoot.spinal.spinalServiceTicket = serviceTicketPersonalized;
   gRoot.spinal.serviceTicketPersonalized = serviceTicketPersonalized;
 }
 
 
 // tslint:disable-next-line:variable-name
-const SpinalServiceTicket: ServiceTicket = gRoot.spinal.spinalServiceUser;
-export { serviceTicketPersonalized, ServiceTicket, SpinalServiceTicket };
+const spinalServiceTicket = ServiceTicketPersonalized;
+
+export { serviceTicketPersonalized, spinalServiceTicket };

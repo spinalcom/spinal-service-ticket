@@ -62,6 +62,11 @@ exports.DEFAULT_STEPS = [
     { name: 'Ouvert', color: '#fff112', order: 1 },
     { name: 'Résolu', color: '#10ff1d', order: 2 },
 ];
+exports.ARCHIVED_STEP = {
+    name: "Archived",
+    order: -1,
+    color: "#FF0000"
+};
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
 exports.SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE = spinal_env_viewer_graph_service_1.SPINAL_RELATION_PTR_LST_TYPE;
@@ -89,6 +94,8 @@ var LOGS_EVENTS;
     LOGS_EVENTS[LOGS_EVENTS["creation"] = 1] = "creation";
     LOGS_EVENTS[LOGS_EVENTS["moveToNext"] = 2] = "moveToNext";
     LOGS_EVENTS[LOGS_EVENTS["moveToPrevious"] = 3] = "moveToPrevious";
+    LOGS_EVENTS[LOGS_EVENTS["archived"] = 4] = "archived";
+    LOGS_EVENTS[LOGS_EVENTS["unarchive"] = 5] = "unarchive";
 })(LOGS_EVENTS = exports.LOGS_EVENTS || (exports.LOGS_EVENTS = {}));
 /////////////////////////////////////////
 /////////////// Target /////////////////

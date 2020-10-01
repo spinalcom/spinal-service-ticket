@@ -68,6 +68,12 @@ export const DEFAULT_STEPS: SpinalStep[] = [
   { name: 'Résolu', color: '#10ff1d', order: 2 },
 ];
 
+export const ARCHIVED_STEP = {
+  name: "Archived",
+  order: -1,
+  color: "#FF0000"
+}
+
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
 export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
@@ -95,7 +101,9 @@ export const SERVICE_LOG_TYPE: string = 'SpinalSystemServiceTicketLog';
 export enum LOGS_EVENTS {
   creation = 1,
   moveToNext = 2,
-  moveToPrevious = 3
+  moveToPrevious = 3,
+  archived = 4,
+  unarchive = 5
 }
 /////////////////////////////////////////
 /////////////// Target /////////////////

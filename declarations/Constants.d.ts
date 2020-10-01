@@ -27,6 +27,11 @@ export declare const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string;
 export declare const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string;
 export declare const DEFAULT_STEPS: SpinalStep[];
+export declare const ARCHIVED_STEP: {
+    name: string;
+    order: number;
+    color: string;
+};
 export declare const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE: string;
@@ -46,7 +51,9 @@ export declare const SERVICE_LOG_TYPE: string;
 export declare enum LOGS_EVENTS {
     creation = 1,
     moveToNext = 2,
-    moveToPrevious = 3
+    moveToPrevious = 3,
+    archived = 4,
+    unarchive = 5
 }
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string;
