@@ -186,6 +186,22 @@ export class ServiceTicketPersonalized {
             }
         })
     }
+    
+    public async removeStep(processId: string, contextId: string, stepId: string){
+        const stepInfo = SpinalGraphService.getInfo(stepId).get()
+        return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then(async (steps) => {
+            SpinalGraphService.removeFromGraph(stepId);
+
+            for (const step of steps) {
+                const realNode = SpinalGraphService.getRealNode(step.id);
+                realNode.info.order.set(step.order - 1);
+            }
+
+            return stepId;
+        })
+    
+    
+    }
 
     public addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error> {
 
