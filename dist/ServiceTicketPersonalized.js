@@ -32,6 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServiceTicketPersonalized = void 0;
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
@@ -113,6 +114,19 @@ class ServiceTicketPersonalized {
                     return this.createStepNode(name, color, order, processId, contextId);
                 }
             });
+        });
+    }
+    removeStep(processId, contextId, stepId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stepInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(stepId).get();
+            return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then((steps) => __awaiter(this, void 0, void 0, function* () {
+                spinal_env_viewer_graph_service_1.SpinalGraphService.removeFromGraph(stepId);
+                for (const step of steps) {
+                    const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(step.id);
+                    realNode.info.order.set(step.order - 1);
+                }
+                return stepId;
+            }));
         });
     }
     addStepById(stepId, processId, contextId) {

@@ -12,6 +12,7 @@ export declare class ServiceTicketPersonalized {
     createProcess(process: SpinalProcess | string, contextId: string): Promise<string>;
     getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
     addStep(processId: string, contextId: string, name: string, color: string, order: number): Promise<any | Error>;
+    removeStep(processId: string, contextId: string, stepId: string): Promise<string>;
     addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error>;
     getStepsFromProcess(processId: string, contextId: string): Promise<any>;
     getFirstStep(processId: string, contextId: string): Promise<string>;

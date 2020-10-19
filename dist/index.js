@@ -23,6 +23,7 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.spinalServiceTicket = exports.serviceTicketPersonalized = void 0;
 // import { ServiceTicket } from './ServiceTicket';
 const ServiceTicketPersonalized_1 = require("./ServiceTicketPersonalized");
 const serviceTicketPersonalized = new ServiceTicketPersonalized_1.ServiceTicketPersonalized();
