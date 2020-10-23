@@ -23,10 +23,9 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.spinalServiceTicket = exports.serviceTicketPersonalized = void 0;
 // import { ServiceTicket } from './ServiceTicket';
-const ServiceTicketPersonalized_1 = require("./ServiceTicketPersonalized");
-const serviceTicketPersonalized = new ServiceTicketPersonalized_1.ServiceTicketPersonalized();
+const ServiceTicket_1 = require("./ServiceTicket");
+const serviceTicketPersonalized = new ServiceTicket_1.ServiceTicket();
 exports.serviceTicketPersonalized = serviceTicketPersonalized;
 const gRoot = typeof window === 'undefined' ? global : window;
 if (typeof gRoot.spinal === 'undefined')
@@ -36,6 +35,6 @@ if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
     gRoot.spinal.serviceTicketPersonalized = serviceTicketPersonalized;
 }
 // tslint:disable-next-line:variable-name
-const spinalServiceTicket = ServiceTicketPersonalized_1.ServiceTicketPersonalized;
+const spinalServiceTicket = serviceTicketPersonalized;
 exports.spinalServiceTicket = spinalServiceTicket;
 //# sourceMappingURL=index.js.map
