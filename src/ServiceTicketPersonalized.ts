@@ -177,7 +177,7 @@ export class ServiceTicketPersonalized {
         return this.getStepsFromProcess(processId, contextId).then((steps) => {
             const max = Math.max.apply(Math, steps.map(el => el.order.get()));
             if (order != 0 && !order) order = max + 1;
-            if (order > max && max - order > 1) return Promise.reject(Error(STEP_ORDER_NOT_VALID));
+            if (order > max && order - max > 1) order = max + 1
 
             if (order >= 0 && order <= max) {
                 return this.insertStep(contextId, processId, { name, color, order });
@@ -186,8 +186,8 @@ export class ServiceTicketPersonalized {
             }
         })
     }
-    
-    public async removeStep(processId: string, contextId: string, stepId: string){
+
+    public async removeStep(processId: string, contextId: string, stepId: string) {
         const stepInfo = SpinalGraphService.getInfo(stepId).get()
         return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then(async (steps) => {
             SpinalGraphService.removeFromGraph(stepId);
@@ -199,8 +199,8 @@ export class ServiceTicketPersonalized {
 
             return stepId;
         })
-    
-    
+
+
     }
 
     public addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error> {
