@@ -243,7 +243,10 @@ export class ServiceTicket {
     }
 
     public getStepsFromProcess(processId: string, contextId: string): Promise<any> {
-        return SpinalGraphService.findInContext(processId, contextId, (node) => node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE)
+        return SpinalGraphService.findInContext(processId, contextId, (node) => {
+            (<any>SpinalGraphService)._addNode(node)
+            return node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE
+        })
         // .then(nodes => {
         //     return SpinalGraphService.getChildren(node.id.get(),
         //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
@@ -452,7 +455,7 @@ export class ServiceTicket {
         const contextId = newContextId || oldContextId;
 
         const stepId = await this.getFirstStep(newProcessId, contextId);
-        const oldStepId = ticketInfo.stepId.get();
+        const oldStepId = await this.getOldStepId(ticketInfo.get(), oldContextId);
 
         if (contextId === oldContextId) {
             await SpinalGraphService.moveChildInContext(oldStepId, stepId, ticketId, contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
@@ -733,6 +736,25 @@ export class ServiceTicket {
                 return false;
             }
         })
+
+    }
+
+    private async getOldStepId(ticketInfo: any, contextId: string) {
+        const stepId = ticketInfo.stepId;
+        if (SpinalGraphService.getInfo(stepId)) return stepId;
+
+        let id2;
+
+        await SpinalGraphService.findInContext(contextId, contextId, (node) => {
+            if (node.getId().get() === stepId) {
+                (<any>SpinalGraphService)._addNode(node)
+                id2 = node.getId().get();
+                return true;
+            }
+            return false;
+        })
+
+        return id2;
 
     }
 }

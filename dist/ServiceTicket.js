@@ -158,7 +158,10 @@ class ServiceTicket {
         });
     }
     getStepsFromProcess(processId, contextId) {
-        return spinal_env_viewer_graph_service_1.SpinalGraphService.findInContext(processId, contextId, (node) => node.getType().get() === Constants_1.SPINAL_TICKET_SERVICE_STEP_TYPE);
+        return spinal_env_viewer_graph_service_1.SpinalGraphService.findInContext(processId, contextId, (node) => {
+            spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(node);
+            return node.getType().get() === Constants_1.SPINAL_TICKET_SERVICE_STEP_TYPE;
+        });
         // .then(nodes => {
         //     return SpinalGraphService.getChildren(node.id.get(),
         //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
@@ -351,7 +354,7 @@ class ServiceTicket {
             let oldContextId = this.getTicketContextId(ticketId);
             const contextId = newContextId || oldContextId;
             const stepId = yield this.getFirstStep(newProcessId, contextId);
-            const oldStepId = ticketInfo.stepId.get();
+            const oldStepId = yield this.getOldStepId(ticketInfo.get(), oldContextId);
             if (contextId === oldContextId) {
                 yield spinal_env_viewer_graph_service_1.SpinalGraphService.moveChildInContext(oldStepId, stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
             }
@@ -571,6 +574,23 @@ class ServiceTicket {
                     return false;
                 }
             });
+        });
+    }
+    getOldStepId(ticketInfo, contextId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stepId = ticketInfo.stepId;
+            if (spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(stepId))
+                return stepId;
+            let id2;
+            yield spinal_env_viewer_graph_service_1.SpinalGraphService.findInContext(contextId, contextId, (node) => {
+                if (node.getId().get() === stepId) {
+                    spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(node);
+                    id2 = node.getId().get();
+                    return true;
+                }
+                return false;
+            });
+            return id2;
         });
     }
 }
