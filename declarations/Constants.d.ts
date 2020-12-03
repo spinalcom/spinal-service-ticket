@@ -53,7 +53,8 @@ export declare enum LOGS_EVENTS {
     moveToNext = 2,
     moveToPrevious = 3,
     archived = 4,
-    unarchive = 5
+    unarchive = 5,
+    move = 6
 }
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string;
 export declare const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string;

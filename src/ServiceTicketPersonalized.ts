@@ -218,7 +218,10 @@ export class ServiceTicketPersonalized {
     }
 
     public getStepsFromProcess(processId: string, contextId: string): Promise<any> {
-        return SpinalGraphService.findInContext(processId, contextId, (node) => node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE)
+        return SpinalGraphService.findInContext(processId, contextId, (node) => {
+            (<any>SpinalGraphService)._addNode(node)
+            return node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE
+        })
         // .then(nodes => {
         //     return SpinalGraphService.getChildren(node.id.get(),
         //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
@@ -397,6 +400,18 @@ export class ServiceTicketPersonalized {
         }
     }
 
+
+    public getTicketContextId(ticketId: string): string {
+        const realNode = SpinalGraphService.getRealNode(ticketId);
+        if (realNode) {
+            return realNode.contextIds._attribute_names.find(id => {
+                const node = SpinalGraphService.getRealNode(id);
+                if (!node) return false;
+                return node.getType().get() === SERVICE_TYPE;
+            })
+        }
+    }
+
     public async unarchiveTicket(contextId: string, processId: string, ticketId: string, userInfo: Object = {}): Promise<any> {
         const ticketInfo = SpinalGraphService.getInfo(ticketId);
         const firstStep = await this.getFirstStep(processId, contextId);
@@ -409,6 +424,35 @@ export class ServiceTicketPersonalized {
         }
 
     }
+
+    public unlinkTicketToProcess(ticketId: string) {
+
+    }
+
+    public async changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string) {
+        let ticketInfo = SpinalGraphService.getInfo(ticketId);
+        let oldContextId = this.getTicketContextId(ticketId);
+        const contextId = newContextId || oldContextId;
+
+        const stepId = await this.getFirstStep(newProcessId, contextId);
+        const oldStepId = ticketInfo.stepId.get();
+
+        if (contextId === oldContextId) {
+            await SpinalGraphService.moveChildInContext(oldStepId, stepId, ticketId, contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+        } else {
+            await this.removeFromContextId(ticketId, oldStepId, oldContextId);
+            await SpinalGraphService.addChildInContext(stepId, ticketId, contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+        }
+
+        await this.modifyTicketStepId(ticketId, stepId);
+        const userInfo = ticketInfo && ticketInfo.user ? ticketInfo.user.get() : {};
+        await this.addLogToTicket(ticketId, LOGS_EVENTS.creation, userInfo, stepId);
+
+        return ticketId;
+
+
+    }
+
 
     //////////////////////////////////////////////////////////
     //                      LOGS                            //
@@ -651,5 +695,18 @@ export class ServiceTicketPersonalized {
             .catch((e) => {
                 return Promise.reject(Error(CANNOT_ADD_STEP_TO_PROCESS + e));
             });
+    }
+
+    private async removeFromContextId(ticketId: string, oldStepId: string, oldContextId: string): Promise<boolean> {
+        return SpinalGraphService.removeChild(oldStepId, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE).then((result) => {
+            const realNode = SpinalGraphService.getRealNode(ticketId);
+            try {
+                realNode.contextIds.delete(oldContextId);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        })
+
     }
 }
