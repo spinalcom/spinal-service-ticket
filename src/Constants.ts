@@ -103,7 +103,8 @@ export enum LOGS_EVENTS {
   moveToNext = 2,
   moveToPrevious = 3,
   archived = 4,
-  unarchive = 5
+  unarchive = 5,
+  move = 6
 }
 /////////////////////////////////////////
 /////////////// Target /////////////////

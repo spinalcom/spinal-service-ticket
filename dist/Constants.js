@@ -96,6 +96,7 @@ var LOGS_EVENTS;
     LOGS_EVENTS[LOGS_EVENTS["moveToPrevious"] = 3] = "moveToPrevious";
     LOGS_EVENTS[LOGS_EVENTS["archived"] = 4] = "archived";
     LOGS_EVENTS[LOGS_EVENTS["unarchive"] = 5] = "unarchive";
+    LOGS_EVENTS[LOGS_EVENTS["move"] = 6] = "move";
 })(LOGS_EVENTS = exports.LOGS_EVENTS || (exports.LOGS_EVENTS = {}));
 /////////////////////////////////////////
 /////////////// Target /////////////////

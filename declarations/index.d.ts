@@ -1,4 +1,4 @@
-import { ServiceTicketPersonalized } from './ServiceTicketPersonalized';
-declare const serviceTicketPersonalized: ServiceTicketPersonalized;
-declare const spinalServiceTicket: typeof ServiceTicketPersonalized;
+import { ServiceTicket } from './ServiceTicket';
+declare const serviceTicketPersonalized: ServiceTicket;
+declare const spinalServiceTicket: ServiceTicket;
 export { serviceTicketPersonalized, spinalServiceTicket };
