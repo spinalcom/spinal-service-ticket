@@ -20,6 +20,7 @@ export declare class ServiceTicket {
     createProcess(process: SpinalProcess | string, contextId: string): Promise<string>;
     getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
     addStep(processId: string, contextId: string, name: string, color: string, order: number): Promise<any | Error>;
+    removeStep(processId: string, contextId: string, stepId: string): Promise<string>;
     addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error>;
     getStepsFromProcess(processId: string, contextId: string): Promise<any>;
     getFirstStep(processId: string, contextId: string): Promise<string>;
@@ -40,6 +41,9 @@ export declare class ServiceTicket {
     moveTicketToPreviousStep(contextId: string, processId: string, ticketId: string, userInfo?: object): Promise<void>;
     ArchiveTickets(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<any>;
     unarchiveTicket(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<any>;
+    unlinkTicketToProcess(ticketId: string): void;
+    getTicketContextId(ticketId: string): string;
+    changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string): Promise<string>;
     addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
     createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
@@ -56,4 +60,5 @@ export declare class ServiceTicket {
     private createArchivedStep;
     private createStepNode;
     private sortStepByOrder;
+    private removeFromContextId;
 }

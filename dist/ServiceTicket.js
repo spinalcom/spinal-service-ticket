@@ -134,6 +134,19 @@ class ServiceTicket {
             });
         });
     }
+    removeStep(processId, contextId, stepId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stepInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(stepId).get();
+            return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then((steps) => __awaiter(this, void 0, void 0, function* () {
+                spinal_env_viewer_graph_service_1.SpinalGraphService.removeFromGraph(stepId);
+                for (const step of steps) {
+                    const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(step.id);
+                    realNode.info.order.set(step.order - 1);
+                }
+                return stepId;
+            }));
+        });
+    }
     addStepById(stepId, processId, contextId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService
             .addChildInContext(processId, stepId, contextId, Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE)
@@ -317,6 +330,39 @@ class ServiceTicket {
                 yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.unarchive, userInfo, fromId, firstStep);
                 return spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(firstStep).get();
             }
+        });
+    }
+    unlinkTicketToProcess(ticketId) {
+    }
+    getTicketContextId(ticketId) {
+        const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+        if (realNode) {
+            return realNode.contextIds._attribute_names.find(id => {
+                const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(id);
+                if (!node)
+                    return false;
+                return node.getType().get() === Constants_1.SERVICE_TYPE;
+            });
+        }
+    }
+    changeTicketProcess(ticketId, newProcessId, newContextId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            let oldContextId = this.getTicketContextId(ticketId);
+            const contextId = newContextId || oldContextId;
+            const stepId = yield this.getFirstStep(newProcessId, contextId);
+            const oldStepId = ticketInfo.stepId.get();
+            if (contextId === oldContextId) {
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.moveChildInContext(oldStepId, stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            }
+            else {
+                yield this.removeFromContextId(ticketId, oldStepId, oldContextId);
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            }
+            yield this.modifyTicketStepId(ticketId, stepId);
+            const userInfo = ticketInfo && ticketInfo.user ? ticketInfo.user.get() : {};
+            yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+            return ticketId;
         });
     }
     //////////////////////////////////////////////////////////
@@ -512,6 +558,20 @@ class ServiceTicket {
             stepsSorted[index].order = index;
         }
         return stepsSorted;
+    }
+    removeFromContextId(ticketId, oldStepId, oldContextId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return spinal_env_viewer_graph_service_1.SpinalGraphService.removeChild(oldStepId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE).then((result) => {
+                const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+                try {
+                    realNode.contextIds.delete(oldContextId);
+                    return true;
+                }
+                catch (error) {
+                    return false;
+                }
+            });
+        });
     }
 }
 exports.ServiceTicket = ServiceTicket;
