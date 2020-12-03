@@ -61,4 +61,5 @@ export declare class ServiceTicket {
     private createStepNode;
     private sortStepByOrder;
     private removeFromContextId;
+    private getOldStepId;
 }
