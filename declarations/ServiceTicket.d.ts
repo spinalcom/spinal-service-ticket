@@ -44,6 +44,7 @@ export declare class ServiceTicket {
     unlinkTicketToProcess(ticketId: string): void;
     getTicketContextId(ticketId: string): string;
     changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string): Promise<string>;
+    changeTicketElementNode(ticketId: string, newElementId: string): Promise<string>;
     addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
     createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;

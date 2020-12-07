@@ -473,6 +473,23 @@ export class ServiceTicket {
 
     }
 
+    public async changeTicketElementNode(ticketId: string, newElementId: string) {
+        const parents = await SpinalGraphService.getParents(ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
+
+        const promises = parents.map(parent => {
+            const id = parent.getId().get()
+            return SpinalGraphService.removeChild(id, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+        })
+
+        await Promise.all(promises)
+
+        await SpinalGraphService.addChild(newElementId, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+            SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+
+        return ticketId;
+
+    }
+
     //////////////////////////////////////////////////////////
     //                      LOGS                            //
     //////////////////////////////////////////////////////////
