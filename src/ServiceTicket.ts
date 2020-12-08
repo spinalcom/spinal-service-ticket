@@ -477,7 +477,7 @@ export class ServiceTicket {
         const parents = await SpinalGraphService.getParents(ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
 
         const promises = parents.map(parent => {
-            const id = parent.getId().get()
+            const id = parent.id ? parent.id.get() : parent.getId().get()
             return SpinalGraphService.removeChild(id, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
         })
 

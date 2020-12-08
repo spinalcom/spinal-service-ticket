@@ -372,7 +372,7 @@ class ServiceTicket {
         return __awaiter(this, void 0, void 0, function* () {
             const parents = yield spinal_env_viewer_graph_service_1.SpinalGraphService.getParents(ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
             const promises = parents.map(parent => {
-                const id = parent.getId().get();
+                const id = parent.id ? parent.id.get() : parent.getId().get();
                 return spinal_env_viewer_graph_service_1.SpinalGraphService.removeChild(id, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
             });
             yield Promise.all(promises);
