@@ -474,10 +474,12 @@ export class ServiceTicket {
     }
 
     public async changeTicketElementNode(ticketId: string, newElementId: string) {
-        const parents = await SpinalGraphService.getParents(ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
+        const realNode = SpinalGraphService.getRealNode(ticketId);
+        const parents = await realNode.getParents(SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
 
         const promises = parents.map(parent => {
-            const id = parent.id ? parent.id.get() : parent.getId().get()
+            (<any>SpinalGraphService)._addNode(parent)
+            const id = parent.getId().get()
             return SpinalGraphService.removeChild(id, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
         })
 
