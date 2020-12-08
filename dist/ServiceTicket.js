@@ -373,6 +373,8 @@ class ServiceTicket {
             const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
             const parents = yield realNode.getParents(Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
             const promises = parents.map(parent => {
+                if (parent.getType().get() === Constants_1.SPINAL_TICKET_SERVICE_STEP_TYPE)
+                    return Promise.resolve(true);
                 spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(parent);
                 const id = parent.getId().get();
                 return spinal_env_viewer_graph_service_1.SpinalGraphService.removeChild(id, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);

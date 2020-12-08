@@ -478,6 +478,8 @@ export class ServiceTicket {
         const parents = await realNode.getParents(SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
 
         const promises = parents.map(parent => {
+            if (parent.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE) return Promise.resolve(true);
+
             (<any>SpinalGraphService)._addNode(parent)
             const id = parent.getId().get()
             return SpinalGraphService.removeChild(id, ticketId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
