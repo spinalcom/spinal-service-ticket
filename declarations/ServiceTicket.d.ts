@@ -45,7 +45,7 @@ export declare class ServiceTicket {
     getTicketContextId(ticketId: string): string;
     changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string): Promise<string>;
     changeTicketElementNode(ticketId: string, newElementId: string): Promise<string>;
-    addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
+    addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string, message?: string): any;
     createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
     addCommonIncident(processId: string, sentence: string): Promise<boolean | string>;
@@ -63,4 +63,9 @@ export declare class ServiceTicket {
     private sortStepByOrder;
     private removeFromContextId;
     private getOldStepId;
+    private addNote;
+    private _sendNote;
+    private addFilesNote;
+    private _getOrCreateFileDirectory;
+    private _getFileType;
 }

@@ -32,6 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
@@ -48,6 +49,8 @@ const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
 const SpinalTicket_1 = require("spinal-models-ticket/dist/SpinalTicket");
 const spinal_core_connectorjs_type_1 = require("spinal-core-connectorjs_type");
 const spinal_env_viewer_plugin_documentation_service_1 = require("spinal-env-viewer-plugin-documentation-service");
+const fileSystemExplorer_1 = require("spinal-env-viewer-plugin-documentation/service/fileSystemExplorer");
+const spinal_models_documentation_1 = require("spinal-models-documentation");
 const moment = require("moment");
 class ServiceTicket {
     constructor() { }
@@ -243,6 +246,9 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     addTicket(ticketInfo, processId, contextId, nodeId) {
         return __awaiter(this, void 0, void 0, function* () {
+            ticketInfo.processId = processId;
+            ticketInfo.contextId = contextId;
+            ticketInfo.nodeId = nodeId;
             const ticketId = yield this.createTicket(ticketInfo);
             const stepId = yield this.getFirstStep(processId, contextId);
             return spinal_env_viewer_graph_service_1.SpinalGraphService
@@ -387,11 +393,12 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      LOGS                            //
     //////////////////////////////////////////////////////////
-    addLogToTicket(ticketId, event, userInfo = {}, fromId, toId) {
+    addLogToTicket(ticketId, event, userInfo = {}, fromId, toId, message) {
         let info = {
             ticketId: ticketId,
             event: event,
             user: userInfo,
+            message: message,
             steps: []
         };
         if (fromId)
@@ -462,7 +469,7 @@ class ServiceTicket {
         return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = [];
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate"];
+                const attributes = ["name", "priority", "user", "creationDate", "description"];
                 for (const element of attributes) {
                     promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
                 }
@@ -480,6 +487,9 @@ class ServiceTicket {
         });
     }
     createTicket(elementInfo, infoNode) {
+        const description = elementInfo.description;
+        const pj = elementInfo.pj;
+        delete elementInfo.pj;
         let infoNodeRef = infoNode;
         if (!infoNodeRef) {
             infoNodeRef = elementInfo;
@@ -489,7 +499,15 @@ class ServiceTicket {
         const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttribute(ticketId).then(() => ticketId);
+        return this.createAttribute(ticketId).then(() => __awaiter(this, void 0, void 0, function* () {
+            const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            if (realNode) {
+                // console.log("pj", elementInfo);
+                const user = elementInfo.user || { username: "unknow", userId: "unknow" };
+                yield this.addNote(realNode, description, pj, user);
+            }
+            return ticketId;
+        }));
     }
     createStep(name, color, order, processId) {
         // this.stepOrderIsValid(processId, order);
@@ -538,15 +556,23 @@ class ServiceTicket {
     }
     getObjData(key, valueModel) {
         switch (key) {
-            case "name":
-                return valueModel;
             case "priority":
                 const found = Object.keys(Constants_1.TICKET_PRIORITIES).find(el => Constants_1.TICKET_PRIORITIES[el] == valueModel.get());
                 return found ? found : "-";
             case "user":
-                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                if (valueModel && valueModel.name) {
+                    return valueModel.name.get();
+                }
+                else if (valueModel && valueModel.username) {
+                    return valueModel.username.get();
+                }
+                else {
+                    return "unknow";
+                }
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
+            default:
+                return valueModel;
         }
     }
     createArchivedStep(processId, contextId) {
@@ -608,6 +634,72 @@ class ServiceTicket {
             });
             return id2;
         });
+    }
+    //////////////////////////////////////////////////////////////
+    //                           NOTES                          //
+    //////////////////////////////////////////////////////////////
+    addNote(ticketNode, note, pj, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.addFilesNote(ticketNode, pj, user);
+            if (!note || note.trim().length === 0)
+                return;
+            yield this._sendNote(ticketNode, note, user);
+        });
+    }
+    _sendNote(node, message, user, type, path) {
+        // console.log(node, message, user, type, path);
+        return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addNote(node, user, message, type, path);
+    }
+    addFilesNote(ticketNode, pj, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!pj || pj.length === 0)
+                return;
+            const directory = yield this._getOrCreateFileDirectory(ticketNode);
+            // const promises = pj.map((file) => {
+            //     return {
+            //         file: file,
+            //         directory: directory,
+            //     };
+            // });
+            // return Promise.all(promises).then((res) => {
+            const promises = pj.map((argFile) => {
+                const type = this._getFileType(argFile);
+                let files = fileSystemExplorer_1.FileExplorer.addFileUpload(directory, [argFile]);
+                let file = files.length > 0 ? files[0] : undefined;
+                return this._sendNote(ticketNode, argFile.name, user, type, file);
+            });
+            return Promise.all(promises);
+            // });
+        });
+    }
+    _getOrCreateFileDirectory(node) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let directory = yield fileSystemExplorer_1.FileExplorer.getDirectory(node);
+            if (!directory) {
+                directory = yield fileSystemExplorer_1.FileExplorer.createDirectory(node);
+            }
+            return directory;
+        });
+    }
+    _getFileType(file) {
+        const imagesExtension = [
+            "JPG",
+            "PNG",
+            "GIF",
+            "WEBP",
+            "TIFF",
+            "PSD",
+            "RAW",
+            "BMP",
+            "HEIF",
+            "INDD",
+            "JPEG 2000",
+            "SVG",
+        ];
+        const extension = /[^.]+$/.exec(file.name)[0];
+        return imagesExtension.indexOf(extension.toUpperCase()) !== -1
+            ? spinal_models_documentation_1.MESSAGE_TYPES.image
+            : spinal_models_documentation_1.MESSAGE_TYPES.file;
     }
 }
 exports.ServiceTicket = ServiceTicket;

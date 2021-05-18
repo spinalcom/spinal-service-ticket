@@ -101,6 +101,8 @@ import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
 
 import { Lst, Ptr } from 'spinal-core-connectorjs_type';
 import { serviceDocumentation } from "spinal-env-viewer-plugin-documentation-service";
+import { FileExplorer } from "spinal-env-viewer-plugin-documentation/service/fileSystemExplorer";
+import { MESSAGE_TYPES } from "spinal-models-documentation";
 import * as moment from "moment";
 
 
@@ -327,6 +329,11 @@ export class ServiceTicket {
 
 
     public async addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string): Promise<string | Error> {
+
+        ticketInfo.processId = processId;
+        ticketInfo.contextId = contextId;
+        ticketInfo.nodeId = nodeId;
+
         const ticketId = await this.createTicket(ticketInfo);
         const stepId = await this.getFirstStep(processId, contextId);
 
@@ -499,12 +506,13 @@ export class ServiceTicket {
     //////////////////////////////////////////////////////////
 
 
-    public addLogToTicket(ticketId: string, event: number, userInfo: Object = {}, fromId?: string, toId?: string): any {
+    public addLogToTicket(ticketId: string, event: number, userInfo: Object = {}, fromId?: string, toId?: string, message?: string): any {
 
         let info = {
             ticketId: ticketId,
             event: event,
             user: userInfo,
+            message: message,
             steps: []
         };
 
@@ -601,7 +609,7 @@ export class ServiceTicket {
         return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = []
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate"];
+                const attributes = ["name", "priority", "user", "creationDate", "description"];
 
 
                 for (const element of attributes) {
@@ -624,15 +632,33 @@ export class ServiceTicket {
     }
 
     private createTicket(elementInfo: TicketInterface, infoNode?: any): Promise<string> {
+        const description = elementInfo.description;
+        const pj = elementInfo.pj;
+
+        delete elementInfo.pj;
+
         let infoNodeRef = infoNode;
+
         if (!infoNodeRef) { infoNodeRef = elementInfo; }
+
+
 
         infoNodeRef.type = SPINAL_TICKET_SERVICE_TICKET_TYPE;
         const ticket = new SpinalTicket(elementInfo);
         const ticketId = SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttribute(ticketId).then(() => ticketId)
+        return this.createAttribute(ticketId).then(async () => {
+            const realNode = SpinalGraphService.getRealNode(ticketId);
+            if (realNode) {
+
+                // console.log("pj", elementInfo);
+
+                const user = elementInfo.user || { username: "unknow", userId: "unknow" }
+                await this.addNote(realNode, description, pj, user);
+            }
+            return ticketId
+        })
     }
 
     private createStep(name: string, color: string, order: number, processId?: string): string {
@@ -696,18 +722,25 @@ export class ServiceTicket {
     private getObjData(key, valueModel): any {
 
         switch (key) {
-            case "name":
-                return valueModel;
 
             case "priority":
                 const found = Object.keys(TICKET_PRIORITIES).find(el => TICKET_PRIORITIES[el] == valueModel.get())
                 return found ? found : "-";
 
             case "user":
-                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                if (valueModel && valueModel.name) {
+                    return valueModel.name.get()
+                } else if (valueModel && valueModel.username) {
+                    return valueModel.username.get()
+                } else {
+                    return "unknow";
+                }
 
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
+
+            default:
+                return valueModel;
         }
 
     }
@@ -778,4 +811,76 @@ export class ServiceTicket {
         return id2;
 
     }
+
+
+    //////////////////////////////////////////////////////////////
+    //                           NOTES                          //
+    //////////////////////////////////////////////////////////////
+
+    private async addNote(ticketNode: SpinalNode<any>, note: string, pj: Array<any>, user?: any) {
+        await this.addFilesNote(ticketNode, pj, user);
+
+        if (!note || note.trim().length === 0) return;
+        await this._sendNote(ticketNode, note, user);
+    }
+
+    private _sendNote(node: SpinalNode<any>, message: string, user: any, type?: string, path?: any) {
+        // console.log(node, message, user, type, path);
+
+        return serviceDocumentation.addNote(node, user, message, type, path);
+    }
+
+    private async addFilesNote(ticketNode: SpinalNode<any>, pj: Array<any>, user: any) {
+        if (!pj || pj.length === 0) return;
+
+        const directory = await this._getOrCreateFileDirectory(ticketNode);
+
+        // const promises = pj.map((file) => {
+        //     return {
+        //         file: file,
+        //         directory: directory,
+        //     };
+        // });
+
+        // return Promise.all(promises).then((res) => {
+        const promises = pj.map((argFile) => {
+            const type = this._getFileType(argFile);
+            let files = FileExplorer.addFileUpload(directory, [argFile]);
+            let file = files.length > 0 ? files[0] : undefined;
+            return this._sendNote(ticketNode, argFile.name, user, type, file);
+        });
+
+        return Promise.all(promises);
+        // });
+    }
+
+    private async _getOrCreateFileDirectory(node) {
+        let directory = await FileExplorer.getDirectory(node);
+        if (!directory) {
+            directory = await FileExplorer.createDirectory(node);
+        }
+        return directory;
+    }
+
+    private _getFileType(file) {
+        const imagesExtension = [
+            "JPG",
+            "PNG",
+            "GIF",
+            "WEBP",
+            "TIFF",
+            "PSD",
+            "RAW",
+            "BMP",
+            "HEIF",
+            "INDD",
+            "JPEG 2000",
+            "SVG",
+        ];
+        const extension = /[^.]+$/.exec(file.name)[0];
+        return imagesExtension.indexOf(extension.toUpperCase()) !== -1
+            ? MESSAGE_TYPES.image
+            : MESSAGE_TYPES.file;
+    }
+
 }
