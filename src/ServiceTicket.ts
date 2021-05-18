@@ -722,7 +722,6 @@ export class ServiceTicket {
     private getObjData(key, valueModel): any {
 
         switch (key) {
-
             case "priority":
                 const found = Object.keys(TICKET_PRIORITIES).find(el => TICKET_PRIORITIES[el] == valueModel.get())
                 return found ? found : "-";
