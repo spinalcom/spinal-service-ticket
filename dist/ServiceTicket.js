@@ -49,7 +49,6 @@ const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
 const SpinalTicket_1 = require("spinal-models-ticket/dist/SpinalTicket");
 const spinal_core_connectorjs_type_1 = require("spinal-core-connectorjs_type");
 const spinal_env_viewer_plugin_documentation_service_1 = require("spinal-env-viewer-plugin-documentation-service");
-const fileSystemExplorer_1 = require("spinal-env-viewer-plugin-documentation/service/fileSystemExplorer");
 const spinal_models_documentation_1 = require("spinal-models-documentation");
 const moment = require("moment");
 class ServiceTicket {
@@ -664,7 +663,7 @@ class ServiceTicket {
             // return Promise.all(promises).then((res) => {
             const promises = pj.map((argFile) => {
                 const type = this._getFileType(argFile);
-                let files = fileSystemExplorer_1.FileExplorer.addFileUpload(directory, [argFile]);
+                let files = spinal_env_viewer_plugin_documentation_service_1.FileExplorer.addFileUpload(directory, [argFile]);
                 let file = files.length > 0 ? files[0] : undefined;
                 return this._sendNote(ticketNode, argFile.name, user, type, file);
             });
@@ -674,9 +673,9 @@ class ServiceTicket {
     }
     _getOrCreateFileDirectory(node) {
         return __awaiter(this, void 0, void 0, function* () {
-            let directory = yield fileSystemExplorer_1.FileExplorer.getDirectory(node);
+            let directory = yield spinal_env_viewer_plugin_documentation_service_1.FileExplorer.getDirectory(node);
             if (!directory) {
-                directory = yield fileSystemExplorer_1.FileExplorer.createDirectory(node);
+                directory = yield spinal_env_viewer_plugin_documentation_service_1.FileExplorer.createDirectory(node);
             }
             return directory;
         });

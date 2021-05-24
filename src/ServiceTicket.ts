@@ -100,8 +100,8 @@ import { SpinalTicket, TicketInterface } from 'spinal-models-ticket/dist/SpinalT
 import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
 
 import { Lst, Ptr } from 'spinal-core-connectorjs_type';
-import { serviceDocumentation } from "spinal-env-viewer-plugin-documentation-service";
-import { FileExplorer } from "spinal-env-viewer-plugin-documentation/service/fileSystemExplorer";
+import { serviceDocumentation, FileExplorer } from "spinal-env-viewer-plugin-documentation-service";
+
 import { MESSAGE_TYPES } from "spinal-models-documentation";
 import * as moment from "moment";
 
