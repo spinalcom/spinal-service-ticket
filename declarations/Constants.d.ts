@@ -11,12 +11,12 @@ export declare const _PROCESS_TYPE: string;
 export declare const STEP_RELATION_TYPE: string;
 export declare const STEP_RELATION_NAME: string;
 export declare const STEP_TYPE: string;
-export declare const ARCHIVED_STEP: {
+export declare const _ARCHIVED_STEP: {
     name: string;
     order: number;
     color: string;
 };
-export declare const DEFAULT_STEPS: SpinalStep[];
+export declare const _DEFAULT_STEPS: SpinalStep[];
 export declare const INCIDENT_SECTION_RELATION_TYPE: string;
 export declare const INCIDENT_SECTION_TYPE: string;
 export declare const INCIDENT_SECTION_RELATION_NAME: string;
