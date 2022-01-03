@@ -24,24 +24,14 @@
 
 import {
     DEFAULT_INCIDENTS_NAME,
-    DEFAULT_STEPS,
-    PROCESS_HAS_TICKET_RELATION_NAME,
-    PROCESS_HAS_TICKET_RELATION_TYPE,
     PROCESS_TYPE,
-    SERVICE_ARCHIVE_TYPE,
     SERVICE_LOG_TYPE,
-    SERVICE_NAME,
     SERVICE_TYPE,
-    SPINAL_TICKET_SERVICE_ARCHIVE_NAME,
-    SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME,
-    SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME,
     SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME,
     SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE,
-    SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME,
-    SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_INCIDENT_TYPE,
     SPINAL_TICKET_SERVICE_LOG_RELATION_NAME,
     SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE,
@@ -50,34 +40,22 @@ import {
     SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
     SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_STEP_TYPE,
-    SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME,
-    SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
     SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE,
-    SPINAL_TICKET_SERVICE_TICKET_SECTION,
-    SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_NAME,
-    SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_TYPE,
     SPINAL_TICKET_SERVICE_TICKET_TYPE,
-    USER_RELATION_NAME,
-    USER_RELATION_TYPE,
     LOGS_EVENTS,
     TICKET_PRIORITIES, ARCHIVED_STEP
 } from './Constants';
 
 
-import { SpinalGraphService, SpinalNode } from "spinal-env-viewer-graph-service";
+import { SpinalContext, SpinalGraphService, SpinalNode, SpinalNodeRef } from "spinal-env-viewer-graph-service";
 
 import {
     CANNOT_ADD_STEP_TO_PROCESS,
     CANNOT_CREATE_CONTEXT_INTERNAL_ERROR,
     CANNOT_CREATE_PROCESS_INTERNAL_ERROR,
     DEFAULT_SENTENCE_SECTION_ALREADY_EXIST,
-    PROCESS_ID_DOES_NOT_EXIST,
-    PROCESS_NAME_ALREADY_USED,
-    STEP_ID_DOES_NOT_EXIST,
     STEP_ORDER_NOT_VALID,
-    TICKET_ID_DOES_NOT_EXIST,
-    TICKET_SECTION_ALREADY_EXIST,
 } from './Errors';
 
 
@@ -94,7 +72,7 @@ import {
 // import { SpinalServiceUser } from 'spinal-service-user';
 
 //SpinalLogTicket, SpinalProcess, SpinalTicket, SpinalLogTicketInterface, TicketInterface
-
+import { IContextInfo, IStepInfo } from "./interfaces";
 import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
 import { SpinalTicket, TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
 import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
@@ -114,7 +92,7 @@ export class ServiceTicket {
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
 
-    public createContext(contextName: string, steps: Array<{ name: string, color?: string, order: number }> = new Array()): Promise<any | Error> {
+    public createContext(contextName: string, steps: IStepInfo[] = []): Promise<SpinalContext<any> | Error> {
 
         return SpinalGraphService.addContext(contextName, SERVICE_TYPE, undefined)
             .then((context) => {
@@ -130,7 +108,7 @@ export class ServiceTicket {
             });
     }
 
-    public getContexts(name?: string): any | any[] {
+    public getContexts(name?: string): IContextInfo | IContextInfo[] {
         const contexts = SpinalGraphService.getContextWithType(SERVICE_TYPE);
         if (name && name.trim().length > 0) {
             const found: any = contexts.filter(el => el.getName().get() === name);
@@ -139,25 +117,22 @@ export class ServiceTicket {
         return contexts.map(el => el.info.get());
     }
 
-    public async updateContexts(contextId: string, newInfo: { name: string, steps: Array<{ name: string, color?: string, order: number }> }): Promise<any | Error> {
+    public async updateContexts(contextId: string, newInfo: IContextInfo): Promise<SpinalContext<any>> {
         if (newInfo.name && newInfo.name.trim().length === 0) throw new Error("Context name must have at less 1 character");
 
         const contextNode = SpinalGraphService.getRealNode(contextId);
 
         if (contextNode) {
-            if (newInfo.name && newInfo.name.trim().length > 0) contextNode.info.name.set(newInfo.name);
+            if (newInfo.name && newInfo.name.trim().length > 0) contextNode.info.name.set(newInfo.name.trim().toLowerCase());
 
-            if (!newInfo.steps || newInfo.steps.length > 0) return;
+            if (!newInfo.steps || !Array.isArray(newInfo.steps) || newInfo.steps.length <= 0) return contextNode;
 
             const oldSteps = await this.getContextSteps(contextId);
             const stepsSorted = this.sortStepByOrder(newInfo.steps);
 
+            // avoir quoi faire si on modifie les steps
+
         }
-
-
-
-
-
     }
 
     //////////////////////////////////////////////////////////
@@ -166,9 +141,10 @@ export class ServiceTicket {
 
     public createProcess(process: SpinalProcess | string, contextId: string): Promise<string> {
         if (typeof process === "string") process = { name: process };
-
         process.type = PROCESS_TYPE;
+
         const processId = SpinalGraphService.createNode(process, undefined);
+
         return SpinalGraphService.addChildInContext(
             contextId,
             processId,
@@ -190,7 +166,7 @@ export class ServiceTicket {
             });
     }
 
-    public getAllProcess(contextId: string) {
+    public getAllProcess(contextId: string): Promise<SpinalNodeRef[]> {
         return SpinalGraphService.getChildrenInContext(contextId, contextId);
     }
 
@@ -675,7 +651,7 @@ export class ServiceTicket {
         return stepId;
     }
 
-    private getContextSteps(contextId: string): Promise<any> {
+    private getContextSteps(contextId: string): Promise<IStepInfo[]> {
         const realNode = SpinalGraphService.getRealNode(contextId);
         if (realNode && realNode.info.steps) {
             return new Promise((resolve, reject) => {

@@ -32,19 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
-// import {
-//     TicketInterface,
-// } from 'spinal-models-ticket/declarations/';
-// import { SpinalProcess } from 'spinal-models-ticket/SpinalProcess';
-// import { SpinalLogTicket } from 'spinal-models-ticket/dist/SpinalLogTicket';
-// import {SpinalTicket} from 'spinal-models-ticket'
-// import { SpinalTicket } from 'spinal-models-ticket/dist/SpinalTicket';
-// import { SpinalServiceUser } from 'spinal-service-user';
-//SpinalLogTicket, SpinalProcess, SpinalTicket, SpinalLogTicketInterface, TicketInterface
 const SpinalLogTicket_1 = require("spinal-models-ticket/dist/SpinalLogTicket");
 const SpinalTicket_1 = require("spinal-models-ticket/dist/SpinalTicket");
 const spinal_core_connectorjs_type_1 = require("spinal-core-connectorjs_type");
@@ -56,7 +46,7 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
-    createContext(contextName, steps = new Array()) {
+    createContext(contextName, steps = []) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addContext(contextName, Constants_1.SERVICE_TYPE, undefined)
             .then((context) => {
             // this.context = context;
@@ -84,11 +74,12 @@ class ServiceTicket {
             const contextNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(contextId);
             if (contextNode) {
                 if (newInfo.name && newInfo.name.trim().length > 0)
-                    contextNode.info.name.set(newInfo.name);
-                if (!newInfo.steps || newInfo.steps.length > 0)
-                    return;
+                    contextNode.info.name.set(newInfo.name.trim().toLowerCase());
+                if (!newInfo.steps || !Array.isArray(newInfo.steps) || newInfo.steps.length <= 0)
+                    return contextNode;
                 const oldSteps = yield this.getContextSteps(contextId);
                 const stepsSorted = this.sortStepByOrder(newInfo.steps);
+                // avoir quoi faire si on modifie les steps
             }
         });
     }
