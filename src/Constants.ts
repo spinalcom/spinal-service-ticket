@@ -24,54 +24,113 @@
 
 import { SPINAL_RELATION_PTR_LST_TYPE } from 'spinal-env-viewer-graph-service';
 import { SpinalStep } from 'spinal-models-ticket/declarations/SpinalStep';
-import * as OLD_CONSTANTS from './old_constants';
-export * from "./old_constants";
 
-export const TICKET_CONTEXT_TYPE: string = OLD_CONSTANTS.SERVICE_NAME;
+export const SERVICE_NAME: string = 'Ticket Service';
+export const SERVICE_TYPE: string = 'SpinalSystemServiceTicket';
 
 /////////////////////////////////////////
 /////////////// TICKET ///////////////////
-
-export const TICKET_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE; // STEP_TO_TICKET_RELATION_TYPE
-export const TICKET_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME; // STEP_TO_TICKET_RELATION_NAME
-export const TIKET_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_TYPE;
+export const SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_TICKET_SECTION: string = 'SpinalSystemServiceHasTicket';
+export const SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME: string = 'SpinalSystemServiceTicketHasTicket';
+export const SPINAL_TICKET_SERVICE_TICKET_SECTION_NAME: string = 'Tickets';
+export const SPINAL_TICKET_SERVICE_TICKET_SECTION_RELATION_NAME: string = 'SpinalSystemServiceHasTicket';
+export const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceArchiveHasTicket';
+export const SPINAL_TICKET_SERVICE_TICKET_TYPE: string = 'SpinalSystemServiceTicketTypeTicket';
 
 /////////////////////////////////////////
 /////////////// PROCESS /////////////////
-
-export const PROCESS_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE; // CONTEXT_TO_PROCESS_RELATION_TYPE
-export const PROCESS_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME; //CONTEXT_TO_PROCESS_RELATION_NAME
-export const _PROCESS_TYPE: string = 'SpinalServiceTicketProcess';
-
+export const SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive_Archive_Process';
+export const SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME: string = 'SpinalSystemServiceTicketHasProcess';
+export const SPINAL_TICKET_SERVICE_PROCESS_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceArchiveHasProcess';
+export const PROCESS_TYPE: string = 'SpinalServiceTicketProcess';
+export const SPINAL_TICKET_SERVICE_PROCESS_TYPE: string = 'SpinalSystemServiceTicketTypeProcess';
+export const PROCESS_HAS_TICKET_RELATION_NAME: string = 'SpinalSystemService_ProcessHasTicket';
+export const PROCESS_HAS_TICKET_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
 
 //////////////////////////////////////
 /////////////// STEP /////////////////
-export const STEP_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE; // PROCESS_TO_STEP_RELATION_TYPE
-export const STEP_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME; // PROCESS_TO_STEP_RELATION_NAME
-export const STEP_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_STEP_TYPE;
+export const SPINAL_TICKET_SERVICE_STEP_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_STEP_TYPE: string = 'SpinalSystemServiceTicketTypeStep';
+export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceArchiveHasStep';
+export const SPINAL_TICKET_SERVICE_STEP_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive_Archive_Step';
+export const SPINAL_TICKET_SERVICE_STEP_RELATION_NAME: string = 'SpinalSystemServiceTicketHasStep';
 
+export const DEFAULT_STEPS: SpinalStep[] = [
+  { name: 'Déclaré', color: '#ff0019', order: 0 },
+  { name: 'Ouvert', color: '#fff112', order: 1 },
+  { name: 'Résolu', color: '#10ff1d', order: 2 },
+];
 
-export const _ARCHIVED_STEP = OLD_CONSTANTS.ARCHIVED_STEP;
-export const _DEFAULT_STEPS = OLD_CONSTANTS.DEFAULT_STEPS
-
+export const ARCHIVED_STEP = {
+  name: "Archived",
+  order: -1,
+  color: "#FF0000"
+}
 
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
-export const INCIDENT_SECTION_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE;
-export const INCIDENT_SECTION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE;
-export const INCIDENT_SECTION_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME;
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_INCIDENT_SUB_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_sub_category';
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_TYPE: string = 'DEFAULT_INCIDENT_TYPE';
+export const SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_category';
+export const SPINAL_TICKET_SERVICE_INCIDENT_SECTION_RELATION_NAME: string = 'Spinal_Service_Ticket_Process_has_categories_section';
+export const SPINAL_TICKET_SERVICE_INCIDENT_TYPE: string = 'INCIDENT_TYPE';
+export const DEFAULT_INCIDENTS_NAME: string = 'Incidents commun';
 
+/////////////////////////////////////////
+/////////////// ARCHIVE /////////////////
+export const SPINAL_TICKET_SERVICE_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive';
+export const SPINAL_TICKET_SERVICE_TICKET_ARCHIVE_NAME: string = 'Spinal_Service_Ticket_Archive_Archive_Ticket';
+export const SPINAL_TICKET_SERVICE_ARCHIVE_RELATION_NAME: string = 'SpinalSystemServiceTicketHasArchive';
+export const SERVICE_ARCHIVE_TYPE: string = 'SpinalSystemServiceTicketArchive';
 
-export const INCIDENT_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_RELATION_TYPE;
-export const INCIDENT_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_RELATION_NAME;
-export const INCIDENT_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_INCIDENT_TYPE;
-export const _DEFAULT_INCIDENTS_NAME: string = OLD_CONSTANTS.DEFAULT_INCIDENTS_NAME;
+/////////////////////////////////////////
+/////////////// LOG /////////////////
+export const SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_LOG_RELATION_NAME: string = 'SpinalSystemServiceTicketHasLog';
+export const SERVICE_LOG_TYPE: string = 'SpinalSystemServiceTicketLog';
+export enum LOGS_EVENTS {
+  creation = 1,
+  moveToNext = 2,
+  moveToPrevious = 3,
+  archived = 4,
+  unarchive = 5,
+  move = 6
+}
+export const LOGS_EVENTS_STRING: string[] = [
+  "none",
+  "creation",
+  "moveToNext",
+  "moveToPrevious",
+  "archived",
+  "unarchive",
+  "move"
+]
+/////////////////////////////////////////
+/////////////// Target /////////////////
+export const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
+export const SPINAL_TICKET_SERVICE_TARGET_RELATION_NAME: string = 'SpinalSystemServiceTicketHasLocation';
 
+/////////////////////////////////////////
+/////////////// USER ////////////////////
+export const USER_RELATION_NAME: string = 'userHasDeclaredTicket';
+export const USER_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
 
-export const LOG_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE;
-export const LOG_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME;
-export const LOG_TYPE: string = OLD_CONSTANTS.SERVICE_LOG_TYPE;
-export const LOGS_EVENTS_STEPS = OLD_CONSTANTS.LOGS_EVENTS;
+/////////////////////////////////////////
+/////////////// ticket ////////////////////
+// tickethasReferentiel
 
-
-export const _TICKET_PRIORITIES = OLD_CONSTANTS.TICKET_PRIORITIES;
+export const TICKET_PRIORITIES: { [key: string]: number } = {
+  occasionally: 0,
+  normal: 1,
+  urgent: 2,
+}

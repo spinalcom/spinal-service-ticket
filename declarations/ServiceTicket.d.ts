@@ -1,15 +1,24 @@
-import { SpinalContext, SpinalNodeRef } from "spinal-env-viewer-graph-service";
-import { IContextInfo, IStepInfo } from "./interfaces";
 import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
 import { TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
 import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
 export declare class ServiceTicket {
     constructor();
-    createContext(contextName: string, steps?: IStepInfo[]): Promise<SpinalContext<any> | Error>;
-    getContexts(name?: string): IContextInfo | IContextInfo[];
-    updateContexts(contextId: string, newInfo: IContextInfo): Promise<SpinalContext<any>>;
+    createContext(contextName: string, steps?: Array<{
+        name: string;
+        color?: string;
+        order: number;
+    }>): Promise<any | Error>;
+    getContexts(name?: string): any | any[];
+    updateContexts(contextId: string, newInfo: {
+        name: string;
+        steps: Array<{
+            name: string;
+            color?: string;
+            order: number;
+        }>;
+    }): Promise<any | Error>;
     createProcess(process: SpinalProcess | string, contextId: string): Promise<string>;
-    getAllProcess(contextId: string): Promise<SpinalNodeRef[]>;
+    getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
     addStep(processId: string, contextId: string, name: string, color: string, order: number): Promise<any | Error>;
     removeStep(processId: string, contextId: string, stepId: string): Promise<string>;
     addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error>;
@@ -35,8 +44,7 @@ export declare class ServiceTicket {
     unlinkTicketToProcess(ticketId: string): void;
     getTicketContextId(ticketId: string): string;
     changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string): Promise<string>;
-    changeTicketElementNode(ticketId: string, newElementId: string): Promise<string>;
-    addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string, message?: string): any;
+    addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
     createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
     addCommonIncident(processId: string, sentence: string): Promise<boolean | string>;
@@ -54,9 +62,4 @@ export declare class ServiceTicket {
     private sortStepByOrder;
     private removeFromContextId;
     private getOldStepId;
-    private addNote;
-    private _sendNote;
-    private addFilesNote;
-    private _getOrCreateFileDirectory;
-    private _getFileType;
 }

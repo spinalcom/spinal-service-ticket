@@ -1,31 +1,59 @@
 {
-  "name": "spinal-service-ticket",
-  "version": "0.2.6",
+  "_args": [
+    [
+      "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+      "/home/dregni/Documents/SpinalCom/BOS/spinal_viewer_town_hall_8010/module/spinal-browser-spinaltwin"
+    ]
+  ],
+  "_from": "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+  "_id": "spinal-service-ticket@git+https://github.com/spinalcom/spinal-service-ticket.git#c227ded6e1f16b2dd218d1330c8120e977860d70",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/spinal-service-ticket",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+    "rawSpec": "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+    "saveSpec": "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+    "fetchSpec": "https://github.com/spinalcom/spinal-service-ticket.git",
+    "gitCommittish": "devv2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/spinalcom/spinal-service-ticket.git#c227ded6e1f16b2dd218d1330c8120e977860d70",
+  "_spec": "git+https://github.com/spinalcom/spinal-service-ticket.git#devv2",
+  "_where": "/home/dregni/Documents/SpinalCom/BOS/spinal_viewer_town_hall_8010/module/spinal-browser-spinaltwin",
+  "author": {
+    "name": "SPINALCOM"
+  },
+  "dependencies": {
+    "moment": "^2.27.0",
+    "spinal-core-connectorjs_type": "git+https://github.com/spinalcom/spinal-core-connectorjs_type.git",
+    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
+    "spinal-env-viewer-plugin-documentation-service": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-documentation-service.git",
+    "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket.git",
+    "spinal-service-user": "git+https://github.com/spinalcom/spinal-service-user.git"
+  },
   "description": "SpinalCOM service ticket. This service allow the handling of ticket inside a spinalcom environment.",
+  "devDependencies": {
+    "@types/node": "^10.12.12",
+    "chai": "^4.2.0",
+    "jsdoc-to-markdown": "^4.0.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.2"
+  },
+  "license": "SpinalCOM",
   "main": "dist/index.js",
-  "types": "declarations/index.d.ts",
+  "name": "spinal-service-ticket",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "test": " nyc  mocha $NODE_DEBUG_OPTION --recursive tests"
   },
-  "author": "SPINALCOM",
-  "license": "SpinalCOM",
-  "devDependencies": {
-    "mocha": "^5.2.0",
-    "jsdoc-to-markdown": "^4.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "typescript": "^3.2.2",
-    "nyc": "^13.1.0",
-    "chai": "^4.2.0",
-    "@types/node": "^10.12.12"
-  },
-  "dependencies": {
-    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
-    "spinal-core-connectorjs_type": "git+https://github.com/spinalcom/spinal-core-connectorjs_type.git",
-    "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket.git",
-    "spinal-service-user": "git+https://github.com/spinalcom/spinal-service-user.git",
-    "spinal-env-viewer-plugin-documentation-service": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-documentation-service.git",
-    "moment": "^2.27.0"
-  }
+  "types": "declarations/index.d.ts",
+  "version": "0.0.5"
 }
