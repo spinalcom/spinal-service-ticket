@@ -32,7 +32,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
@@ -366,6 +365,20 @@ class ServiceTicket {
             yield this.modifyTicketStepId(ticketId, stepId);
             const userInfo = ticketInfo && ticketInfo.user ? ticketInfo.user.get() : {};
             yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+            return ticketId;
+        });
+    }
+    changeTicketElementNode(ticketId, newElementId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const realNode = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const parents = yield realNode.getParents(Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
+            const promises = parents.map(parent => {
+                spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(parent);
+                const id = parent.getId().get();
+                return spinal_env_viewer_graph_service_1.SpinalGraphService.removeChild(id, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            });
+            yield Promise.all(promises);
+            yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(newElementId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
             return ticketId;
         });
     }
