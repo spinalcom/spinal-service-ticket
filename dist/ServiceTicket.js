@@ -32,6 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
 const Errors_1 = require("./Errors");
@@ -460,7 +461,7 @@ class ServiceTicket {
         return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = [];
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate"];
+                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
                 for (const element of attributes) {
                     promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
                 }
@@ -545,6 +546,8 @@ class ServiceTicket {
                 return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
+            default:
+                return valueModel[key] ? valueModel[key].get() : "";
         }
     }
     createArchivedStep(processId, contextId) {

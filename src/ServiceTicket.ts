@@ -596,7 +596,7 @@ export class ServiceTicket {
         return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = []
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate"];
+                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
 
 
                 for (const element of attributes) {
@@ -703,6 +703,8 @@ export class ServiceTicket {
 
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
+            default:
+                return valueModel[key] ? valueModel[key].get() : "";
         }
 
     }
