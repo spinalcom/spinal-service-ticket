@@ -474,15 +474,15 @@ class ServiceTicket {
         const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttribute(ticketId).then(() => ticketId);
+        return this.createAttribute(ticketId, elementInfo).then(() => ticketId);
     }
-    createAttribute(ticketId) {
+    createAttribute(ticketId, elementInfo) {
         const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
         const categoryName = "default";
         return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = [];
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
+                const attributes = Object.keys(elementInfo);
                 for (const element of attributes) {
                     promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
                 }

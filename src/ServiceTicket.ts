@@ -609,17 +609,17 @@ export class ServiceTicket {
         const ticketId = SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
         ;
-        return this.createAttribute(ticketId).then(() => ticketId)
+        return this.createAttribute(ticketId, elementInfo).then(() => ticketId)
     }
 
-    private createAttribute(ticketId: string): Promise<any> {
+    private createAttribute(ticketId: string, elementInfo: TicketInterface): Promise<any> {
         const node = SpinalGraphService.getRealNode(ticketId);
         const categoryName: string = "default";
 
         return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
             const promises = []
             if (node) {
-                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
+                const attributes = Object.keys(elementInfo);
 
 
                 for (const element of attributes) {
