@@ -41,4 +41,5 @@ if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
 // tslint:disable-next-line:variable-name
 const spinalServiceTicket = serviceTicketPersonalized;
 
+export * from "./Constants";
 export { serviceTicketPersonalized, spinalServiceTicket };
