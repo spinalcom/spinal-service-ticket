@@ -455,20 +455,6 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //                                              PRIVATE                                         //
     //////////////////////////////////////////////////////////////////////////////////////////////////
-    createAttribute(ticketId) {
-        const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
-        const categoryName = "default";
-        return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
-            const promises = [];
-            if (node) {
-                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
-                for (const element of attributes) {
-                    promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
-                }
-                return Promise.all(promises);
-            }
-        });
-    }
     modifyStepProcessId(stepId, processId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.modifyNode(stepId, { processId });
     }
@@ -489,6 +475,20 @@ class ServiceTicket {
         // this.tickets.add(ticketId);
         ;
         return this.createAttribute(ticketId).then(() => ticketId);
+    }
+    createAttribute(ticketId) {
+        const node = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+        const categoryName = "default";
+        return spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
+            const promises = [];
+            if (node) {
+                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
+                for (const element of attributes) {
+                    promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
+                }
+                return Promise.all(promises);
+            }
+        });
     }
     createStep(name, color, order, processId) {
         // this.stepOrderIsValid(processId, order);
@@ -547,7 +547,7 @@ class ServiceTicket {
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
             default:
-                return valueModel[key] ? valueModel[key].get() : "";
+                return valueModel && valueModel[key] ? valueModel[key].get() : "";
         }
     }
     createArchivedStep(processId, contextId) {

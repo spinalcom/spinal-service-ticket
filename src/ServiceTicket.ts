@@ -589,25 +589,7 @@ export class ServiceTicket {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private createAttribute(ticketId: string): Promise<any> {
-        const node = SpinalGraphService.getRealNode(ticketId);
-        const categoryName: string = "default";
 
-        return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
-            const promises = []
-            if (node) {
-                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
-
-
-                for (const element of attributes) {
-                    promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])))
-                }
-                return Promise.all(promises)
-            }
-        })
-
-
-    }
 
     private modifyStepProcessId(stepId: string, processId: string): boolean {
         return SpinalGraphService.modifyNode(stepId, <any>{ processId });
@@ -628,6 +610,26 @@ export class ServiceTicket {
         // this.tickets.add(ticketId);
         ;
         return this.createAttribute(ticketId).then(() => ticketId)
+    }
+
+    private createAttribute(ticketId: string): Promise<any> {
+        const node = SpinalGraphService.getRealNode(ticketId);
+        const categoryName: string = "default";
+
+        return serviceDocumentation.addCategoryAttribute(node, categoryName).then((attributeCategory) => {
+            const promises = []
+            if (node) {
+                const attributes = ["name", "priority", "user", "creationDate", "declarer_id"];
+
+
+                for (const element of attributes) {
+                    promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])))
+                }
+                return Promise.all(promises)
+            }
+        })
+
+
     }
 
     private createStep(name: string, color: string, order: number, processId?: string): string {
@@ -704,7 +706,7 @@ export class ServiceTicket {
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
             default:
-                return valueModel[key] ? valueModel[key].get() : "";
+                return valueModel && valueModel[key] ? valueModel[key].get() : "";
         }
 
     }

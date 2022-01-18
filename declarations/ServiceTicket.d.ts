@@ -50,10 +50,10 @@ export declare class ServiceTicket {
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
     addCommonIncident(processId: string, sentence: string): Promise<boolean | string>;
     getCommonIncident(processId: string): Promise<any>;
-    private createAttribute;
     private modifyStepProcessId;
     private modifyTicketStepId;
     private createTicket;
+    private createAttribute;
     private createStep;
     private getContextSteps;
     private addSentenceSection;
