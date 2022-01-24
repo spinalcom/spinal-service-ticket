@@ -470,6 +470,8 @@ class ServiceTicket {
             infoNodeRef = elementInfo;
         }
         infoNodeRef.type = Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE;
+        if (!infoNodeRef.declarer_id)
+            infoNodeRef.declarer_id = "unknow";
         const ticket = new SpinalTicket_1.SpinalTicket(elementInfo);
         const ticketId = spinal_env_viewer_graph_service_1.SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
@@ -543,11 +545,11 @@ class ServiceTicket {
                 const found = Object.keys(Constants_1.TICKET_PRIORITIES).find(el => Constants_1.TICKET_PRIORITIES[el] == valueModel.get());
                 return found ? found : "-";
             case "user":
-                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                return valueModel && valueModel.name ? valueModel.name.get() : valueModel.username ? valueModel.username.get() : "unknown";
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
             default:
-                return valueModel && valueModel[key] ? valueModel[key].get() : "";
+                return valueModel ? valueModel.get() : "";
         }
     }
     createArchivedStep(processId, contextId) {

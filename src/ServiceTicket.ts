@@ -605,6 +605,7 @@ export class ServiceTicket {
         if (!infoNodeRef) { infoNodeRef = elementInfo; }
 
         infoNodeRef.type = SPINAL_TICKET_SERVICE_TICKET_TYPE;
+        if (!infoNodeRef.declarer_id) infoNodeRef.declarer_id = "unknow";
         const ticket = new SpinalTicket(elementInfo);
         const ticketId = SpinalGraphService.createNode(infoNodeRef, ticket);
         // this.tickets.add(ticketId);
@@ -701,12 +702,12 @@ export class ServiceTicket {
                 return found ? found : "-";
 
             case "user":
-                return valueModel && valueModel.name ? valueModel.name.get() : "unknown";
+                return valueModel && valueModel.name ? valueModel.name.get() : valueModel.username ? valueModel.username.get() : "unknown";
 
             case "creationDate":
                 return moment(valueModel.get()).format('MMMM Do YYYY, h:mm:ss a');
             default:
-                return valueModel && valueModel[key] ? valueModel[key].get() : "";
+                return valueModel ? valueModel.get() : "";
         }
 
     }

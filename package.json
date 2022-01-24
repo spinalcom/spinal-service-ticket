@@ -55,5 +55,5 @@
     "test": " nyc  mocha $NODE_DEBUG_OPTION --recursive tests"
   },
   "types": "declarations/index.d.ts",
-  "version": "0.0.6"
+  "version": "0.1.6"
 }
