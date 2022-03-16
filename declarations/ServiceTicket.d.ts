@@ -1,6 +1,7 @@
 import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
 import { TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
 import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
+import { IUserInfo } from './interfaces/IUserInfo';
 export declare class ServiceTicket {
     constructor();
     createContext(contextName: string, steps?: Array<{
@@ -37,15 +38,15 @@ export declare class ServiceTicket {
     getTicketsFromNode(nodeId: string): Promise<any[]>;
     getTicketsFromStep(stepId: string): Promise<any>;
     moveTicket(ticketId: string, stepFromId: string, stepToId: string, contextId: string): Promise<any>;
-    moveTicketToNextStep(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<void>;
-    moveTicketToPreviousStep(contextId: string, processId: string, ticketId: string, userInfo?: object): Promise<void>;
-    ArchiveTickets(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<any>;
-    unarchiveTicket(contextId: string, processId: string, ticketId: string, userInfo?: Object): Promise<any>;
+    moveTicketToNextStep(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<void>;
+    moveTicketToPreviousStep(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<void>;
+    ArchiveTickets(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<any>;
+    unarchiveTicket(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<any>;
     unlinkTicketToProcess(ticketId: string): void;
     getTicketContextId(ticketId: string): string;
     changeTicketProcess(ticketId: string, newProcessId: string, newContextId?: string): Promise<string>;
     changeTicketElementNode(ticketId: string, newElementId: string): Promise<string>;
-    addLogToTicket(ticketId: string, event: number, userInfo?: Object, fromId?: string, toId?: string): any;
+    addLogToTicket(ticketId: string, event: number, userInfo?: IUserInfo, fromId?: string, toId?: string): any;
     createLog(info: SpinalLogTicketInterface): string;
     getLogs(ticketId: string): Promise<SpinalLogTicket[]>;
     addCommonIncident(processId: string, sentence: string): Promise<boolean | string>;

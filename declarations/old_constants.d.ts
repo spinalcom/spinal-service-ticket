@@ -47,6 +47,7 @@ export declare const LOG_RELATION_TYPE: string;
 export declare const LOG_RELATION_NAME: string;
 export declare const LOG_TYPE: string;
 export declare const LOGS_EVENTS_STEPS: typeof LOGS_EVENTS;
+export declare const LOGS_EVENTS_STRING: string[];
 export declare const TICKET_PRIORITIES: {
     [key: string]: number;
 };

@@ -146,6 +146,17 @@ export const LOG_RELATION_NAME: string = SPINAL_TICKET_SERVICE_LOG_RELATION_NAME
 export const LOG_TYPE: string = SERVICE_LOG_TYPE;
 export const LOGS_EVENTS_STEPS = LOGS_EVENTS;
 
+
+export const LOGS_EVENTS_STRING: string[] = [
+  "none",
+  "creation",
+  "moveToNext",
+  "moveToPrevious",
+  "archived",
+  "unarchive",
+  "move"
+]
+
 /////////////////////////////////////////
 /////////////// Target /////////////////
 // export const SPINAL_TICKET_SERVICE_TARGET_RELATION_TYPE: string = SPINAL_RELATION_PTR_LST_TYPE;
