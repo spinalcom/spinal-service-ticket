@@ -32,7 +32,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
@@ -46,13 +45,18 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
-    createContext(contextName, steps = new Array()) {
+    createContext(contextName, steps = new Array(), contexType = undefined) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addContext(contextName, Constants_1.SERVICE_TYPE, undefined)
             .then((context) => {
             // this.context = context;
             // this.initVar();
             const stepsModel = new spinal_core_connectorjs_type_1.Lst(steps);
             context.info.add_attr("steps", new spinal_core_connectorjs_type_1.Ptr(stepsModel));
+            console.log("je suis ici");
+            if (Constants_1.CONTEXT_SUBTYPE_LIST.includes(contexType) && contexType != undefined) {
+                console.log("je vous ai compris !");
+                context.info.add_attr("subType", contexType);
+            }
             return context;
         })
             .catch((e) => {

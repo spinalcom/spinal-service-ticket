@@ -2,6 +2,7 @@ import { SpinalStep } from 'spinal-models-ticket/declarations/SpinalStep';
 import * as OLD_CONSTANTS from './old_constants';
 export * from "./old_constants";
 export declare const TICKET_CONTEXT_TYPE: string;
+export declare const CONTEXT_SUBTYPE_LIST: string[];
 export declare const TICKET_RELATION_TYPE: string;
 export declare const TICKET_RELATION_NAME: string;
 export declare const TIKET_TYPE: string;

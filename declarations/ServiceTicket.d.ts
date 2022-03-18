@@ -8,7 +8,7 @@ export declare class ServiceTicket {
         name: string;
         color?: string;
         order: number;
-    }>): Promise<any | Error>;
+    }>, contexType?: string): Promise<any | Error>;
     getContexts(name?: string): any | any[];
     updateContexts(contextId: string, newInfo: {
         name: string;

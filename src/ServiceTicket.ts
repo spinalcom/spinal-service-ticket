@@ -45,7 +45,8 @@ import {
     SPINAL_TICKET_SERVICE_TICKET_TYPE,
     LOGS_EVENTS,
     TICKET_PRIORITIES,
-    ARCHIVED_STEP
+    ARCHIVED_STEP,
+    CONTEXT_SUBTYPE_LIST
 } from './Constants';
 
 import {
@@ -77,7 +78,7 @@ export class ServiceTicket {
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
 
-    public createContext(contextName: string, steps: Array<{ name: string, color?: string, order: number }> = new Array()): Promise<any | Error> {
+    public createContext(contextName: string, steps: Array<{ name: string, color?: string, order: number }> = new Array(), contexType: string = undefined): Promise<any | Error> {
 
         return SpinalGraphService.addContext(contextName, SERVICE_TYPE, undefined)
             .then((context) => {
@@ -85,6 +86,12 @@ export class ServiceTicket {
                 // this.initVar();
                 const stepsModel = new Lst(steps);
                 context.info.add_attr("steps", new Ptr(stepsModel));
+                console.log("je suis ici");
+                if(CONTEXT_SUBTYPE_LIST.includes(contexType) && contexType != undefined){
+                    console.log("je vous ai compris !");
+                    context.info.add_attr("subType", contexType);
+                }
+                
                 return context;
 
             })
