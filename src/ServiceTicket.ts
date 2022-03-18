@@ -86,12 +86,9 @@ export class ServiceTicket {
                 // this.initVar();
                 const stepsModel = new Lst(steps);
                 context.info.add_attr("steps", new Ptr(stepsModel));
-                console.log("je suis ici");
                 if(CONTEXT_SUBTYPE_LIST.includes(contexType) && contexType != undefined){
-                    console.log("je vous ai compris !");
                     context.info.add_attr("subType", contexType);
                 }
-                
                 return context;
 
             })

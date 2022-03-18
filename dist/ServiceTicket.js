@@ -52,9 +52,7 @@ class ServiceTicket {
             // this.initVar();
             const stepsModel = new spinal_core_connectorjs_type_1.Lst(steps);
             context.info.add_attr("steps", new spinal_core_connectorjs_type_1.Ptr(stepsModel));
-            console.log("je suis ici");
             if (Constants_1.CONTEXT_SUBTYPE_LIST.includes(contexType) && contexType != undefined) {
-                console.log("je vous ai compris !");
                 context.info.add_attr("subType", contexType);
             }
             return context;
