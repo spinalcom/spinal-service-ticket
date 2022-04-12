@@ -27,7 +27,7 @@ import * as OLD_CONSTANTS from './old_constants';
 export * from "./old_constants";
 
 
-export const TICKET_CONTEXT_TYPE: string = OLD_CONSTANTS.SERVICE_NAME;
+export const TICKET_CONTEXT_TYPE: string = OLD_CONSTANTS.SERVICE_TYPE;
 /////////////////////////////////////////
 /////////////// TICKET ///////////////////
 export const TICKET_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE; // STEP_TO_TICKET_RELATION_TYPE
