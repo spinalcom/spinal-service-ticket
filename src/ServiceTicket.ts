@@ -45,7 +45,8 @@ import {
     SPINAL_TICKET_SERVICE_TICKET_TYPE,
     LOGS_EVENTS,
     TICKET_PRIORITIES,
-    ARCHIVED_STEP
+    ARCHIVED_STEP,
+    TICKET_ATTRIBUTE_OCCURENCE_NAME
 } from './Constants';
 
 import {
@@ -591,6 +592,7 @@ export class ServiceTicket {
                 for (const element of attributes) {
                     promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])))
                 }
+                promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, TICKET_ATTRIBUTE_OCCURENCE_NAME, "0", "number" ));
                 return Promise.all(promises)
             }
         })

@@ -479,6 +479,7 @@ class ServiceTicket {
                 for (const element of attributes) {
                     promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])));
                 }
+                promises.push(spinal_env_viewer_plugin_documentation_service_1.serviceDocumentation.addAttributeByCategory(node, attributeCategory, Constants_1.TICKET_ATTRIBUTE_OCCURENCE_NAME, "0", "number"));
                 return Promise.all(promises);
             }
         });

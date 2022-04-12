@@ -5,6 +5,7 @@ export declare const TICKET_CONTEXT_TYPE: string;
 export declare const TICKET_RELATION_TYPE: string;
 export declare const TICKET_RELATION_NAME: string;
 export declare const TIKET_TYPE: string;
+export declare const TICKET_ATTRIBUTE_OCCURENCE_NAME = "Occurrence number";
 export declare const PROCESS_RELATION_TYPE: string;
 export declare const PROCESS_RELATION_NAME: string;
 export declare const _PROCESS_TYPE: string;
