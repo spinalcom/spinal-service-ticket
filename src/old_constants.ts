@@ -141,6 +141,15 @@ export enum LOGS_EVENTS {
   move = 6
 }
 
+export const EVENTS_TO_LOG = Object.freeze({
+  1: "creation",
+  2: "moveToNext",
+  3: "moveToPrevious",
+  4: "archived",
+  5: "unarchive",
+  6: "move"
+})
+
 export const LOG_RELATION_TYPE: string = SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE;
 export const LOG_RELATION_NAME: string = SPINAL_TICKET_SERVICE_LOG_RELATION_NAME;
 export const LOG_TYPE: string = SERVICE_LOG_TYPE;

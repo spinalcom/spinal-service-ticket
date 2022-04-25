@@ -235,8 +235,11 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     addTicket(ticketInfo, processId, contextId, nodeId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ticketId = yield this.createTicket(ticketInfo);
             const stepId = yield this.getFirstStep(processId, contextId);
+            ticketInfo.processId = processId;
+            ticketInfo.stepId = stepId;
+            ticketInfo.contextId = contextId;
+            const ticketId = yield this.createTicket(ticketInfo);
             return spinal_env_viewer_graph_service_1.SpinalGraphService
                 .addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
                 .then(() => __awaiter(this, void 0, void 0, function* () {
@@ -381,6 +384,7 @@ class ServiceTicket {
         let info = {
             ticketId: ticketId,
             event: event,
+            action: Constants_1.EVENTS_TO_LOG[event],
             user: userInfo,
             steps: []
         };
@@ -402,7 +406,12 @@ class ServiceTicket {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(ticketId, [Constants_1.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME]).then(logs => {
             const promises = logs.map(el => el.element.load());
             return Promise.all(promises).then(elements => {
-                return elements.map(el => el.get());
+                return elements.map(el => {
+                    const res = el.get();
+                    if (typeof res.action == "undefined")
+                        res.action = Constants_1.EVENTS_TO_LOG[res.event];
+                    return res;
+                });
             });
         });
     }

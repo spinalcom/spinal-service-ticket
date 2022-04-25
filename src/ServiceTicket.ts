@@ -46,7 +46,8 @@ import {
     LOGS_EVENTS,
     TICKET_PRIORITIES,
     ARCHIVED_STEP,
-    TICKET_ATTRIBUTE_OCCURENCE_NAME
+    TICKET_ATTRIBUTE_OCCURENCE_NAME,
+    EVENTS_TO_LOG
 } from './Constants';
 
 import {
@@ -293,8 +294,13 @@ export class ServiceTicket {
 
 
     public async addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string): Promise<string | Error> {
-        const ticketId = await this.createTicket(ticketInfo);
         const stepId = await this.getFirstStep(processId, contextId);
+
+        ticketInfo.processId = processId;
+        ticketInfo.stepId = stepId;
+        ticketInfo.contextId = contextId;
+
+        const ticketId = await this.createTicket(ticketInfo);
 
         return SpinalGraphService
             .addChildInContext(stepId, ticketId,
@@ -465,6 +471,7 @@ export class ServiceTicket {
         let info = {
             ticketId: ticketId,
             event: event,
+            action: EVENTS_TO_LOG[event],
             user: userInfo,
             steps: []
         };
@@ -498,7 +505,12 @@ export class ServiceTicket {
         return SpinalGraphService.getChildren(ticketId, [SPINAL_TICKET_SERVICE_LOG_RELATION_NAME]).then(logs => {
             const promises = logs.map(el => el.element.load());
             return Promise.all(promises).then(elements => {
-                return elements.map(el => el.get())
+                return elements.map(el => {
+                    const res = el.get();
+                    if (typeof res.action == "undefined") res.action = EVENTS_TO_LOG[res.event];
+
+                    return res;
+                })
             })
         });
     }
@@ -592,7 +604,7 @@ export class ServiceTicket {
                 for (const element of attributes) {
                     promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, element, this.getObjData(element, node.info[element])))
                 }
-                promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, TICKET_ATTRIBUTE_OCCURENCE_NAME, "0", "number" ));
+                promises.push(serviceDocumentation.addAttributeByCategory(node, attributeCategory, TICKET_ATTRIBUTE_OCCURENCE_NAME, "0", "number"));
                 return Promise.all(promises)
             }
         })

@@ -43,6 +43,14 @@ export declare enum LOGS_EVENTS {
     unarchive = 5,
     move = 6
 }
+export declare const EVENTS_TO_LOG: Readonly<{
+    1: string;
+    2: string;
+    3: string;
+    4: string;
+    5: string;
+    6: string;
+}>;
 export declare const LOG_RELATION_TYPE: string;
 export declare const LOG_RELATION_NAME: string;
 export declare const LOG_TYPE: string;
