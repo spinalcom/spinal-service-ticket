@@ -167,7 +167,7 @@ export class ServiceTicket {
         if (order < 0) return Promise.reject(Error(STEP_ORDER_NOT_VALID));
 
         return this.getStepsFromProcess(processId, contextId).then((steps) => {
-            const max = Math.max.apply(Math, steps.map(el => el.order.get()));
+            const max = Math.max(...(steps.map(el => el.order.get())))
             if (order != 0 && !order) order = max + 1;
             if (order > max && max - order > 1) return Promise.reject(Error(STEP_ORDER_NOT_VALID));
 
