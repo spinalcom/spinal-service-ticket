@@ -32,7 +32,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
@@ -46,13 +45,16 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
-    createContext(contextName, steps = new Array()) {
+    createContext(contextName, steps = new Array(), contextSubType = "Ticket") {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.addContext(contextName, Constants_1.SERVICE_TYPE, undefined)
             .then((context) => {
             // this.context = context;
             // this.initVar();
             const stepsModel = new spinal_core_connectorjs_type_1.Lst(steps);
             context.info.add_attr("steps", new spinal_core_connectorjs_type_1.Ptr(stepsModel));
+            if (Constants_1.TICKET_CONTEXT_SUBTYPE_LIST.includes(contextSubType)) {
+                context.info.add_attr("subType", contextSubType);
+            }
             return context;
         })
             .catch((e) => {
@@ -112,7 +114,7 @@ class ServiceTicket {
             if (order < 0)
                 return Promise.reject(Error(Errors_1.STEP_ORDER_NOT_VALID));
             return this.getStepsFromProcess(processId, contextId).then((steps) => {
-                const max = Math.max.apply(Math, steps.map(el => el.order.get()));
+                const max = Math.max(...(steps.map(el => el.order.get())));
                 if (order != 0 && !order)
                     order = max + 1;
                 if (order > max && max - order > 1)
@@ -233,27 +235,43 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      TICKETS                         //
     //////////////////////////////////////////////////////////
-    addTicket(ticketInfo, processId, contextId, nodeId) {
+    addTicket(ticketInfo, processId, contextId, nodeId, ticketType = "Ticket") {
         return __awaiter(this, void 0, void 0, function* () {
             const stepId = yield this.getFirstStep(processId, contextId);
             ticketInfo.processId = processId;
             ticketInfo.stepId = stepId;
             ticketInfo.contextId = contextId;
             const ticketId = yield this.createTicket(ticketInfo);
-            return spinal_env_viewer_graph_service_1.SpinalGraphService
-                .addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
-                .then(() => __awaiter(this, void 0, void 0, function* () {
-                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(nodeId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
-                yield this.modifyTicketStepId(ticketId, stepId);
-                const userInfo = ticketInfo.user ? ticketInfo.user : {};
-                yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
-                return ticketId;
-            }));
+            if (ticketType == "Alarm") {
+                return spinal_env_viewer_graph_service_1.SpinalGraphService
+                    .addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+                    .then(() => __awaiter(this, void 0, void 0, function* () {
+                    yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(nodeId, ticketId, Constants_1.ALARM_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                    yield this.modifyTicketStepId(ticketId, stepId);
+                    const userInfo = ticketInfo.user ? ticketInfo.user : {};
+                    yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+                    return ticketId;
+                }));
+            }
+            else {
+                return spinal_env_viewer_graph_service_1.SpinalGraphService
+                    .addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+                    .then(() => __awaiter(this, void 0, void 0, function* () {
+                    yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(nodeId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                    yield this.modifyTicketStepId(ticketId, stepId);
+                    const userInfo = ticketInfo.user ? ticketInfo.user : {};
+                    yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+                    return ticketId;
+                }));
+            }
             return Promise.resolve(Error('CANNOT_ADD_TO_USER'));
         });
     }
     getTicketsFromNode(nodeId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(nodeId, [Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]).then(children => children.map(el => el.get()));
+    }
+    getAlarmsFromNode(nodeId) {
+        return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(nodeId, [Constants_1.ALARM_RELATION_NAME]).then(children => children.map(el => el.get()));
     }
     getTicketsFromStep(stepId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.findNode(stepId)

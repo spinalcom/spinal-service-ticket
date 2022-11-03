@@ -47,7 +47,9 @@ import {
     TICKET_PRIORITIES,
     ARCHIVED_STEP,
     TICKET_ATTRIBUTE_OCCURENCE_NAME,
-    EVENTS_TO_LOG
+    EVENTS_TO_LOG,
+    TICKET_CONTEXT_SUBTYPE_LIST,
+    ALARM_RELATION_NAME
 } from './Constants';
 
 import {
@@ -79,7 +81,7 @@ export class ServiceTicket {
     //                      CONTEXTS                        //
     //////////////////////////////////////////////////////////
 
-    public createContext(contextName: string, steps: Array<{ name: string, color?: string, order: number }> = new Array()): Promise<any | Error> {
+    public createContext(contextName: string, steps: Array<{ name: string, color?: string, order: number }> = new Array(), contextSubType:string= "Ticket"): Promise<any | Error> {
 
         return SpinalGraphService.addContext(contextName, SERVICE_TYPE, undefined)
             .then((context) => {
@@ -87,6 +89,9 @@ export class ServiceTicket {
                 // this.initVar();
                 const stepsModel = new Lst(steps);
                 context.info.add_attr("steps", new Ptr(stepsModel));
+                if(TICKET_CONTEXT_SUBTYPE_LIST.includes(contextSubType)){
+                    context.info.add_attr("subType", contextSubType);
+                }
                 return context;
 
             })
@@ -293,7 +298,7 @@ export class ServiceTicket {
     //////////////////////////////////////////////////////////
 
 
-    public async addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string): Promise<string | Error> {
+    public async addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType:string="Ticket"): Promise<string | Error> {
         const stepId = await this.getFirstStep(processId, contextId);
 
         ticketInfo.processId = processId;
@@ -302,7 +307,24 @@ export class ServiceTicket {
 
         const ticketId = await this.createTicket(ticketInfo);
 
-        return SpinalGraphService
+        if(ticketType == "Alarm"){
+            return SpinalGraphService
+            .addChildInContext(stepId, ticketId,
+                contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+                SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+            .then(async () => {
+                await SpinalGraphService.addChild(nodeId, ticketId, ALARM_RELATION_NAME,
+                    SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+
+                await this.modifyTicketStepId(ticketId, stepId);
+
+                const userInfo = ticketInfo.user ? ticketInfo.user : {}
+                await this.addLogToTicket(ticketId, LOGS_EVENTS.creation, userInfo, stepId)
+                return ticketId;
+            })
+        }
+        else{
+            return SpinalGraphService
             .addChildInContext(stepId, ticketId,
                 contextId, SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
                 SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
@@ -316,6 +338,8 @@ export class ServiceTicket {
                 await this.addLogToTicket(ticketId, LOGS_EVENTS.creation, userInfo, stepId)
                 return ticketId;
             })
+        }
+        
 
         return Promise.resolve(Error('CANNOT_ADD_TO_USER'));
 
@@ -324,6 +348,10 @@ export class ServiceTicket {
 
     public getTicketsFromNode(nodeId: string) {
         return SpinalGraphService.getChildren(nodeId, [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME]).then(children => children.map(el => el.get()))
+    }
+
+    public getAlarmsFromNode(nodeId: string){
+        return SpinalGraphService.getChildren(nodeId, [ALARM_RELATION_NAME]).then(children => children.map(el => el.get()))
     }
 
     public getTicketsFromStep(stepId: string): Promise<any> {

@@ -28,12 +28,14 @@ export * from "./old_constants";
 
 
 export const TICKET_CONTEXT_TYPE: string = OLD_CONSTANTS.SERVICE_TYPE;
+export const TICKET_CONTEXT_SUBTYPE_LIST: Array<string> = ["Ticket", "Alarm"];
 /////////////////////////////////////////
 /////////////// TICKET ///////////////////
 export const TICKET_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE; // STEP_TO_TICKET_RELATION_TYPE
 export const TICKET_RELATION_NAME: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME; // STEP_TO_TICKET_RELATION_NAME
 export const TIKET_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_TYPE;
 export const TICKET_ATTRIBUTE_OCCURENCE_NAME = "Occurrence number";
+export const ALARM_RELATION_NAME = "hasAlarm";
 /////////////////////////////////////////
 /////////////// PROCESS /////////////////
 export const PROCESS_RELATION_TYPE: string = OLD_CONSTANTS.SPINAL_TICKET_SERVICE_PROCESS_RELATION_TYPE; // CONTEXT_TO_PROCESS_RELATION_TYPE

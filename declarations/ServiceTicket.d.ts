@@ -8,7 +8,7 @@ export declare class ServiceTicket {
         name: string;
         color?: string;
         order: number;
-    }>): Promise<any | Error>;
+    }>, contextSubType?: string): Promise<any | Error>;
     getContexts(name?: string): any | any[];
     updateContexts(contextId: string, newInfo: {
         name: string;
@@ -34,8 +34,9 @@ export declare class ServiceTicket {
         color?: string;
         order: number;
     }): Promise<any>;
-    addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string): Promise<string | Error>;
+    addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType?: string): Promise<string | Error>;
     getTicketsFromNode(nodeId: string): Promise<any[]>;
+    getAlarmsFromNode(nodeId: string): Promise<any[]>;
     getTicketsFromStep(stepId: string): Promise<any>;
     moveTicket(ticketId: string, stepFromId: string, stepToId: string, contextId: string): Promise<any>;
     moveTicketToNextStep(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<void>;
