@@ -22,10 +22,22 @@
  *  with this file. If not, see
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.spinalServiceTicket = exports.serviceTicketPersonalized = void 0;
 // import { ServiceTicket } from './ServiceTicket';
 const ServiceTicket_1 = require("./ServiceTicket");
 const serviceTicketPersonalized = new ServiceTicket_1.ServiceTicket();
@@ -40,5 +52,5 @@ if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
 // tslint:disable-next-line:variable-name
 const spinalServiceTicket = serviceTicketPersonalized;
 exports.spinalServiceTicket = spinalServiceTicket;
-__export(require("./Constants"));
+__exportStar(require("./Constants"), exports);
 //# sourceMappingURL=index.js.map

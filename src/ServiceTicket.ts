@@ -103,7 +103,7 @@ export class ServiceTicket {
     public getContexts(name?: string): any | any[] {
         const contexts = SpinalGraphService.getContextWithType(SERVICE_TYPE);
         if (name && name.trim().length > 0) {
-            const found: any = contexts.filter(el => el.getName().get() === name);
+            const found: any = contexts.find(el => el.getName().get() === name);
             return found ? found.info.get() : undefined;
         }
         return contexts.map(el => el.info.get());

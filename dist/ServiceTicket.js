@@ -32,6 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServiceTicket = void 0;
 const Constants_1 = require("./Constants");
 const Errors_1 = require("./Errors");
 const spinal_env_viewer_graph_service_1 = require("spinal-env-viewer-graph-service");
@@ -64,7 +65,7 @@ class ServiceTicket {
     getContexts(name) {
         const contexts = spinal_env_viewer_graph_service_1.SpinalGraphService.getContextWithType(Constants_1.SERVICE_TYPE);
         if (name && name.trim().length > 0) {
-            const found = contexts.filter(el => el.getName().get() === name);
+            const found = contexts.find(el => el.getName().get() === name);
             return found ? found.info.get() : undefined;
         }
         return contexts.map(el => el.info.get());
