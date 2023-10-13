@@ -1,5 +1,6 @@
+"use strict";
 /*
- * Copyright 2022 SpinalCom - www.spinalcom.com
+ * Copyright 2023 SpinalCom - www.spinalcom.com
  *
  * This file is part of SpinalCore.
  *
@@ -21,9 +22,5 @@
  * with this file. If not, see
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
-
-export interface IUserInfo {
-  username?: string;
-  userId?: string | number;
-  [key: string]: any;
-}
+Object.defineProperty(exports, "__esModule", { value: true });
+//# sourceMappingURL=ISpinalNodePart.js.map

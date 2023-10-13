@@ -25,7 +25,6 @@
 // import { ServiceTicket } from './ServiceTicket';
 import { ServiceTicket } from './ServiceTicket';
 
-
 const serviceTicketPersonalized = new ServiceTicket();
 
 const gRoot: any = typeof window === 'undefined' ? global : window;
@@ -37,9 +36,8 @@ if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
   gRoot.spinal.serviceTicketPersonalized = serviceTicketPersonalized;
 }
 
-
 // tslint:disable-next-line:variable-name
 const spinalServiceTicket = serviceTicketPersonalized;
 
-export * from "./Constants";
+export * from './Constants';
 export { serviceTicketPersonalized, spinalServiceTicket };

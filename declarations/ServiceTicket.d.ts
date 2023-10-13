@@ -1,7 +1,10 @@
-import { SpinalLogTicket, SpinalLogTicketInterface } from "spinal-models-ticket/dist/SpinalLogTicket";
+import { SpinalNode } from 'spinal-env-viewer-graph-service';
+import { SpinalLogTicket, SpinalLogTicketInterface } from 'spinal-models-ticket/dist/SpinalLogTicket';
 import { TicketInterface } from 'spinal-models-ticket/dist/SpinalTicket';
-import { SpinalProcess } from "spinal-models-ticket/dist/SpinalProcess";
+import { SpinalProcess } from 'spinal-models-ticket/dist/SpinalProcess';
 import { IUserInfo } from './interfaces/IUserInfo';
+import * as moment from 'moment';
+import { ISpinalNodeArchivePart } from './interfaces/ISpinalNodePart';
 export declare class ServiceTicket {
     constructor();
     createContext(contextName: string, steps?: Array<{
@@ -19,7 +22,7 @@ export declare class ServiceTicket {
         }>;
     }): Promise<any | Error>;
     createProcess(process: SpinalProcess | string, contextId: string): Promise<string>;
-    getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service/declarations/GraphManagerService").SpinalNodeRef[]>;
+    getAllProcess(contextId: string): Promise<import("spinal-env-viewer-graph-service").SpinalNodeRef[]>;
     addStep(processId: string, contextId: string, name: string, color: string, order: number): Promise<any | Error>;
     removeStep(processId: string, contextId: string, stepId: string): Promise<string>;
     addStepById(stepId: string, processId: string, contextId: string): Promise<boolean | Error>;
@@ -65,4 +68,17 @@ export declare class ServiceTicket {
     private sortStepByOrder;
     private removeFromContextId;
     private getOldStepId;
+    getTicketsFromArchive(processOrSpatialNode: string | SpinalNode, begin: moment.MomentInput, end: moment.MomentInput): Promise<SpinalNode<any>[]>;
+    getTicketsFromArchiveGen(processOrSpatialNode: string | SpinalNode, begin: moment.MomentInput, end: moment.MomentInput): AsyncGenerator<SpinalNode<any>, void, unknown>;
+    deleteTicketFromArchive(processOrSpatialNode: string | SpinalNode, begin: number, end: number): Promise<void>;
+    updateArchivePartData(archivePart: ISpinalNodeArchivePart, archiveTicketNode: SpinalNode, timeStampAttr: string): Promise<void>;
+    archiveTicketFromProcess(ticketNode: string | SpinalNode, processNode: string | SpinalNode, date: moment.MomentInput, maxArchiveSize?: number): Promise<void>;
+    archiveTicketFromSpatial(ticketNode: string | SpinalNode, spatialNode: string | SpinalNode, date: moment.MomentInput, maxArchiveSize?: number): Promise<void>;
+    private archiveTicket;
+    private removeTicketFromParent;
+    private getAchivePartsFromArchive;
+    private getArchivePartFromArchive;
+    private getArchive;
+    private getOrCreateArchive;
+    private getArchivePartNameDate;
 }

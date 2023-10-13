@@ -1,6 +1,6 @@
-import { SpinalStep } from 'spinal-models-ticket/declarations/SpinalStep';
 import * as OLD_CONSTANTS from './old_constants';
-export * from "./old_constants";
+export * from './old_constants';
+export { GEOGRAPHIC_TYPES_ORDER as GEO_TYPES } from 'spinal-env-viewer-context-geographic-service';
 export declare const TICKET_CONTEXT_TYPE: string;
 export declare const TICKET_CONTEXT_SUBTYPE_LIST: Array<string>;
 export declare const TICKET_RELATION_TYPE: string;
@@ -19,13 +19,13 @@ export declare const ARCHIVED_STEP: {
     order: number;
     color: string;
 };
-export declare const DEFAULT_STEPS: SpinalStep[];
+export declare const DEFAULT_STEPS: import("spinal-models-ticket/declarations/SpinalStep").SpinalStep[];
 export declare const _ARCHIVED_STEP: {
     name: string;
     order: number;
     color: string;
 };
-export declare const _DEFAULT_STEPS: SpinalStep[];
+export declare const _DEFAULT_STEPS: import("spinal-models-ticket/declarations/SpinalStep").SpinalStep[];
 export declare const INCIDENT_SECTION_RELATION_TYPE: string;
 export declare const INCIDENT_SECTION_TYPE: string;
 export declare const INCIDENT_SECTION_RELATION_NAME: string;
@@ -40,3 +40,14 @@ export declare const LOGS_EVENTS_STEPS: typeof OLD_CONSTANTS.LOGS_EVENTS;
 export declare const _TICKET_PRIORITIES: {
     [key: string]: number;
 };
+export declare const PROCESS_ARCHIVE_TICKET_RELATION = "ProcessHasArchiveTicket";
+export declare const PROCESS_ARCHIVE_TICKET_TYPE = "ProcessArchiveTicket";
+export declare const SPATIAL_ARCHIVE_TICKET_RELATION = "SpatialHasArchiveTicket";
+export declare const SPATIAL_ARCHIVE_TICKET_TYPE = "SpatialArchiveTicket";
+export declare const ARCHIVE_TICKET_PART_RELATION = "ArchiveTicketHasPart";
+export declare const ARCHIVE_TICKET_PART_TYPE = "ArchiveTicketPart";
+export declare const ARCHIVE_TICKET_PART_TICKET_RELATION = "ArchiveTicketPartHasTicket";
+export declare const ARCHIVE_TICKET_RELATION_TYPE = "PtrLst";
+export declare const ARCHIVE_TICKET_TIMESTAMP_ATTR_PROCESS = "ProcessArchiveTimestamp";
+export declare const ARCHIVE_TICKET_TIMESTAMP_ATTR_SPATIAL = "SpatialArchiveTimestamp";
+export declare const ARCHIVE_TICKET_RELATIONS: string[];

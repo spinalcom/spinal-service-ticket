@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 SpinalCom - www.spinalcom.com
+ * Copyright 2023 SpinalCom - www.spinalcom.com
  *
  * This file is part of SpinalCore.
  *
@@ -22,8 +22,9 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-export interface IUserInfo {
-  username?: string;
-  userId?: string | number;
-  [key: string]: any;
+import type { Val } from 'spinal-core-connectorjs';
+import type { SpinalNode, SpinalNodeInfoModel } from 'spinal-model-graph';
+
+export interface ISpinalNodeArchivePart extends SpinalNode {
+  info: SpinalNodeInfoModel & { start: Val; end: Val };
 }
