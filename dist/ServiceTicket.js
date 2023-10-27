@@ -752,7 +752,10 @@ class ServiceTicket {
                     return ((_a = ticket.info[timeStampAttr]) === null || _a === void 0 ? void 0 : _a.get()) >= tsBegin &&
                         ((_b = ticket.info[timeStampAttr]) === null || _b === void 0 ? void 0 : _b.get()) <= tsEnd;
                 });
-                yield archivePart.removeChildren(ticketsToRm, Constants_1.ARCHIVE_TICKET_PART_TICKET_RELATION, Constants_1.ARCHIVE_TICKET_RELATION_TYPE);
+                try {
+                    yield archivePart.removeChildren(ticketsToRm, Constants_1.ARCHIVE_TICKET_PART_TICKET_RELATION, Constants_1.ARCHIVE_TICKET_RELATION_TYPE);
+                }
+                catch (error) { }
                 ticketsToRm.forEach((ticket) => ticket.setIndirectModificationDate(Date.now()));
                 yield this.updateArchivePartData(archivePart, archiveTicketNode, timeStampAttr);
             }
@@ -822,7 +825,9 @@ class ServiceTicket {
             const parents = yield ticketNode.getParents(relationName);
             const parentsFiltered = parents.filter((parent) => parentTypes.includes(parent.info.type.get()));
             const proms = parentsFiltered.map((parent) => {
-                return parent.removeChild(ticketNode, relationName, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                return parent
+                    .removeChild(ticketNode, relationName, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE)
+                    .catch(() => console.log(`catch erreor remove child for ${ticketNode.info.name.get()}`));
             });
             yield Promise.all(proms);
         });

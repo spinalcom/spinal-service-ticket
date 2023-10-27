@@ -1183,11 +1183,13 @@ export class ServiceTicket {
           ticket.info[timeStampAttr]?.get() >= tsBegin &&
           ticket.info[timeStampAttr]?.get() <= tsEnd
       );
-      await archivePart.removeChildren(
-        ticketsToRm,
-        ARCHIVE_TICKET_PART_TICKET_RELATION,
-        ARCHIVE_TICKET_RELATION_TYPE
-      );
+      try {
+        await archivePart.removeChildren(
+          ticketsToRm,
+          ARCHIVE_TICKET_PART_TICKET_RELATION,
+          ARCHIVE_TICKET_RELATION_TYPE
+        );
+      } catch (error) {}
       ticketsToRm.forEach((ticket) =>
         ticket.setIndirectModificationDate(Date.now())
       );
@@ -1334,11 +1336,17 @@ export class ServiceTicket {
       parentTypes.includes(parent.info.type.get())
     );
     const proms = parentsFiltered.map((parent) => {
-      return parent.removeChild(
-        ticketNode,
-        relationName,
-        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
-      );
+      return parent
+        .removeChild(
+          ticketNode,
+          relationName,
+          SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+        )
+        .catch(() =>
+          console.log(
+            `catch erreor remove child for ${ticketNode.info.name.get()}`
+          )
+        );
     });
     await Promise.all(proms);
   }
