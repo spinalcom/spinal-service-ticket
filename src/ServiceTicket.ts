@@ -1368,7 +1368,7 @@ export class ServiceTicket {
     if (
       child &&
       child.info.type.get() === childNodeType &&
-      maxArchiveSize < child.getNbChildren()
+      maxArchiveSize > child.getNbChildren()
     ) {
       return child;
     }

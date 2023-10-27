@@ -18,3 +18,7 @@ It's not an `insert` methods but just a `push_back`.
 # 37.10.23 - 0.1.9
 
 - catch error remove child
+
+# 37.10.23 - 0.1.10
+
+bug fix get archive part

@@ -841,7 +841,7 @@ class ServiceTicket {
             const child = children[children.length - 1];
             if (child &&
                 child.info.type.get() === childNodeType &&
-                maxArchiveSize < child.getNbChildren()) {
+                maxArchiveSize > child.getNbChildren()) {
                 return child;
             }
             const name = this.getArchivePartNameDate(date, date);
