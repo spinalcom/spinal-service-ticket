@@ -152,7 +152,9 @@ class ServiceTicket {
     }
     removeStep(processId, contextId, stepId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const stepInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(stepId).get();
+            // const stepInfo = SpinalGraphService.getInfo(stepId).get();
+            const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(stepId);
+            const stepInfo = step.info;
             return this.getSuperiorsSteps(contextId, processId, stepInfo.order, true).then((steps) => __awaiter(this, void 0, void 0, function* () {
                 spinal_env_viewer_graph_service_1.SpinalGraphService.removeFromGraph(stepId);
                 for (const step of steps) {
@@ -316,7 +318,9 @@ class ServiceTicket {
     }
     moveTicketToNextStep(contextId, processId, ticketId, userInfo = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const ticketInfo = ticket.info;
             if (ticketInfo) {
                 const stepId = ticketInfo.stepId.get();
                 const nextStep = yield this.getNextStep(processId, stepId, contextId);
@@ -331,7 +335,9 @@ class ServiceTicket {
     }
     moveTicketToPreviousStep(contextId, processId, ticketId, userInfo = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const ticketInfo = ticket.info;
             if (ticketInfo) {
                 const stepId = ticketInfo.stepId.get();
                 const previousStep = yield this.getPreviousStep(processId, stepId, contextId);
@@ -347,7 +353,9 @@ class ServiceTicket {
     ArchiveTickets(contextId, processId, ticketId, userInfo = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             const archiveId = yield this.createArchivedStep(processId, contextId);
-            const ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const ticketInfo = ticket.info;
             if (ticketInfo && archiveId) {
                 const fromId = ticketInfo.stepId.get();
                 yield this.moveTicket(ticketId, fromId, archiveId, contextId);
@@ -358,7 +366,9 @@ class ServiceTicket {
     }
     unarchiveTicket(contextId, processId, ticketId, userInfo = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const ticketInfo = ticket.info;
             const firstStep = yield this.getFirstStep(processId, contextId);
             if (ticketInfo && firstStep) {
                 const fromId = ticketInfo.stepId.get();
@@ -382,7 +392,9 @@ class ServiceTicket {
     }
     changeTicketProcess(ticketId, newProcessId, newContextId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let ticketInfo = spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(ticketId);
+            // let ticketInfo = SpinalGraphService.getInfo(ticketId);
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const ticketInfo = ticket.info;
             let oldContextId = this.getTicketContextId(ticketId);
             const contextId = newContextId || oldContextId;
             const stepId = yield this.getFirstStep(newProcessId, contextId);
@@ -644,7 +656,9 @@ class ServiceTicket {
     getOldStepId(ticketInfo, contextId) {
         return __awaiter(this, void 0, void 0, function* () {
             const stepId = ticketInfo.stepId;
-            if (spinal_env_viewer_graph_service_1.SpinalGraphService.getInfo(stepId))
+            const step = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(stepId);
+            const stepInfo = step.info;
+            if (stepInfo)
                 return stepId;
             let id2;
             yield spinal_env_viewer_graph_service_1.SpinalGraphService.findInContext(contextId, contextId, (node) => {

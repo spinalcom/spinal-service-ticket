@@ -236,7 +236,9 @@ export class ServiceTicket {
     contextId: string,
     stepId: string
   ) {
-    const stepInfo = SpinalGraphService.getInfo(stepId).get();
+    // const stepInfo = SpinalGraphService.getInfo(stepId).get();
+    const step = SpinalGraphService.getRealNode(stepId);
+    const stepInfo = step.info;
     return this.getSuperiorsSteps(
       contextId,
       processId,
@@ -517,7 +519,10 @@ export class ServiceTicket {
     ticketId: string,
     userInfo: IUserInfo = {}
   ): Promise<void> {
-    const ticketInfo = SpinalGraphService.getInfo(ticketId);
+
+    // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const ticketInfo = ticket.info;
     if (ticketInfo) {
       const stepId = ticketInfo.stepId.get();
       const nextStep = await this.getNextStep(processId, stepId, contextId);
@@ -547,7 +552,9 @@ export class ServiceTicket {
     ticketId: string,
     userInfo: IUserInfo = {}
   ): Promise<void> {
-    const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const ticketInfo = ticket.info;
     if (ticketInfo) {
       const stepId = ticketInfo.stepId.get();
       const previousStep = await this.getPreviousStep(
@@ -582,7 +589,9 @@ export class ServiceTicket {
     userInfo: IUserInfo = {}
   ): Promise<any> {
     const archiveId = await this.createArchivedStep(processId, contextId);
-    const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const ticketInfo = ticket.info;
 
     if (ticketInfo && archiveId) {
       const fromId = ticketInfo.stepId.get();
@@ -604,7 +613,9 @@ export class ServiceTicket {
     ticketId: string,
     userInfo: IUserInfo = {}
   ): Promise<any> {
-    const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    // const ticketInfo = SpinalGraphService.getInfo(ticketId);
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const ticketInfo = ticket.info;
     const firstStep = await this.getFirstStep(processId, contextId);
 
     if (ticketInfo && firstStep) {
@@ -639,7 +650,9 @@ export class ServiceTicket {
     newProcessId: string,
     newContextId?: string
   ) {
-    let ticketInfo = SpinalGraphService.getInfo(ticketId);
+    // let ticketInfo = SpinalGraphService.getInfo(ticketId);
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const ticketInfo = ticket.info;
     let oldContextId = this.getTicketContextId(ticketId);
     const contextId = newContextId || oldContextId;
 
@@ -1058,7 +1071,9 @@ export class ServiceTicket {
 
   private async getOldStepId(ticketInfo: any, contextId: string) {
     const stepId = ticketInfo.stepId;
-    if (SpinalGraphService.getInfo(stepId)) return stepId;
+    const step = SpinalGraphService.getRealNode(stepId);
+    const stepInfo = step.info;
+    if (stepInfo) return stepId;
     let id2;
     await SpinalGraphService.findInContext(contextId, contextId, (node) => {
       if (node.getId().get() === stepId) {
