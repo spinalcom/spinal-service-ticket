@@ -302,6 +302,20 @@ class ServiceTicket {
             ]);
         });
     }
+    getTicketProcess(ticketId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ticket = spinal_env_viewer_graph_service_1.SpinalGraphService.getRealNode(ticketId);
+            const steps = yield ticket.getParents(Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
+            const step = steps.find((step) => step.getId().get() === ticket.info.stepId.get());
+            if (!step)
+                throw new Error('Ticket Step not found');
+            const processes = yield step.getParents(Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME);
+            const process = processes.find((process) => process.getId().get() === ticket.info.processId.get());
+            if (!process)
+                throw new Error('Process not found');
+            return process;
+        });
+    }
     moveTicket(ticketId, stepFromId, stepToId, contextId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (typeof ticketId === 'undefined' ||
@@ -314,6 +328,13 @@ class ServiceTicket {
                 stepId: stepToId,
             });
             return spinal_env_viewer_graph_service_1.SpinalGraphService.moveChildInContext(stepFromId, stepToId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+        });
+    }
+    moveTicketToStep(ticketId, stepFromId, stepToId, contextId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.moveTicket(ticketId, stepFromId, stepToId, contextId).then(() => __awaiter(this, void 0, void 0, function* () {
+                yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.move, undefined, stepFromId, stepToId);
+            }));
         });
     }
     moveTicketToNextStep(contextId, processId, ticketId, userInfo = {}) {

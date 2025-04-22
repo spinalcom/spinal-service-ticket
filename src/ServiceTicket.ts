@@ -485,6 +485,19 @@ export class ServiceTicket {
     });
   }
 
+  public async getTicketProcess(ticketId: string) : Promise<SpinalNode<any>> {
+    const ticket = SpinalGraphService.getRealNode(ticketId);
+    const steps = await ticket.getParents(SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME);
+    const step = steps.find(( step ) => step.getId().get() === ticket.info.stepId.get());
+    if(!step) throw new Error('Ticket Step not found');
+    const processes = await step.getParents(SPINAL_TICKET_SERVICE_STEP_RELATION_NAME);
+    const process = processes.find(( process ) => process.getId().get() === ticket.info.processId.get());
+    if (!process) throw new Error('Process not found');
+    return process;
+  }
+
+
+
   public async moveTicket(
     ticketId: string,
     stepFromId: string,
@@ -512,6 +525,26 @@ export class ServiceTicket {
       SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
     );
   }
+
+  public async moveTicketToStep(
+    ticketId: string,
+    stepFromId: string,
+    stepToId: string,
+    contextId: string
+  ) : Promise<any> {
+    return this.moveTicket(ticketId, stepFromId, stepToId, contextId).then( async () => {
+      await this.addLogToTicket(
+        ticketId,
+        LOGS_EVENTS.move,
+        undefined,
+        stepFromId,
+        stepToId
+      );
+    });
+    
+  }
+
+
 
   public async moveTicketToNextStep(
     contextId: string,

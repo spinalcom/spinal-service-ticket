@@ -41,7 +41,9 @@ export declare class ServiceTicket {
     getTicketsFromNode(nodeId: string): Promise<any[]>;
     getAlarmsFromNode(nodeId: string): Promise<any[]>;
     getTicketsFromStep(stepId: string): Promise<any>;
+    getTicketProcess(ticketId: string): Promise<SpinalNode<any>>;
     moveTicket(ticketId: string, stepFromId: string, stepToId: string, contextId: string): Promise<any>;
+    moveTicketToStep(ticketId: string, stepFromId: string, stepToId: string, contextId: string): Promise<any>;
     moveTicketToNextStep(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<void>;
     moveTicketToPreviousStep(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<void>;
     ArchiveTickets(contextId: string, processId: string, ticketId: string, userInfo?: IUserInfo): Promise<any>;
