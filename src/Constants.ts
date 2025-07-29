@@ -25,7 +25,6 @@ import * as OLD_CONSTANTS from './old_constants';
 export * from './old_constants';
 import { SPINAL_RELATION_PTR_LST_TYPE } from 'spinal-model-graph';
 export { GEOGRAPHIC_TYPES_ORDER as GEO_TYPES } from 'spinal-env-viewer-context-geographic-service';
-import { GEOGRAPHIC_TYPES_ORDER as GEO_TYPES } from 'spinal-env-viewer-context-geographic-service';
 
 export const TICKET_CONTEXT_TYPE: string = OLD_CONSTANTS.SERVICE_TYPE;
 export const TICKET_CONTEXT_SUBTYPE_LIST: Array<string> = ['Ticket', 'Alarm'];
@@ -39,6 +38,8 @@ export const TIKET_TYPE: string =
   OLD_CONSTANTS.SPINAL_TICKET_SERVICE_TICKET_TYPE;
 export const TICKET_ATTRIBUTE_OCCURENCE_NAME = 'Occurrence number';
 export const ALARM_RELATION_NAME = 'hasAlarm';
+export const TICKET_ATTRIBUTE_CATEGORY_NAME = 'default';
+
 /////////////////////////////////////////
 /////////////// PROCESS /////////////////
 export const PROCESS_RELATION_TYPE: string =

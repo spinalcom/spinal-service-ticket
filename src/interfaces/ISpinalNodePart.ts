@@ -23,8 +23,13 @@
  */
 
 import type { Val } from 'spinal-core-connectorjs';
-import type { SpinalNode, SpinalNodeInfoModel } from 'spinal-model-graph';
+import type { SpinalNodeInfoModel } from 'spinal-model-graph';
+import type { ISpinalNodeSpecialized } from './ISpinalNodeSpecialized';
 
-export interface ISpinalNodeArchivePart extends SpinalNode {
-  info: SpinalNodeInfoModel & { start: Val; end: Val };
+export interface ISpinalNodeArchivePartInfo extends SpinalNodeInfoModel {
+  start: Val;
+  end: Val;
 }
+
+export type ISpinalNodeArchivePart =
+  ISpinalNodeSpecialized<ISpinalNodeArchivePartInfo>;

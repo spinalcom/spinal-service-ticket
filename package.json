@@ -1,6 +1,6 @@
 {
   "name": "spinal-service-ticket",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "license": "SpinalCOM",
   "main": "dist/index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "types": "declarations/index.d.ts",
   "dependencies": {
     "moment": "^2.27.0",
+    "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-core-connectorjs_type": "git+https://github.com/spinalcom/spinal-core-connectorjs_type.git",
     "spinal-env-viewer-context-geographic-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-geographic-service.git",
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
@@ -20,12 +21,6 @@
   "description": "SpinalCOM service ticket. This service allow the handling of ticket inside a spinalcom environment.",
   "devDependencies": {
     "@types/node": "^10.12.12",
-    "chai": "^4.2.0",
-    "jsdoc-to-markdown": "^4.0.1",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
-    "tslint": "^5.11.0",
-    "tslint-config-airbnb": "^5.11.1",
     "typescript": "^4.8.4"
   }
 }
