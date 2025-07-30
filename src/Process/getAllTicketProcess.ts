@@ -22,10 +22,10 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import type { SpinalContext } from 'spinal-model-graph';
+import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
 
 export function getAllTicketProcess(
   contextNodeTicket: SpinalContext
-): Promise<SpinalContext[]> {
+): Promise<SpinalNode[]> {
   return contextNodeTicket.getChildrenInContext(contextNodeTicket);
 }

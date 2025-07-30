@@ -1,2 +1,2 @@
-import type { SpinalContext } from 'spinal-model-graph';
-export declare function getAllTicketProcess(contextNodeTicket: SpinalContext): Promise<SpinalContext[]>;
+import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
+export declare function getAllTicketProcess(contextNodeTicket: SpinalContext): Promise<SpinalNode[]>;
