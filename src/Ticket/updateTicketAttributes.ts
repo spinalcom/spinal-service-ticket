@@ -28,15 +28,57 @@ import { TICKET_ATTRIBUTE_CATEGORY_NAME } from '../Constants';
 
 export function updateTicketAttributes(
   ticketNode: SpinalNode,
-  attrToSet: Record<string, string>,
-  res: Record<string, string> = {}
+  /**
+   * The attributes to set on the ticket, usually the value is a string but it will flatten if it's an object
+   * @example
+   * {
+   *   "priority": "high",
+   *   "status": "open",
+   *   "customField": {
+   *     "status": "blabla",
+   *     "field2": "value2"
+   *   }
+   * }
+   * This will result in:
+   * {
+   *   "priority": "high",
+   *   "status": "open",
+   *   "field2": "value2"
+   * }
+   * @param attrToSet - The attributes to set on the ticket
+   */
+  attrToSet: Record<string, any>
 ) {
-  for (const key in attrToSet) {
-    if (Object.prototype.hasOwnProperty.call(attrToSet, key)) {
-      const element = attrToSet[key];
+  const res = sanatizeAttributes(attrToSet);
+  if (Object.keys(res).length === 0) {
+    return Promise.resolve();
+  }
+  return attributeService.createOrUpdateAttrsAndCategories(
+    ticketNode,
+    TICKET_ATTRIBUTE_CATEGORY_NAME,
+    res
+  );
+}
+
+/**
+ * Sanatize the attributes to ensure all values are strings.
+ * This function will flatten the attributes if they are objects.
+ * It will convert all non-string values to strings.
+ * If the value is an object, it will recursively call itself to flatten the object.
+ * @param {Record<string, any>} attributes
+ * @param {Record<string, string>} [res={}]
+ * @return {*}  {Record<string, string>}
+ */
+function sanatizeAttributes(
+  attributes: Record<string, any>,
+  res: Record<string, string> = {}
+): Record<string, string> {
+  for (const key in attributes) {
+    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
+      const element = attributes[key];
       if (typeof element === 'object') {
         // call recursively if the element is an object
-        updateTicketAttributes(ticketNode, element, res);
+        sanatizeAttributes(element, res);
       } else if (typeof element !== 'string') {
         Object.assign(res, {
           [key]: (<any>element).toString(),
@@ -49,10 +91,5 @@ export function updateTicketAttributes(
       }
     }
   }
-
-  return attributeService.createOrUpdateAttrsAndCategories(
-    ticketNode,
-    TICKET_ATTRIBUTE_CATEGORY_NAME,
-    res
-  );
+  return res;
 }
