@@ -1,6 +1,6 @@
 {
   "name": "spinal-service-ticket",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "SpinalCOM",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,8 @@
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
     "spinal-env-viewer-plugin-documentation-service": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-documentation-service.git",
     "spinal-models-ticket": "git+https://github.com/spinalcom/spinal-models-ticket.git",
-    "spinal-service-user": "git+https://github.com/spinalcom/spinal-service-user.git"
+    "spinal-service-user": "git+https://github.com/spinalcom/spinal-service-user.git",
+    "lodash": "^4.17.21"
   },
   "description": "SpinalCOM service ticket. This service allow the handling of ticket inside a spinalcom environment.",
   "devDependencies": {

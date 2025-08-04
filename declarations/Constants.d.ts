@@ -20,13 +20,13 @@ export declare const ARCHIVED_STEP: {
     order: number;
     color: string;
 };
-export declare const DEFAULT_STEPS: import("spinal-models-ticket/declarations").SpinalStep[];
+export declare const DEFAULT_STEPS: import("spinal-models-ticket").SpinalStep[];
 export declare const _ARCHIVED_STEP: {
     name: string;
     order: number;
     color: string;
 };
-export declare const _DEFAULT_STEPS: import("spinal-models-ticket/declarations").SpinalStep[];
+export declare const _DEFAULT_STEPS: import("spinal-models-ticket").SpinalStep[];
 export declare const INCIDENT_SECTION_RELATION_TYPE: string;
 export declare const INCIDENT_SECTION_TYPE: string;
 export declare const INCIDENT_SECTION_RELATION_NAME: string;
