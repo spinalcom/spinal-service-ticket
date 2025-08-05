@@ -36,12 +36,24 @@ exports.getTicketInfo = void 0;
 const spinal_env_viewer_plugin_documentation_service_1 = require("spinal-env-viewer-plugin-documentation-service");
 function getTicketInfo(ticketNode, attributesToGet) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (attributesToGet.length === 0)
+        if (Array.isArray(attributesToGet) && attributesToGet.length > 0) {
+            const data = yield spinal_env_viewer_plugin_documentation_service_1.attributeService.getAttrBySchema(ticketNode, {
+                default: attributesToGet,
+            });
+            return data.default;
+        }
+        const category = yield spinal_env_viewer_plugin_documentation_service_1.attributeService.getCategoryByName(ticketNode, 'default');
+        if (!category)
             return;
-        const data = yield spinal_env_viewer_plugin_documentation_service_1.attributeService.getAttrBySchema(ticketNode, {
-            default: attributesToGet,
-        });
-        return data.default;
+        const attributes = yield spinal_env_viewer_plugin_documentation_service_1.attributeService.getAttributesByCategory(ticketNode, category);
+        const data = {};
+        for (const attr of attributes) {
+            const label = attr.label.get();
+            const value = attr.value.get();
+            if (label && value)
+                data[label] = value;
+        }
+        return data;
     });
 }
 exports.getTicketInfo = getTicketInfo;

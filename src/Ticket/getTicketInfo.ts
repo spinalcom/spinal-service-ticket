@@ -25,13 +25,37 @@
 import type { SpinalNode } from 'spinal-model-graph';
 import { attributeService } from 'spinal-env-viewer-plugin-documentation-service';
 
+export async function getTicketInfo(
+  ticketNode: SpinalNode
+): Promise<Record<string, string>>;
 export async function getTicketInfo<T extends readonly string[]>(
   ticketNode: SpinalNode,
   attributesToGet: T
+): Promise<{ [V in T[number]]: string }>;
+export async function getTicketInfo<T extends readonly string[]>(
+  ticketNode: SpinalNode,
+  attributesToGet?: T
 ) {
-  if (attributesToGet.length === 0) return;
-  const data = await attributeService.getAttrBySchema(ticketNode, {
-    default: attributesToGet,
-  } as const);
-  return data.default;
+  if (Array.isArray(attributesToGet) && attributesToGet.length > 0) {
+    const data = await attributeService.getAttrBySchema(ticketNode, {
+      default: attributesToGet,
+    } as const);
+    return data.default;
+  }
+  const category = await attributeService.getCategoryByName(
+    ticketNode,
+    'default'
+  );
+  if (!category) return;
+  const attributes = await attributeService.getAttributesByCategory(
+    ticketNode,
+    category
+  );
+  const data: Record<string, string> = {};
+  for (const attr of attributes) {
+    const label = attr.label.get();
+    const value = attr.value.get();
+    if (label && value) data[label] = value;
+  }
+  return data;
 }
