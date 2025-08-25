@@ -23,38 +23,28 @@
  */
 
 import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
-import { getTicketInfo } from './getTicketInfo';
 import {
-  SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
   SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+  STEP_TYPE,
 } from '../Constants';
 
-export async function getProcessFromTicket(
+export async function getStepFromTicket(
   ticketNode: SpinalNode,
   contextNodeTicket?: SpinalContext
 ): Promise<SpinalNode> {
-  const ticketInfo = await getTicketInfo(ticketNode, [
-    'stepId',
-    'processId',
-  ] as const);
-
   // try with to find via the context
   if (contextNodeTicket) {
     for await (const item of ticketNode.visitParentsInContext(
       contextNodeTicket
     )) {
-      if (ticketInfo.processId === item.info.id.get()) return item;
+      if (STEP_TYPE === item.info.type.get()) return item;
     }
   }
 
   // try with to find via the relations
-  return ticketNode.findOneParent(
-    [
-      SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-      SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-    ],
-    (item) => {
-      return ticketInfo.processId === item.info.id.get();
-    }
-  );
+  for await (const item of ticketNode.visitParents([
+    SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+  ])) {
+    if (STEP_TYPE === item.info.type.get()) return item;
+  }
 }

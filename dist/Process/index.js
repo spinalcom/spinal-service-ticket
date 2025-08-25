@@ -39,4 +39,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./createTicketProcess"), exports);
 __exportStar(require("./getAllTicketProcess"), exports);
+__exportStar(require("./getProcessFromStep"), exports);
+__exportStar(require("./getProcessFromTicket"), exports);
 //# sourceMappingURL=index.js.map

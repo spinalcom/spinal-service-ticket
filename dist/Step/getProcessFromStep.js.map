@@ -1,1 +1,0 @@
-{"version":3,"file":"getProcessFromStep.js","sourceRoot":"","sources":["../../src/Step/getProcessFromStep.ts"],"names":[],"mappings":";AAAA;;;;;;;;;;;;;;;;;;;;;;GAsBG;;;;;;;;;;;;AAGH,oDAA4E;AAE5E,SAAsB,kBAAkB,CACtC,QAAoB;;QAEpB,MAAM,WAAW,GAAG,MAAM,QAAQ,CAAC,UAAU,CAAC;YAC5C,wDAAwC;SACzC,CAAC,CAAC;QACH,OAAO,WAAW,CAAC,CAAC,CAAC,CAAC;IACxB,CAAC;CAAA;AAPD,gDAOC"}

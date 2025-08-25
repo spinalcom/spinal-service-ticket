@@ -39,48 +39,35 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProcessFromTicket = void 0;
-const getTicketInfo_1 = require("./getTicketInfo");
+exports.getContextFromProcess = void 0;
 const Constants_1 = require("../Constants");
-function getProcessFromTicket(ticketNode, contextNodeTicket) {
+function getContextFromProcess(processNode) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const ticketInfo = yield (0, getTicketInfo_1.getTicketInfo)(ticketNode, [
-            'stepId',
-            'processId',
-        ]);
-        // try with to find via the context
-        if (contextNodeTicket) {
-            try {
-                for (var _d = true, _e = __asyncValues(ticketNode.visitParentsInContext(contextNodeTicket)), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
-                    _c = _f.value;
-                    _d = false;
-                    try {
-                        const item = _c;
-                        if (ticketInfo.processId === item.info.id.get())
-                            return item;
-                    }
-                    finally {
-                        _d = true;
-                    }
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
+        try {
+            for (var _d = true, _e = __asyncValues(processNode.visitParents([
+                Constants_1.SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+            ])), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
+                _c = _f.value;
+                _d = false;
                 try {
-                    if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
+                    const item = _c;
+                    if (Constants_1.TICKET_CONTEXT_TYPE === item.info.id.get())
+                        return item;
                 }
-                finally { if (e_1) throw e_1.error; }
+                finally {
+                    _d = true;
+                }
             }
         }
-        // try with to find via the relations
-        return ticketNode.findOneParent([
-            Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-            Constants_1.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-        ], (item) => {
-            return ticketInfo.processId === item.info.id.get();
-        });
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
     });
 }
-exports.getProcessFromTicket = getProcessFromTicket;
-//# sourceMappingURL=getProcessFromTicket.js.map
+exports.getContextFromProcess = getContextFromProcess;
+//# sourceMappingURL=getContextFromProcess.js.map

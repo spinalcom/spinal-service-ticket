@@ -22,30 +22,23 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
-import { getTicketInfo } from './getTicketInfo';
-import { SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME } from '../Constants';
+import type { SpinalNode } from 'spinal-model-graph';
+import {
+  SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+  SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+  SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+  TICKET_CONTEXT_TYPE,
+} from '../Constants';
 
-export async function getStepFromTicket(
-  ticketNode: SpinalNode,
-  contextNodeTicket?: SpinalContext
+export async function getContextFromTicket(
+  ticketNode: SpinalNode
 ): Promise<SpinalNode> {
-  const ticketInfo = await getTicketInfo(ticketNode, ['stepId'] as const);
-
-  // try with to find via the context
-  if (contextNodeTicket) {
-    for await (const item of ticketNode.visitParentsInContext(
-      contextNodeTicket
-    )) {
-      if (ticketInfo.stepId === item.info.id.get()) return item;
-    }
-  }
-
   // try with to find via the relations
-  return ticketNode.findOneParent(
-    [SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME],
-    (item) => {
-      return ticketInfo.stepId === item.info.id.get();
-    }
-  );
+  for await (const item of ticketNode.visitParents([
+    SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+    SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+    SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+  ])) {
+    if (TICKET_CONTEXT_TYPE === item.info.type.get()) return item;
+  }
 }

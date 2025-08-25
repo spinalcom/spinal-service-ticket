@@ -22,7 +22,18 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-export * from './createTicketProcess';
-export * from './getAllTicketProcess';
-export * from './getProcessFromStep';
-export * from './getProcessFromTicket';
+import type { SpinalNode } from 'spinal-model-graph';
+import {
+  TICKET_CONTEXT_TYPE,
+  SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+} from '../Constants';
+
+export async function getContextFromProcess(
+  processNode: SpinalNode
+): Promise<SpinalNode> {
+  for await (const item of processNode.visitParents([
+    SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+  ])) {
+    if (TICKET_CONTEXT_TYPE === item.info.id.get()) return item;
+  }
+}

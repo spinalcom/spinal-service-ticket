@@ -9,7 +9,7 @@ export * from './createStepToProcess';
 export * from './getInferiorsStepNodes';
 export * from './getPreviousStepNode';
 export * from './getStepNodesFromProcess';
-export * from './getProcessFromStep';
+export * from './getStepFromTicket';
 export * from './_createStepNode';
 export * from './_createArchivedStep';
 export * from './_initializeStepNode';

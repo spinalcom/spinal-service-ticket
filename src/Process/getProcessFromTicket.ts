@@ -22,29 +22,31 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import type { SpinalNode } from 'spinal-model-graph';
+import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
 import {
-  ALARM_RELATION_NAME,
-  SPINAL_TICKET_SERVICE_STEP_TYPE,
+  PROCESS_TYPE,
+  SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
   SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
 } from '../Constants';
 
-export async function getNodeFromTicket(
-  ticketNode: SpinalNode
-): Promise<SpinalNode | undefined> {
-  const parentNodes = await ticketNode.getParents([
-    ALARM_RELATION_NAME,
-    SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
-  ]);
-  for (const parent of parentNodes) {
-    if (
-      ![SPINAL_TICKET_SERVICE_STEP_TYPE, 'analyticOutputs'].includes(
-        parent.info.type.get()
-      )
-    ) {
-      return parent;
+export async function getProcessFromTicket(
+  ticketNode: SpinalNode,
+  contextNodeTicket?: SpinalContext
+): Promise<SpinalNode> {
+  // try with to find via the context
+  if (contextNodeTicket) {
+    for await (const item of ticketNode.visitParentsInContext(
+      contextNodeTicket
+    )) {
+      if (PROCESS_TYPE === item.info.type.get()) return item;
     }
   }
 
-  return undefined;
+  // try with to find via the relations
+  for await (const item of ticketNode.visitParents([
+    SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+    SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+  ])) {
+    if (PROCESS_TYPE === item.info.type.get()) return item;
+  }
 }

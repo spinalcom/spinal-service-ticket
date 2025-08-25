@@ -57,7 +57,7 @@ import { addTicket } from './Ticket/addTicket';
 import { getTicketsFromNode } from './Ticket/getTicketsFromNode';
 import { getAlarmsFromNode } from './Ticket/getAlarmsFromNode';
 import { getTicketsFromStep } from './Ticket/getTicketsFromStep';
-import { getProcessFromTicket } from './Ticket/getProcessFromTicket';
+import { getProcessFromTicket } from './Process/getProcessFromTicket';
 import { moveTicketNode } from './Ticket/moveTicketNode';
 import { moveTicketToStep } from './Ticket/moveTicketToStep';
 import { moveTicketToNextStep } from './Ticket/moveTicketToNextStep';

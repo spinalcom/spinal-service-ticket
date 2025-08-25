@@ -40,7 +40,12 @@ function getNodeFromTicket(ticketNode) {
             Constants_1.ALARM_RELATION_NAME,
             Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
         ]);
-        return parentNodes[0];
+        for (const parent of parentNodes) {
+            if (![Constants_1.SPINAL_TICKET_SERVICE_STEP_TYPE, 'analyticOutputs'].includes(parent.info.type.get())) {
+                return parent;
+            }
+        }
+        return undefined;
     });
 }
 exports.getNodeFromTicket = getNodeFromTicket;

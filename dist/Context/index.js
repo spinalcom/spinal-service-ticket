@@ -40,4 +40,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./createTicketContext"), exports);
 __exportStar(require("./getTicketContexts"), exports);
 __exportStar(require("./updateTicketContexts"), exports);
+__exportStar(require("./getContextFromProcess"), exports);
+__exportStar(require("./getContextFromStep"), exports);
+__exportStar(require("./getContextFromTicket"), exports);
 //# sourceMappingURL=index.js.map

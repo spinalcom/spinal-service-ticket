@@ -23,13 +23,20 @@
  */
 
 import type { SpinalNode } from 'spinal-model-graph';
-import { SPINAL_TICKET_SERVICE_STEP_RELATION_NAME } from '../old_constants';
+import {
+  SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+  SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+  TICKET_CONTEXT_TYPE,
+} from '../Constants';
 
-export async function getProcessFromStep(
+export async function getContextFromStep(
   stepNode: SpinalNode
-): Promise<SpinalNode | undefined> {
-  const parentNodes = await stepNode.getParents([
-    SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
-  ]);
-  return parentNodes[0];
+): Promise<SpinalNode> {
+  // try with to find via the relations
+  for await (const item of stepNode.visitParents([
+    SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+    SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
+  ])) {
+    if (TICKET_CONTEXT_TYPE === item.info.type.get()) return item;
+  }
 }
