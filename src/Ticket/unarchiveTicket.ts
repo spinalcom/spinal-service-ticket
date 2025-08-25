@@ -25,8 +25,7 @@ import type { SpinalContext, SpinalNode } from 'spinal-model-graph';
 import type { IUserInfo } from '../interfaces/IUserInfo';
 import { addLogToTicketNode } from '../Logs/addLogToTicketNode';
 import { moveTicketNode } from './moveTicketNode';
-import { ARCHIVED_STEP, LOGS_EVENTS } from '../Constants';
-import { getStepNodesFromProcess } from '../Step/getStepNodesFromProcess';
+import { LOGS_EVENTS } from '../Constants';
 import { _initializeStepNode } from '../Step/_initializeStepNode';
 import { getTicketInfo } from './getTicketInfo';
 import { getStepFromProcessByStepId } from '../Step/getStepFromProcessByStepId';
@@ -37,7 +36,7 @@ export async function unarchiveTicket(
   processNode: SpinalNode,
   ticketNode: SpinalNode,
   userInfo: IUserInfo = {}
-): Promise<any> {
+) {
   const ticketInfo = await getTicketInfo(ticketNode, ['stepId'] as const);
   const firstStep = await getFirstStepNode(processNode, contextNodeTicket);
 
