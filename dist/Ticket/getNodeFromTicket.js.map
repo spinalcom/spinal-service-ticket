@@ -1,0 +1,1 @@
+{"version":3,"file":"getNodeFromTicket.js","sourceRoot":"","sources":["../../src/Ticket/getNodeFromTicket.ts"],"names":[],"mappings":";AAAA;;;;;;;;;;;;;;;;;;;;;;GAsBG;;;;;;;;;;;;AAGH,4CAGsB;AAEtB,SAAsB,iBAAiB,CACrC,UAAsB;;QAEtB,MAAM,WAAW,GAAG,MAAM,UAAU,CAAC,UAAU,CAAC;YAC9C,+BAAmB;YACnB,sDAA0C;SAC3C,CAAC,CAAC;QACH,OAAO,WAAW,CAAC,CAAC,CAAC,CAAC;IACxB,CAAC;CAAA;AARD,8CAQC"}

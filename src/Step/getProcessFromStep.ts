@@ -22,22 +22,14 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-export * from './addTicket';
-export * from './changeTicketNodeTarget';
-export * from './getAlarmsFromNode';
-export * from './getTicketContextId';
-export * from './getTicketsFromNode';
-export * from './moveTicketToNextStep';
-export * from './moveTicketToStep';
-export * from './updateTicketAttributes';
-export * from './archiveTickets';
-export * from './changeTicketProcess';
-export * from './getProcessFromTicket';
-export * from './getTicketInfo';
-export * from './getTicketsFromStep';
-export * from './moveTicketNode';
-export * from './getStepFromTicket';
-export * from './getNodeFromTicket';
-export * from './moveTicketToPreviousStep';
-export * from './unarchiveTicket';
-export * from './_modifyTicketStepId';
+import type { SpinalNode } from 'spinal-model-graph';
+import { SPINAL_TICKET_SERVICE_STEP_RELATION_NAME } from '../old_constants';
+
+export async function getProcessFromStep(
+  stepNode: SpinalNode
+): Promise<SpinalNode | undefined> {
+  const parentNodes = await stepNode.getParents([
+    SPINAL_TICKET_SERVICE_STEP_RELATION_NAME,
+  ]);
+  return parentNodes[0];
+}

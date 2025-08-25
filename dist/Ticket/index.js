@@ -51,6 +51,8 @@ __exportStar(require("./getProcessFromTicket"), exports);
 __exportStar(require("./getTicketInfo"), exports);
 __exportStar(require("./getTicketsFromStep"), exports);
 __exportStar(require("./moveTicketNode"), exports);
+__exportStar(require("./getStepFromTicket"), exports);
+__exportStar(require("./getNodeFromTicket"), exports);
 __exportStar(require("./moveTicketToPreviousStep"), exports);
 __exportStar(require("./unarchiveTicket"), exports);
 __exportStar(require("./_modifyTicketStepId"), exports);

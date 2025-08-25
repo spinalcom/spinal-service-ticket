@@ -12,6 +12,8 @@ export * from './getProcessFromTicket';
 export * from './getTicketInfo';
 export * from './getTicketsFromStep';
 export * from './moveTicketNode';
+export * from './getStepFromTicket';
+export * from './getNodeFromTicket';
 export * from './moveTicketToPreviousStep';
 export * from './unarchiveTicket';
 export * from './_modifyTicketStepId';

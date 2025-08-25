@@ -48,6 +48,7 @@ __exportStar(require("./createStepToProcess"), exports);
 __exportStar(require("./getInferiorsStepNodes"), exports);
 __exportStar(require("./getPreviousStepNode"), exports);
 __exportStar(require("./getStepNodesFromProcess"), exports);
+__exportStar(require("./getProcessFromStep"), exports);
 __exportStar(require("./_createStepNode"), exports);
 __exportStar(require("./_createArchivedStep"), exports);
 __exportStar(require("./_initializeStepNode"), exports);
