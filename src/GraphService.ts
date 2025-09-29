@@ -50,7 +50,7 @@ export async function graphServiceGetContextWithType(
   contextType: string
 ): Promise<SpinalContext[]> {
   const graph = graphServiceGetGraph();
-  const contexts = await graph.getChildren(contextType);
+  const contexts = await graph.getChildren();
   return contexts.filter(
     (context) =>
       context instanceof SpinalContext &&

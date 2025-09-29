@@ -52,7 +52,7 @@ exports.graphServiceAddContext = graphServiceAddContext;
 function graphServiceGetContextWithType(contextType) {
     return __awaiter(this, void 0, void 0, function* () {
         const graph = graphServiceGetGraph();
-        const contexts = yield graph.getChildren(contextType);
+        const contexts = yield graph.getChildren();
         return contexts.filter((context) => context instanceof spinal_model_graph_1.SpinalContext &&
             context.getType().get() === contextType);
     });
