@@ -34,6 +34,6 @@ export async function getContextFromProcess(
   for await (const item of processNode.visitParents([
     SPINAL_TICKET_SERVICE_PROCESS_RELATION_NAME,
   ])) {
-    if (TICKET_CONTEXT_TYPE === item.info.id.get()) return item;
+    if (TICKET_CONTEXT_TYPE === item.info.type.get()) return item;
   }
 }

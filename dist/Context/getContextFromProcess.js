@@ -52,7 +52,7 @@ function getContextFromProcess(processNode) {
                 _d = false;
                 try {
                     const item = _c;
-                    if (Constants_1.TICKET_CONTEXT_TYPE === item.info.id.get())
+                    if (Constants_1.TICKET_CONTEXT_TYPE === item.info.type.get())
                         return item;
                 }
                 finally {
