@@ -40,4 +40,14 @@ if (typeof gRoot.spinal.SpinalServiceTicket === 'undefined') {
 const spinalServiceTicket = serviceTicketPersonalized;
 
 export * from './Constants';
+
 export { serviceTicketPersonalized, spinalServiceTicket };
+
+export * from './Archive';
+export * from './CommonIncident';
+export * from './Context';
+export * from './interfaces';
+export * from './Logs';
+export * from './Process';
+export * from './Step';
+export * from './Ticket';

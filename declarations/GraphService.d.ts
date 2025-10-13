@@ -1,0 +1,10 @@
+import { type SpinalGraph, SpinalContext, type SpinalNode } from 'spinal-model-graph';
+import type { Model } from 'spinal-core-connectorjs';
+export { SpinalNodeRef } from 'spinal-env-viewer-graph-service';
+export declare function graphServiceGetGraph(): SpinalGraph;
+export declare function graphServiceAddContext(contextName: string, contextType: string, elt?: Model): Promise<SpinalContext>;
+export declare function graphServiceGetContextWithType(contextType: string): Promise<SpinalContext[]>;
+export declare function graphServiceAddNode(node: SpinalNode): void;
+export declare function graphServiceGetRef(node: SpinalNode): import("spinal-env-viewer-graph-service").SpinalNodeRef;
+export declare function graphServiceGetInfo(node: SpinalNode): Record<string, any>;
+export declare function graphServiceGetRealNode(id: string): SpinalNode;

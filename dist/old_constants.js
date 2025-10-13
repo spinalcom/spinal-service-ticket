@@ -78,15 +78,15 @@ exports.SPINAL_TICKET_SERVICE_STEP_RELATION_NAME = 'SpinalSystemServiceTicketHas
 // export const STEP_RELATION_NAME: string = SPINAL_TICKET_SERVICE_STEP_RELATION_NAME; // PROCESS_TO_STEP_RELATION_NAME
 // export const STEP_TYPE: string = SPINAL_TICKET_SERVICE_STEP_TYPE;
 exports.ARCHIVED_STEP = {
-    name: "Archived",
+    name: 'Archived',
     order: -1,
-    color: "#FF0000"
+    color: '#FF0000',
 };
 exports.DEFAULT_STEPS = [
     { name: 'Déclaré', color: '#ff0019', order: 0 },
     { name: 'Ouvert', color: '#fff112', order: 1 },
     { name: 'Résolu', color: '#10ff1d', order: 2 },
-    exports.ARCHIVED_STEP
+    exports.ARCHIVED_STEP,
 ];
 /////////////////////////////////////////
 /////////////// CATEGORY ////////////////
@@ -123,25 +123,25 @@ var LOGS_EVENTS;
     LOGS_EVENTS[LOGS_EVENTS["move"] = 6] = "move";
 })(LOGS_EVENTS = exports.LOGS_EVENTS || (exports.LOGS_EVENTS = {}));
 exports.EVENTS_TO_LOG = Object.freeze({
-    1: "creation",
-    2: "moveToNext",
-    3: "moveToPrevious",
-    4: "archived",
-    5: "unarchive",
-    6: "move"
+    [LOGS_EVENTS.creation]: 'creation',
+    [LOGS_EVENTS.moveToNext]: 'moveToNext',
+    [LOGS_EVENTS.moveToPrevious]: 'moveToPrevious',
+    [LOGS_EVENTS.archived]: 'archived',
+    [LOGS_EVENTS.unarchive]: 'unarchive',
+    [LOGS_EVENTS.move]: 'move',
 });
 exports.LOG_RELATION_TYPE = exports.SPINAL_TICKET_SERVICE_LOG_RELATION_TYPE;
 exports.LOG_RELATION_NAME = exports.SPINAL_TICKET_SERVICE_LOG_RELATION_NAME;
 exports.LOG_TYPE = exports.SERVICE_LOG_TYPE;
 exports.LOGS_EVENTS_STEPS = LOGS_EVENTS;
 exports.LOGS_EVENTS_STRING = [
-    "none",
-    "creation",
-    "moveToNext",
-    "moveToPrevious",
-    "archived",
-    "unarchive",
-    "move"
+    'none',
+    'creation',
+    'moveToNext',
+    'moveToPrevious',
+    'archived',
+    'unarchive',
+    'move',
 ];
 /////////////////////////////////////////
 /////////////// Target /////////////////

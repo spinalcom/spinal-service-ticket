@@ -1,10 +1,10 @@
 /*
- * Copyright 2021 SpinalCom - www.spinalcom.com
+ * Copyright 2025 SpinalCom - www.spinalcom.com
  *
  * This file is part of SpinalCore.
  *
  * Please read all of the following terms and conditions
- * of the Free Software license Agreement ("Agreement")
+ * of the Software license Agreement ("Agreement")
  * carefully.
  *
  * This Agreement is a legally binding contract between
@@ -22,4 +22,9 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-export { IContextInfo, IStepInfo } from './IContextInfo';
+export * from './IContextInfo';
+export * from './ISpinalNodePart';
+export * from './ISpinalNodeSpecialized';
+export * from './ITicketStepNode';
+export * from './ITicketStep';
+export * from './IUserInfo';
