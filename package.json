@@ -1,6 +1,6 @@
 {
   "name": "spinal-service-ticket",
-  "version": "0.1.15",
+  "version": "1.0.0",
   "license": "Spinalcom",
   "main": "dist/index.js",
   "scripts": {
