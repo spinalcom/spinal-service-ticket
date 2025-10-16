@@ -287,6 +287,18 @@ class ServiceTicket {
             }
         });
     }
+    addTicketFromNode(ticketNode, stepNode, contextNode, anchorNode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // const stepId = await this.getFirstStep(processNode.id.get(), contextNode.id.get());
+            yield stepNode.addChildInContext(ticketNode, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE, contextNode);
+            yield anchorNode.addChild(ticketNode, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+            spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(ticketNode);
+            spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(stepNode);
+            yield this.modifyTicketStepId(ticketNode.getId().get(), stepNode.getId().get());
+            yield this.addLogToTicket(ticketNode.getId().get(), Constants_1.LOGS_EVENTS.creation, {}, stepNode.getId().get());
+            return ticketNode;
+        });
+    }
     getTicketsFromNode(nodeId) {
         return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildren(nodeId, [
             Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,

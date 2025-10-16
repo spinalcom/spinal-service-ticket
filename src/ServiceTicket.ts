@@ -465,6 +465,42 @@ export class ServiceTicket {
     }
   }
 
+  public async addTicketFromNode(
+    ticketNode: SpinalNode<any>,
+    stepNode: SpinalNode<any>,
+    contextNode: SpinalNode<any>,
+    anchorNode: SpinalNode<any>,
+  ): Promise<SpinalNode<any> | Error> {
+    // const stepId = await this.getFirstStep(processNode.id.get(), contextNode.id.get());
+
+    await stepNode.addChildInContext(
+      ticketNode,
+      SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+      SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE,
+      contextNode
+    );
+  
+    await anchorNode.addChild(
+      ticketNode,
+      SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+      SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+    );
+
+    SpinalGraphService._addNode(ticketNode);
+    SpinalGraphService._addNode(stepNode);
+
+
+    await this.modifyTicketStepId(ticketNode.getId().get(), stepNode.getId().get());
+    await this.addLogToTicket(
+      ticketNode.getId().get(),
+      LOGS_EVENTS.creation,
+      {},
+      stepNode.getId().get()
+    );
+    return ticketNode;
+    
+  }
+
   public getTicketsFromNode(nodeId: string) {
     return SpinalGraphService.getChildren(nodeId, [
       SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
