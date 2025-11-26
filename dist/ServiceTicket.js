@@ -175,10 +175,11 @@ class ServiceTicket {
         });
     }
     getStepsFromProcess(processId, contextId) {
-        return spinal_env_viewer_graph_service_1.SpinalGraphService.findInContext(processId, contextId, (node) => {
-            spinal_env_viewer_graph_service_1.SpinalGraphService._addNode(node);
-            return node.getType().get() === Constants_1.SPINAL_TICKET_SERVICE_STEP_TYPE;
-        });
+        return spinal_env_viewer_graph_service_1.SpinalGraphService.getChildrenInContext(processId, contextId);
+        // return SpinalGraphService.findInContext(processId, contextId, (node) => {
+        //   (<any>SpinalGraphService)._addNode(node);
+        //   return node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE;
+        // });
         // .then(nodes => {
         //     return SpinalGraphService.getChildren(node.id.get(),
         //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);

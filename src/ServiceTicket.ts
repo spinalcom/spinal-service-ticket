@@ -280,10 +280,12 @@ export class ServiceTicket {
     processId: string,
     contextId: string
   ): Promise<any> {
-    return SpinalGraphService.findInContext(processId, contextId, (node) => {
-      (<any>SpinalGraphService)._addNode(node);
-      return node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE;
-    });
+    return SpinalGraphService.getChildrenInContext(processId, contextId);
+
+    // return SpinalGraphService.findInContext(processId, contextId, (node) => {
+    //   (<any>SpinalGraphService)._addNode(node);
+    //   return node.getType().get() === SPINAL_TICKET_SERVICE_STEP_TYPE;
+    // });
     // .then(nodes => {
     //     return SpinalGraphService.getChildren(node.id.get(),
     //         [SPINAL_TICKET_SERVICE_STEP_RELATION_NAME]);
