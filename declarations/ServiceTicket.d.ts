@@ -38,6 +38,8 @@ export declare class ServiceTicket {
         order: number;
     }): Promise<any>;
     addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType?: string): Promise<string | Error>;
+    asyncBackAddTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType: string, stepId: string, ticketId: string): Promise<string>;
+    addTicketFast(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType?: string): Promise<string | Error>;
     addTicketFromNode(ticketNode: SpinalNode<any>, stepNode: SpinalNode<any>, contextNode: SpinalNode<any>, anchorNode: SpinalNode<any>): Promise<SpinalNode<any> | Error>;
     getTicketsFromNode(nodeId: string): Promise<any[]>;
     getAlarmsFromNode(nodeId: string): Promise<any[]>;

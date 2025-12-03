@@ -467,6 +467,82 @@ export class ServiceTicket {
     }
   }
 
+
+
+  public async asyncBackAddTicket(
+    ticketInfo: TicketInterface,
+    processId: string,
+    contextId: string,
+    nodeId: string,
+    ticketType: string = 'Ticket',
+    stepId: string,
+    ticketId: string
+  ){
+    if (ticketType == 'Alarm') {
+      await SpinalGraphService.addChildInContext(
+        stepId,
+        ticketId,
+        contextId,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+      );
+      await SpinalGraphService.addChild(
+        nodeId,
+        ticketId,
+        ALARM_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+      );
+      await this.modifyTicketStepId(ticketId, stepId);
+      const userInfo = ticketInfo.user ? ticketInfo.user : {};
+      await this.addLogToTicket(
+        ticketId,
+        LOGS_EVENTS.creation,
+        userInfo,
+        stepId
+      );
+      return ticketId;
+    } else {
+      await SpinalGraphService.addChildInContext(
+        stepId,
+        ticketId,
+        contextId,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+      );
+      await SpinalGraphService.addChild(
+        nodeId,
+        ticketId,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
+        SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE
+      );
+      await this.modifyTicketStepId(ticketId, stepId);
+      const userInfo = ticketInfo.user ? ticketInfo.user : {};
+      await this.addLogToTicket(
+        ticketId,
+        LOGS_EVENTS.creation,
+        userInfo,
+        stepId
+      );
+      return ticketId;
+    }
+  }
+
+  public async addTicketFast(
+    ticketInfo: TicketInterface,
+    processId: string,
+    contextId: string,
+    nodeId: string,
+    ticketType: string = 'Ticket'
+  ): Promise<string | Error> {
+    const stepId = await this.getFirstStep(processId, contextId);
+    ticketInfo.processId = processId;
+    ticketInfo.stepId = stepId;
+    ticketInfo.contextId = contextId;
+    const ticketId = await this.createTicket(ticketInfo);
+    this.asyncBackAddTicket(ticketInfo, processId, contextId, nodeId, ticketType, stepId, ticketId);
+    return ticketId;
+  }
+
   public async addTicketFromNode(
     ticketNode: SpinalNode<any>,
     stepNode: SpinalNode<any>,

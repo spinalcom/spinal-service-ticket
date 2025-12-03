@@ -288,6 +288,37 @@ class ServiceTicket {
             }
         });
     }
+    asyncBackAddTicket(ticketInfo, processId, contextId, nodeId, ticketType = 'Ticket', stepId, ticketId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (ticketType == 'Alarm') {
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(nodeId, ticketId, Constants_1.ALARM_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                yield this.modifyTicketStepId(ticketId, stepId);
+                const userInfo = ticketInfo.user ? ticketInfo.user : {};
+                yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+                return ticketId;
+            }
+            else {
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChildInContext(stepId, ticketId, contextId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                yield spinal_env_viewer_graph_service_1.SpinalGraphService.addChild(nodeId, ticketId, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE);
+                yield this.modifyTicketStepId(ticketId, stepId);
+                const userInfo = ticketInfo.user ? ticketInfo.user : {};
+                yield this.addLogToTicket(ticketId, Constants_1.LOGS_EVENTS.creation, userInfo, stepId);
+                return ticketId;
+            }
+        });
+    }
+    addTicketFast(ticketInfo, processId, contextId, nodeId, ticketType = 'Ticket') {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stepId = yield this.getFirstStep(processId, contextId);
+            ticketInfo.processId = processId;
+            ticketInfo.stepId = stepId;
+            ticketInfo.contextId = contextId;
+            const ticketId = yield this.createTicket(ticketInfo);
+            this.asyncBackAddTicket(ticketInfo, processId, contextId, nodeId, ticketType, stepId, ticketId);
+            return ticketId;
+        });
+    }
     addTicketFromNode(ticketNode, stepNode, contextNode, anchorNode) {
         return __awaiter(this, void 0, void 0, function* () {
             // const stepId = await this.getFirstStep(processNode.id.get(), contextNode.id.get());
