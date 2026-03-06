@@ -186,9 +186,14 @@ class ServiceTicket {
     //////////////////////////////////////////////////////////
     //                      TICKETS                         //
     //////////////////////////////////////////////////////////
-    addTicket(ticketInfo, processId, contextId, nodeId, ticketType = 'Ticket') {
+    addTicket(ticketInfo, processId, contextId, nodeId, ticketType = 'Ticket', existingTicketNode // Api Server optimization requires creation of ticket node and fast return.
+    //  This is passed on here to do the rest of the work
+    ) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ticketNode = yield (0, addTicket_1.addTicket)(ticketInfo, (0, GraphService_1.graphServiceGetRealNode)(processId), (0, GraphService_1.graphServiceGetRealNode)(contextId), (0, GraphService_1.graphServiceGetRealNode)(nodeId), ticketType);
+            const existingTicketRealNode = typeof existingTicketNode === 'string'
+                ? (0, GraphService_1.graphServiceGetRealNode)(existingTicketNode)
+                : existingTicketNode;
+            const ticketNode = yield (0, addTicket_1.addTicket)(ticketInfo, (0, GraphService_1.graphServiceGetRealNode)(processId), (0, GraphService_1.graphServiceGetRealNode)(contextId), (0, GraphService_1.graphServiceGetRealNode)(nodeId), ticketType, existingTicketRealNode);
             (0, GraphService_1.graphServiceAddNode)(ticketNode);
             return ticketNode.info.id.get();
         });

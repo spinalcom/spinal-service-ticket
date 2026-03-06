@@ -23,7 +23,7 @@ export declare class ServiceTicket {
     getSuperiorsSteps(contextId: string, processId: string, stepOrder: number, equals?: Boolean): Promise<Record<string, any>[]>;
     getInferiorsSteps(contextId: string, processId: string, stepOrder: number, equals?: Boolean): Promise<Record<string, any>[]>;
     insertStep(contextId: string, processId: string, stepInfo: ITicketStep): Promise<string>;
-    addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType?: string): Promise<string>;
+    addTicket(ticketInfo: TicketInterface, processId: string, contextId: string, nodeId: string, ticketType?: string, existingTicketNode?: string | SpinalNode): Promise<string>;
     getTicketsFromNode(nodeId: string): Promise<Record<string, any>[]>;
     getAlarmsFromNode(nodeId: string): Promise<Record<string, any>[]>;
     getTicketsFromStep(stepId: string): Promise<SpinalNodeRef[]>;

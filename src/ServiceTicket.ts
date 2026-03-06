@@ -79,7 +79,7 @@ import { archiveTicketFromProcess } from './Archive/archiveTicketFromProcess';
 import { archiveTicketFromSpatial } from './Archive/archiveTicketFromSpatial';
 
 export class ServiceTicket {
-  constructor() {}
+  constructor() { }
 
   //////////////////////////////////////////////////////////
   //                      CONTEXTS                        //
@@ -284,14 +284,22 @@ export class ServiceTicket {
     processId: string,
     contextId: string,
     nodeId: string,
-    ticketType: string = 'Ticket'
+    ticketType: string = 'Ticket',
+    existingTicketNode?: string | SpinalNode // Api Server optimization requires creation of ticket node and fast return.
+    //  This is passed on here to do the rest of the work
   ): Promise<string> {
+    const existingTicketRealNode =
+      typeof existingTicketNode === 'string'
+        ? graphServiceGetRealNode(existingTicketNode)
+        : existingTicketNode;
+
     const ticketNode = await addTicket(
       ticketInfo,
       graphServiceGetRealNode(processId),
       graphServiceGetRealNode(contextId),
       graphServiceGetRealNode(nodeId),
-      ticketType
+      ticketType,
+      existingTicketRealNode
     );
     graphServiceAddNode(ticketNode);
     return ticketNode.info.id.get();
@@ -408,7 +416,7 @@ export class ServiceTicket {
     return graphServiceGetInfo(data);
   }
 
-  public unlinkTicketToProcess(ticketId: string) {}
+  public unlinkTicketToProcess(ticketId: string) { }
 
   public getTicketContextId(ticketId: string): string {
     return getTicketContextId(graphServiceGetRealNode(ticketId));

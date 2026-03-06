@@ -38,7 +38,7 @@ const getFirstStepNode_1 = require("../Step/getFirstStepNode");
 const addLogToTicketNode_1 = require("../Logs/addLogToTicketNode");
 const Constants_1 = require("../Constants");
 const updateTicketAttributes_1 = require("./updateTicketAttributes");
-function addTicket(ticketInfo, processNode, contextNodeTicket, targetNode, ticketType = 'Ticket') {
+function addTicket(ticketInfo, processNode, contextNodeTicket, targetNode, ticketType = 'Ticket', existingTicketNode) {
     return __awaiter(this, void 0, void 0, function* () {
         const stepNode = yield (0, getFirstStepNode_1.getFirstStepNode)(processNode, contextNodeTicket);
         ticketInfo.processId = processNode.info.id.get();
@@ -47,7 +47,7 @@ function addTicket(ticketInfo, processNode, contextNodeTicket, targetNode, ticke
         Object.assign(ticketInfo, {
             creationDate: Date.now().toString(),
         });
-        const ticketNode = yield createTicketNode(ticketInfo);
+        const ticketNode = yield createTicketNode(ticketInfo, existingTicketNode);
         yield stepNode.addChildInContext(ticketNode, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME, Constants_1.SPINAL_TICKET_SERVICE_TICKET_RELATION_TYPE, contextNodeTicket);
         yield targetNode.addChild(ticketNode, ticketType == 'Alarm'
             ? Constants_1.ALARM_RELATION_NAME
@@ -58,11 +58,11 @@ function addTicket(ticketInfo, processNode, contextNodeTicket, targetNode, ticke
     });
 }
 exports.addTicket = addTicket;
-function createTicketNode(elementInfo) {
+function createTicketNode(elementInfo, existingTicketNode) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!elementInfo.declarer_id)
             elementInfo.declarer_id = 'unknow';
-        const ticket = new spinal_model_graph_1.SpinalNode(elementInfo.name, Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE);
+        const ticket = existingTicketNode !== null && existingTicketNode !== void 0 ? existingTicketNode : new spinal_model_graph_1.SpinalNode(elementInfo.name, Constants_1.SPINAL_TICKET_SERVICE_TICKET_TYPE);
         yield (0, updateTicketAttributes_1.updateTicketAttributes)(ticket, elementInfo);
         return ticket;
     });

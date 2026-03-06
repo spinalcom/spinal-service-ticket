@@ -41,7 +41,8 @@ export async function addTicket(
   processNode: SpinalNode,
   contextNodeTicket: SpinalNode,
   targetNode: SpinalNode,
-  ticketType: string = 'Ticket'
+  ticketType: string = 'Ticket',
+  existingTicketNode?: SpinalNode
 ) {
   const stepNode = await getFirstStepNode(processNode, contextNodeTicket);
 
@@ -51,7 +52,7 @@ export async function addTicket(
   Object.assign(ticketInfo, {
     creationDate: Date.now().toString(),
   });
-  const ticketNode = await createTicketNode(ticketInfo);
+  const ticketNode = await createTicketNode(ticketInfo, existingTicketNode);
   await stepNode.addChildInContext(
     ticketNode,
     SPINAL_TICKET_SERVICE_TICKET_RELATION_NAME,
@@ -77,13 +78,13 @@ export async function addTicket(
 }
 
 async function createTicketNode(
-  elementInfo: TicketInterface
+  elementInfo: TicketInterface,
+  existingTicketNode?: SpinalNode
 ): Promise<SpinalNode> {
   if (!elementInfo.declarer_id) elementInfo.declarer_id = 'unknow';
-  const ticket = new SpinalNode(
-    elementInfo.name,
-    SPINAL_TICKET_SERVICE_TICKET_TYPE
-  );
+  const ticket =
+    existingTicketNode ??
+    new SpinalNode(elementInfo.name, SPINAL_TICKET_SERVICE_TICKET_TYPE);
 
   await updateTicketAttributes(ticket, elementInfo);
   return ticket;
